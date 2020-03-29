@@ -1,0 +1,247 @@
+﻿
+@{
+    ViewBag.Title = "Registrar Datos de la Empresa";
+}
+
+@*<script src="~/Scripts/funcionesRegistrarEmpresa.js"></script>*@
+
+
+
+
+<div class="container-fluid py-5">
+
+    <div class="row">
+        <div class="col-md-2">
+
+        </div>
+        <div id="buscarRfc" class="col-md-3">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">RFC</span>
+                </div>
+                <input placeholder="RFC" type="text" class="form-control" ng-model="ctrl.RfcBuscarEmpresa">
+                <div class="input-group-append">
+                    <span class="input-group-text"><i class="fas fa-search" ng-click="ctrl.BuscarEmpresa()"></i></span>
+                </div>
+            </div>
+        </div>
+        <div id="buscandoEmpresa" class="col-md-6" style="display:none">
+            <div class="spinner-grow text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-grow text-success" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-grow text-warning" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-grow text-danger" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div id="formularioRegistro" class="row" style="display:none">
+        <div class="col-md-2">
+            <ul class="list-group">
+                <li id="globalInfoemp" class="list-group-item d-flex justify-content-between align-items-center" style="background-color:yellow">
+                    Información de la Empresa
+                    <span class="badge badge-primary badge-pill">
+                        <i id="infemp1" style="display:none" class="fas fa-check"></i>
+                        <i id="infemp2" class="fas fa-exclamation"></i>
+                    </span>
+                </li>
+                <li id="globalDatosCont" class="list-group-item d-flex justify-content-between align-items-center" style="background-color:yellow">
+                    Datos de Contacto
+                    <span class="badge badge-primary badge-pill">
+                        <i id="datcont1" style="display:none" class="fas fa-check"></i>
+                        <i id="datcont2" class="fas fa-exclamation"></i>
+                    </span>
+                </li>
+                <li id="globalSesion" class="list-group-item d-flex justify-content-between align-items-center" style="background-color:yellow">
+                    Usuario y Contraseña
+                    <span class="badge badge-primary badge-pill">
+                        <i id="datossesion1" style="display:none" class="fas fa-check"></i>
+                        <i id="datossesion2" class="fas fa-exclamation"></i>
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-10">
+            <ul class="nav nav-tabs" id="tabInfoEmpresa" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="infoEmpresa-tab" data-toggle="tab" href="#infoEmp" role="tab" aria-controls="infoEmpr" aria-selected="true">Información de la Empresa</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="datosCotacto-tab" data-toggle="tab" href="#datosCont" role="tab" aria-controls="datosCotacto" aria-selected="false">Datos de Contacto</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="infoLogin-tab" data-toggle="tab" href="#infoLog" role="tab" aria-controls="infoLog" aria-selected="false">Usuario y Contraseña</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+
+                <div class="tab-pane fade show active" id="infoEmp" role="tabpanel" aria-labelledby="home-tab">
+                    <div class="row">
+                        <div class="input-group mb-3 col-md-6 py-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Razón Social</span>
+                            </div>
+                            <input ng-model="ctrl.RazonSocial" ng-change="ctrl.GlobalInfoPer()" type="text" class="form-control" placeholder="Razón Social" aria-label="RazonSocial" aria-describedby="basic-addon1" style="max-width:100%">
+                        </div>
+                        <div class="input-group mb-3 col-md-6 py-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Nombre Comercial</span>
+                            </div>
+                            <input ng-model="ctrl.NombreComercial" ng-change="ctrl.GlobalInfoPer()" type="text" class="form-control" placeholder="Nombre Comercial" aria-label="NombrComercial" aria-describedby="basic-addon1" style="max-width:100%">
+                        </div>
+                        <div class="input-group mb-3 col-md-6 py-1">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Tipo de Persona</span>
+                            </div>
+                            <select name="TipoPersona" id="tipoPerosna" ng-change="ctrl.GlobalInfoPer()" ng-model="ctrl.TipoPersona" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listTipoPersona" style="max-width:100%" required></select>
+                        </div>
+                        <div class="input-group mb-3 col-md-6 py-1">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Actividad</span>
+                            </div>
+                            <input ng-model="ctrl.Actividad" type="text" ng-change="ctrl.GlobalInfoPer()" class="form-control" placeholder="Actividad" aria-label="Actividad" aria-describedby="basic-addon1" style="max-width:100%">
+                        </div>
+                        <div class="input-group mb-3 col-md-6 py-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Código Postal</span>
+                            </div>
+                            <input ng-model="ctrl.CodigoPost" type="text" ng-change="ctrl.GlobalInfoPer()" class="form-control" placeholder="Código Postal" aria-label="CódigoPostal" aria-describedby="basic-addon1" style="max-width:100%">
+                        </div>
+                        <div class="input-group mb-3 col-md-6 py-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Estado</span>
+                            </div>
+                            <select name="Estado" id="Estado" ng-model="ctrl.Estado" ng-change="ctrl.GlobalInfoPer()" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listEstados" ng-click="ctrl.ComboMunicipios()" style="max-width:100%" required></select>
+                        </div>
+                        <div class="input-group mb-3 col-md-6 py-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Municipio</span>
+                            </div>
+                            <select name="Municipio" id="Municipio" ng-change="ctrl.GlobalInfoPer()" ng-model="ctrl.Municipio" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listMunicipios" style="max-width:100%" required></select>
+                        </div>
+                        <div class="input-group mb-3 col-md-6 py-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Cólonia</span>
+                            </div>
+                            <input ng-model="ctrl.Colonia" type="text" ng-change="ctrl.GlobalInfoPer()" class="form-control" placeholder="Cólonia" aria-label="Cólonia" aria-describedby="basic-addon1" style="max-width:100%">
+                        </div>
+                        <div class="input-group mb-3 col-md-12 py-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Domicilio</span>
+                            </div>
+                            <input ng-model="ctrl.Domicilio" type="text" ng-change="ctrl.GlobalInfoPer()" class="form-control" placeholder="Domicilio" aria-label="Domicilio" aria-describedby="basic-addon1" style="max-width:100%">
+                        </div>
+                        <div class="col-md-1">
+                            <input id="informacionEmpresa" type="button" class="btn btn-info" value="Continuar" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="datosCont" role="tabpanel" aria-labelledby="profile-tab">
+                    <div class="row">
+                        <div class="input-group mb-3 col-md-6 py-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Persona de Contacto</span>
+                            </div>
+                            <input ng-model="ctrl.PersonaContacto" type="text" ng-change="ctrl.GlobalDatosContacto()" class="form-control" placeholder="Persona de Contacto" aria-label="PersonaContacto" aria-describedby="basic-addon1" style="max-width:100%">
+                        </div>
+                        <div class="input-group mb-3 col-md-6 py-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Cargo</span>
+                            </div>
+                            <input ng-model="ctrl.Cargo" type="text" ng-change="ctrl.GlobalDatosContacto()" class="form-control" placeholder="Cargo" aria-label="Cargo" aria-describedby="basic-addon1" style="max-width:100%">
+                        </div>
+                        <div class="input-group mb-3 col-md-6 py-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Teléfono de Oficina</span>
+                            </div>
+                            <input ng-model="ctrl.TelOficina" type="text" ng-change="ctrl.GlobalDatosContacto()" class="form-control" placeholder="Teléfono de Oficina" aria-label="TeléfonoOficina" aria-describedby="basic-addon1" style="max-width:100%">
+                        </div>
+                        <div class="input-group mb-3 col-md-6 py-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Celular</span>
+                            </div>
+                            <input ng-model="ctrl.Celular" type="text" ng-change="ctrl.GlobalDatosContacto()" class="form-control" placeholder="Celular" aria-label="Celular" aria-describedby="basic-addon1" style="max-width:100%">
+                        </div>
+                        <div class="input-group mb-3 col-md-6 py-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">E-mail</span>
+                            </div>
+                            <input ng-model="ctrl.Email" type="text" ng-change="ctrl.GlobalDatosContacto()" class="form-control" placeholder="E-mail" aria-label="E-mail" aria-describedby="basic-addon1" style="max-width:100%">
+                        </div>
+                        <div class="input-group mb-3 col-md-6 py-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Medio de Contacto</span>
+                            </div>
+                            <select name="Estado" id="Estado" ng-change="ctrl.GlobalDatosContacto()" ng-model="ctrl.MedioContacto" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listMedioContacto" nstyle="max-width:100%" required></select>
+                        </div>
+
+                        <div class="col-md-1">
+                            <input id="datosContactoRegresar" type="button" class="btn btn-info" value="Regresar" />
+                        </div>
+                        <div class="col-md-10">
+
+                        </div>
+
+                        <div class="col-md-1">
+                            <input id="datosContacto" type="button" class="btn btn-info" value="Continuar" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="infoLog" role="tabpanel" aria-labelledby="contact-tab">
+                    <div class="row">
+                        <div class="input-group mb-3 col-md-12 py-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Usuario</span>
+                            </div>
+                            <input id="usuarioEmpresa" ng-model="ctrl.Usuario" type="text" ng-change="ctrl.GlobalDatosSesion()" class="form-control" placeholder="Usuario" aria-label="Usuario" aria-describedby="basic-addon1" style="max-width:44%">
+                        </div>
+                        <div class="input-group mb-3 col-md-6 py-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Contraseña</span>
+                            </div>
+                            <input ng-model="ctrl.Contrasena" type="password" ng-change="ctrl.GlobalDatosSesion()" class="form-control" placeholder="Contraseña" aria-label="Contraseña" aria-describedby="basic-addon1" style="max-width:100%">
+                        </div>
+                        <div class="input-group mb-3 col-md-6 py-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Confirmar Contraseña</span>
+                            </div>
+                            <input ng-model="ctrl.Contrasena2" type="password" ng-change="ctrl.GlobalDatosSesion()" class="form-control" placeholder="Confirmar Contraseña" aria-label="ConfirmarContraseña" aria-describedby="basic-addon1" style="max-width:100%">
+                        </div>
+                        <div class="col-md-1">
+                            <input id="infoLogRegresar" type="button" class="btn btn-info" value="Regresar" />
+                        </div>
+                        <div class="col-md-10">
+
+                        </div>
+                        <div class="col-md-1">
+                            <input type="button" class="btn btn-info" value="Guardar" ng-click="ctrl.RegistrarDatosEmpresa()" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <!--MODALES-->
+
+
+
+
+
+
+</div>
