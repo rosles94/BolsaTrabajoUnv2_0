@@ -17,7 +17,7 @@ namespace BolsaTrabajoUnv2_0.Models
         public string Descripcion { get; set; }
         public string Principal { get; set; }
         public string Fecha_Inicio { get; set; }
-        public string Fecha_Fi { get; set; }
+        public string Fecha_Fin { get; set; }
         public string Contacto { get; set; }
         public string Tiempo_Laborado { get; set; }
         public string Id_Local { get; set; }

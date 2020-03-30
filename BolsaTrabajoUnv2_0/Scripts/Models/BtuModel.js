@@ -158,7 +158,48 @@ var btuContext =
                 callBackResult({ ressult: 'notgp', message: ex });
             }
         });
+    },
+
+    GuardarInformacionCandidato: function (Matricula, NombreCandidato, ApePatCandidato, ApeMatCandidato, FecNac, Estado,
+    Municipio, Domicilio, TelCel, TelAd, Email, AreaInt, ObjPersonal, callBackResult) {
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/GuardarInformacionCandidato",
+            data: {
+                Matricula, NombreCandidato, ApePatCandidato, ApeMatCandidato, FecNac, Estado,
+                Municipio, Domicilio, TelCel, TelAd, Email, AreaInt, ObjPersonal
+            },
+            success: function (resp) {
+                if (resp.Error === false)
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: ex });
+            }
+        });
+    },
+
+    GuardarEstudiosAcademicos: function (GradoEst, NombEsc, Carrera, AreaConoc, FechaIni, FechaFin, callBackResult) {
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/GuardarEstudiosAcademicos",
+            data: {
+                GradoEst, NombEsc, Carrera, AreaConoc, FechaIni, FechaFin
+            },
+            success: function (resp) {
+                if (resp.Error === false)
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: ex });
+            }
+        });
     }
+
 
     
 };

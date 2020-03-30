@@ -136,38 +136,6 @@
                 alert("Las contraseñas no coinciden");
         };
 
-        var ComboEstados = () => {
-            btuContext.ComboEstados(function (resp) {
-                switch (resp.ressult) {
-                    case "tgp":
-                        self.listEstados = btuContext.listEstados;
-                        break;
-                    case "notgp":
-                        alert(resp.MensajeError);
-                        break;
-                    default:
-                        break;
-                }
-                $scope.$apply();
-            });
-        };
-
-        this.ComboMunicipios = () => {
-            btuContext.ComboMunicipios(self.Estado, function (resp) {
-                switch (resp.ressult) {
-                    case "tgp":
-                        self.listMunicipios = btuContext.listMunicipios;
-                        break;
-                    case "notgp":
-                        alert(resp.MensajeError);
-                        break;
-                    default:
-                        break;
-                }
-                $scope.$apply();
-            });
-        };
-
         var TipoPersona = () => {
             btuContext.ComboTipoPersona(function (resp) {
                 switch (resp.ressult) {
@@ -199,6 +167,77 @@
                 $scope.$apply();
             });
         };
-        
+
+        //Funciones Vista DatosCandidatos
+
+        this.CargarDatosPrincipales = () => {
+            ComboEstados();
+        };
+
+        this.GuardarInformacionCandidato = () => {
+            btuContext.GuardarInformacionCandidato(self.Matricula, self.NombreCandidato, self.ApePatCandidato, self.ApeMatCandidato, self.FecNac, self.Estado,
+                self.Municipio, self.Domicilio, self.TelCel, self.TelAd, self.Email, self.AreaInt, self.ObjPersonal, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":                        
+                        break;
+                    case "notgp":
+                        alert(resp.MensajeError);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
+        this.GuardarEstudiosAcademicos = () => {
+            btuContext.GuardarEstudiosAcademicos(self.GradoEst, self.NombEsc, self.Carrera, self.AreaConoc, self.FechaIni, self.FechaFin, function (resp) {
+                    switch (resp.ressult) {
+                        case "tgp":
+                            break;
+                        case "notgp":
+                            alert(resp.MensajeError);
+                            break;
+                        default:
+                            break;
+                    }
+                    $scope.$apply();
+                });
+        };
+
+
+
+        //Funciones para cargar combos compartidos
+        var ComboEstados = () => {
+            btuContext.ComboEstados(function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listEstados = btuContext.listEstados;
+                        break;
+                    case "notgp":
+                        alert(resp.MensajeError);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
+        this.ComboMunicipios = () => {
+            btuContext.ComboMunicipios(self.Estado, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listMunicipios = btuContext.listMunicipios;
+                        break;
+                    case "notgp":
+                        alert(resp.MensajeError);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
     }]);
 })();

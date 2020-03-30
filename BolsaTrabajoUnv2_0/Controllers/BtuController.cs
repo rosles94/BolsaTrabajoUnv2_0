@@ -86,6 +86,68 @@ namespace BolsaTrabajoUnv2_0.Controllers
             }
         }
 
+        //Metodos usados en la vista Datos Candidato
+        public JsonResult GuardarInformacionCandidato(string Matricula, string NombreCandidato, string ApePatCandidato, string ApeMatCandidato, string FecNac, string Estado,
+            string Municipio, string Domicilio, string TelCel, string TelAd, string Email, string AreaInt, string ObjPersonal)
+        {
+            Btu_Curriculum objDatosCandidato = new Btu_Curriculum();
+            ResultadoBtuCurriculum objResultado = new ResultadoBtuCurriculum();
+            try
+            {
+                objDatosCandidato.Matricula = Matricula.ToUpper();
+                objDatosCandidato.Nombre = NombreCandidato.ToUpper();
+                objDatosCandidato.Materno = ApeMatCandidato.ToUpper();
+                objDatosCandidato.Paterno = ApePatCandidato.ToUpper();
+                objDatosCandidato.Fecha_Nacimiento = FecNac;
+                objDatosCandidato.Estado = Estado;
+                objDatosCandidato.Municipio = Municipio;
+                objDatosCandidato.Domicilio = Domicilio;
+                objDatosCandidato.Celular = TelCel;
+                objDatosCandidato.Telefono = TelAd;
+                objDatosCandidato.Correo = Email;
+                objDatosCandidato.Intereses = AreaInt;
+                objDatosCandidato.Objetivo = ObjPersonal;
+                System.Web.HttpContext.Current.Session["SessionInformacionPersonalCandidato"] = objDatosCandidato;
+                objResultado.Error = false;
+                objResultado.MensajeError = "";
+                objResultado.Resultado = null;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = false;
+                objResultado.MensajeError = ex.Message;
+                objResultado.Resultado = null;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult GuardarEstudiosAcademicos(string GradoEst, string NombEsc, string Carrera, string AreaConoc, string FechaIni, string FechaFin)
+        {
+            Btu_Curriculum_Informacion objInformacionAcad = new Btu_Curriculum_Informacion();
+            ResultadoCurriculmInformacion objResultado = new ResultadoCurriculmInformacion();
+            try
+            {
+                objInformacionAcad.Institucion = NombEsc;
+                objInformacionAcad.Id_Carrera = Carrera;
+                objInformacionAcad.Carrera = Carrera;
+                objInformacionAcad.Area = AreaConoc;
+                objInformacionAcad.Fecha_Inicio = FechaIni;
+                objInformacionAcad.Fecha_Fin = FechaFin;
+                System.Web.HttpContext.Current.Session["SessionInformacionAcademicaCandidato"] = objInformacionAcad;
+                objResultado.Error = false;
+                objResultado.MensajeError = "";
+                objResultado.Resultado = null;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex )
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                objResultado.Resultado = null;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
 
 
         //Combos
@@ -196,6 +258,11 @@ namespace BolsaTrabajoUnv2_0.Controllers
         }
 
         public ActionResult RegistrarEmpresa ()
+        {
+            return View();
+        }
+
+        public ActionResult DatosCandidato()
         {
             return View();
         }

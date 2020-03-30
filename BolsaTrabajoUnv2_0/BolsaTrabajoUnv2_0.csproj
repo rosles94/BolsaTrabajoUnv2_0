@@ -2739,6 +2739,7 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Btu\RegistrarEmpresa.cshtml" />
     <Content Include="Scripts\version.json" />
+    <Content Include="Views\Btu\DatosCandidato.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
