@@ -10,6 +10,13 @@
         let listMunicipios = "";
         let listTipoPersona = "";
         let listMedioContacto = "";
+        let listCarreras = "";
+        let listGradoEstudios = "";
+        let listAreaConocimiento = "";
+        let listNivelSoftware = "";
+        let listNivelIdioma = "";
+        let listTipoCurso = "";
+
 
 
         //Funciones Vista Registrar Empresas
@@ -170,8 +177,32 @@
 
         //Funciones Vista DatosCandidatos
 
+        this.GlobalInfoPersonal = () => {
+            if (self.Matricula !== undefined && self.NombreCandidato !== undefined && self.ApePatCandidato !== undefined && self.ApeMatCandidato !== undefined
+                && self.FecNac !== undefined && self.Estado !== undefined && self.Municipio !== undefined && self.Domicilio !== undefined && self.TelCel !== undefined
+                && self.TelAd !== undefined && self.Email !== undefined && self.AreaInt !== undefined && self.ObjPersonal !== undefined
+                && self.Matricula !== "" && self.NombreCandidato !== "" && self.ApePatCandidato !== "" && self.ApeMatCandidato !== "" && self.FecNac !== ""
+                && self.Estado !== "" && self.Municipio !== "" && self.Domicilio !== "" && self.TelCel !== "" && self.TelAd !== "" && self.Email !== ""
+                && self.AreaInt !== "" && self.ObjPersonal !== "") {
+                $("#infper1").show();
+                $("#infper2").hide();
+                $("#globalInfoPer").css('background-color', 'green');
+            }
+            else {
+                $("#infper1").hide();
+                $("#infper2").show();
+                $("#globalInfoPer").css('background-color', 'yellow');
+            }
+        };
+
         this.CargarDatosPrincipales = () => {
             ComboEstados();
+            ComboGradoEstudios();
+            ComboCarreras();
+            ComboAreaConocimiento();
+            ComboNivelSoftware();
+            ComboNivelIdioma();
+
         };
 
         this.GuardarInformacionCandidato = () => {
@@ -191,7 +222,12 @@
         };
 
         this.GuardarEstudiosAcademicos = () => {
-            btuContext.GuardarEstudiosAcademicos(self.GradoEst, self.NombEsc, self.Carrera, self.AreaConoc, self.FechaIni, self.FechaFin, function (resp) {
+            let Carrera = $("#Carrera option:selected").text();
+            let FechaInicio = $("#FechaIniCarrera").val();
+            let FechaFin = $("#FechaFinCarrera").val();
+            let DescGradoEstu = $("#GradoEst option:selected").text();
+
+            btuContext.GuardarEstudiosAcademicos(self.GradoEst, self.NombEsc, self.Carrera, self.AreaConoc, FechaInicio, FechaFin, Carrera, DescGradoEstu, function (resp) {
                     switch (resp.ressult) {
                         case "tgp":
                             break;
@@ -205,8 +241,19 @@
                 });
         };
 
+        this.GuardarSoftware = () => {
 
+        };
 
+        this.GuardarIdoma = () => {
+
+        };
+
+        this.GuardarExperienciaProfesional = () => {
+
+        };
+
+               
         //Funciones para cargar combos compartidos
         var ComboEstados = () => {
             btuContext.ComboEstados(function (resp) {
@@ -239,5 +286,102 @@
                 $scope.$apply();
             });
         };
+
+        var ComboGradoEstudios = () => {
+            btuContext.ComboGradoEstudios(function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listGradoEstudios = btuContext.listGradoEstudios;
+                        break;
+                    case "notgp":
+                        alert(resp.MensajeError);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
+        var ComboCarreras = () => {
+            btuContext.ComboCarreras( function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listCarreras = btuContext.listCarreras;
+                        break;
+                    case "notgp":
+                        alert(resp.MensajeError);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
+        var ComboAreaConocimiento = () => {
+            btuContext.ComboAreaConocimiento(function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listAreaConocimiento = btuContext.listAreaConocimiento;
+                        break;
+                    case "notgp":
+                        alert(resp.MensajeError);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
+        var ComboNivelSoftware = () => {
+            btuContext.ComboNivelSoftware("SOFTWARE", function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listNivelSoftware = btuContext.listNvlSoft;
+                        break;
+                    case "notgp":
+                        alert(resp.MensajeError);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
+        var ComboNivelIdioma = () => {
+            btuContext.ComboNivelIdioma("IDIOMA", function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listNivelIdioma = btuContext.listNvlIdi;
+                        break;
+                    case "notgp":
+                        alert(resp.MensajeError);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
+        var ComboTipoCurso = () => {
+            btuContext.ComboTipoCurso(function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listTipoCurso = btuContext.listTipoCurso;
+                        break;
+                    case "notgp":
+                        alert(resp.MensajeError);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
     }]);
 })();

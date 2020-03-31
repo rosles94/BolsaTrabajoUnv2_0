@@ -88,5 +88,14 @@ namespace BolsaTrabajoUnv2_0.Data
             return Lista;
         }
 
+        public static List<Comun> ComboAreaConocimiento()
+        {
+            string[] Parametros = { };
+            object[] Valores = { };
+            var Lista = ExeProcedimiento.GenerarOracleCommandCursor_Combo("PKG_VINCULAR.Obt_Area_Conocimiento", Parametros, Valores);
+            return Lista;
+        }
+        
+
     }
 }
