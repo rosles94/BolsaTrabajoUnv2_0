@@ -34,6 +34,11 @@ namespace BolsaTrabajoUnv2_0.Models
         public string Ruta_Foto { get; set; }
         public bool Edita { get; set; }
         public string Dependencia { get; set; }
+        public string Carrera { get; set; }
+
+        public string IdCarrera { get; set; }
+
+
     }
 
 

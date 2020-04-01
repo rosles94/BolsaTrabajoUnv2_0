@@ -16,8 +16,12 @@
         let listNivelSoftware = "";
         let listNivelIdioma = "";
         let listTipoCurso = "";
-
-
+        let listSesionUnach = "";
+        let listDatosRegistroUnach = "";
+        let listEstAcadGuardados = "";
+        let listSoftware = "";
+        let listIdioma = "";
+        let datosPersonales = false;
 
         //Funciones Vista Registrar Empresas
 
@@ -177,7 +181,7 @@
 
         //Funciones Vista DatosCandidatos
 
-        this.GlobalInfoPersonal = () => {
+        this.GlobalInfoPersonal = () => {            
             if (self.Matricula !== undefined && self.NombreCandidato !== undefined && self.ApePatCandidato !== undefined && self.ApeMatCandidato !== undefined
                 && self.FecNac !== undefined && self.Estado !== undefined && self.Municipio !== undefined && self.Domicilio !== undefined && self.TelCel !== undefined
                 && self.TelAd !== undefined && self.Email !== undefined && self.AreaInt !== undefined && self.ObjPersonal !== undefined
@@ -186,27 +190,34 @@
                 && self.AreaInt !== "" && self.ObjPersonal !== "") {
                 $("#infper1").show();
                 $("#infper2").hide();
-                $("#globalInfoPer").css('background-color', 'green');
+                $("#globalInfoPer").css('background-color', 'green');                
             }
             else {
                 $("#infper1").hide();
-                $("#infper2").show();
+                $("#infper2").show();                
                 $("#globalInfoPer").css('background-color', 'yellow');
             }
         };
 
         this.GlobalInfoAcademica = () => {
-            if (self.GradoEst !== undefined && self.NombEsc !== undefined && self.Carrera !== undefined && self.AreaConoc !== undefined && self.FechaIniCarrera !== undefined && self.FechaFinCarrera !== undefined &&
-                self.GradoEst !== '' && self.NombEsc !== '' && self.Carrera !== '' && self.AreaConoc !== '' && self.FechaIniCarrera !== '' && self.FechaFinCarrera !== '') {
+            if (self.listEstAcadGuardados.length !== 0) {
                 $("#estuacad1").show();
                 $("#estuacad2").hide();
                 $("#globalEstuAcd").css('background-color', 'green');
             }
             else {
-                $("#estuacad1").hide();
-                $("#estuacad2").show();
-                $("#globalEstuAcd").css('background-color', 'yellow');
-            }
+                if (self.GradoEst !== undefined && self.NombEsc !== undefined && self.Carrera !== undefined && self.AreaConoc !== undefined && self.FechaIniCarrera !== undefined && self.FechaFinCarrera !== undefined &&
+                    self.GradoEst !== '' && self.NombEsc !== '' && self.Carrera !== '' && self.AreaConoc !== '' && self.FechaIniCarrera !== '' && self.FechaFinCarrera !== '') {
+                    $("#estuacad1").show();
+                    $("#estuacad2").hide();
+                    $("#globalEstuAcd").css('background-color', 'green');
+                }
+                else {
+                    $("#estuacad1").hide();
+                    $("#estuacad2").show();
+                    $("#globalEstuAcd").css('background-color', 'yellow');
+                }
+            }            
         };
 
         this.GlobalExpProf = () => {
@@ -230,14 +241,41 @@
             ComboAreaConocimiento();
             ComboNivelSoftware();
             ComboNivelIdioma();
-
+            ComboTipoCurso();
+            btuContext.DatosRegistroUnach( function (resp) {
+                    switch (resp.ressult) {
+                        case "tgp":
+                            self.listDatosRegistroUnach = btuContext.listDatosRegistroUnach;
+                            self.DescCarrera = self.listDatosRegistroUnach[0].Carrera;
+                            self.Matricula = self.listDatosRegistroUnach[0].Matricula;
+                            self.NombreCandidato = self.listDatosRegistroUnach[0].Nombre;
+                            self.ApePatCandidato = self.listDatosRegistroUnach[0].Paterno;
+                            self.ApeMatCandidato = self.listDatosRegistroUnach[0].Materno;
+                            $("#FecNac").val(self.listDatosRegistroUnach[0].FechaNacimiento); 
+                            //self.Estado = self.listDatosRegistroUnach[0].Estado;
+                            //self.Municipio = self.listDatosRegistroUnach[0].Municipio;                            
+                            self.Domicilio = self.listDatosRegistroUnach[0].Domicilio;
+                            self.TelCel = self.listDatosRegistroUnach[0].Celular;
+                            self.TelAd = self.listDatosRegistroUnach[0].Telefono;
+                            self.Email = self.listDatosRegistroUnach[0].Correo;       
+                            self.Carrera = self.listDatosRegistroUnach[0].IdCarrera
+                            break;
+                        case "notgp":
+                            alert(resp.message);
+                            break;
+                        default:
+                            break;
+                    }
+                    $scope.$apply();
+                });
         };
 
         this.GuardarInformacionCandidato = () => {
             btuContext.GuardarInformacionCandidato(self.Matricula, self.NombreCandidato, self.ApePatCandidato, self.ApeMatCandidato, self.FecNac, self.Estado,
                 self.Municipio, self.Domicilio, self.TelCel, self.TelAd, self.Email, self.AreaInt, self.ObjPersonal, function (resp) {
                 switch (resp.ressult) {
-                    case "tgp":                        
+                    case "tgp":
+                        datosPersonales = true;
                         break;
                     case "notgp":
                         alert(resp.message);
@@ -258,6 +296,13 @@
             btuContext.GuardarEstudiosAcademicos(self.GradoEst, self.NombEsc, self.Carrera, self.AreaConoc, FechaInicio, FechaFin, Carrera, DescGradoEstu, function (resp) {
                     switch (resp.ressult) {
                         case "tgp":
+                            self.listEstAcadGuardados = btuContext.listEstAcadGuardados;
+                            self.GradoEst = "";
+                            self.NombEsc = "";
+                            self.Carrera = "";
+                            self.AreaConoc = "";
+                            self.FechaIniCarrera = "";
+                            self.FechaFinCarrera = "";
                             break;
                         case "notgp":
                             alert(resp.message);
@@ -270,15 +315,100 @@
         };
 
         this.GuardarSoftware = () => {
-
+            btuContext.GuardarSoftware(self.Software, self.NivelSoftware, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listSoftware = btuContext.listSoftware;
+                        self.Software = "";
+                        self.NivelSoftware = "";
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
         };
 
-        this.GuardarIdoma = () => {
-
+        this.GuardarIdioma = () => {
+            btuContext.GuardarIdioma(self.Idioma, self.NivelIdioma, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listIdioma = btuContext.listIdioma;
+                        self.Idioma = "";
+                        self.NivelIdioma = "";
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
         };
 
         this.GuardarExperienciaProfesional = () => {
 
+        };
+
+        this.EliminarEstudioAcademico = (Posicion) => {
+            let eliminar = confirm('¿Desea eliminar el elemento de la lista?')
+            if (eliminar) {
+                btuContext.EliminarEstudioAcademico(Posicion, function (resp) {
+                    switch (resp.ressult) {
+                        case "tgp":
+                            self.listEstAcadGuardados = btuContext.listEstAcadGuardados;
+                            break;
+                        case "notgp":
+                            alert(resp.message);
+                            break;
+                        default:
+                            break;
+                    }
+                    $scope.$apply();
+                });
+            }
+        };
+
+        this.EliminarSoftware = (Posicion) => {
+            let eliminar = confirm('¿Desea eliminar el elemento de la lista?')
+            if (eliminar) {
+                btuContext.EliminarSoftware(Posicion, function (resp) {
+                    switch (resp.ressult) {
+                        case "tgp":
+                            self.listSoftware = btuContext.listSoftware;
+                            break;
+                        case "notgp":
+                            alert(resp.message);
+                            break;
+                        default:
+                            break;
+                    }
+                    $scope.$apply();
+                });
+            }
+        };
+
+        this.EliminarIdioma = (Posicion) => {
+            let eliminar = confirm('¿Desea eliminar el elemento de la lista?')
+            if (eliminar) {
+                btuContext.EliminarIdioma(Posicion, function (resp) {
+                    switch (resp.ressult) {
+                        case "tgp":
+                            self.listIdioma = btuContext.listIdioma;
+                            break;
+                        case "notgp":
+                            alert(resp.message);
+                            break;
+                        default:
+                            break;
+                    }
+                    $scope.$apply();
+                });
+            }
         };
 
                
@@ -410,6 +540,28 @@
                 $scope.$apply();
             });
         };
+
+        //Funciones para la vista Btu
+
+        this.IniciarSesion = (Tipo) =>{
+            btuContext.IniciarSesion(self.UsuarioUnach, self.ContrasenaUnach, Tipo, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listSesionUnach = btuContext.listSesionUnach;
+                        if (self.listSesionUnach[0].Existe === "1" && self.listSesionUnach[0].Registrado === "0")
+                            window.location.assign(urlServer + "Btu/DatosCandidato");
+                        //self.listSesionUnach[0].Existe !== "1"                            
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
 
     }]);
 })();

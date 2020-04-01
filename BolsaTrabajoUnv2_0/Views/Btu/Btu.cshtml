@@ -1,0 +1,121 @@
+﻿
+@{
+    ViewBag.Title = "Btu";
+}
+
+    <ul>
+        <li data-toggle="modal" data-target="#modalAdministrador">ADMINISTRADOR </li>
+        <li data-toggle="modal" data-target="#modalEmpresa">EMPRESA </li>
+        <li data-toggle="modal" data-target="#modalAlumno">ALUMNO UNACH </li>
+        <li>Objetivo Profesional: </li>
+    </ul>
+
+
+    <div class="modal fade" id="modalAdministrador" tabindex="-1" role="dialog" aria-labelledby="modalAdministrador" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Administrador</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Usuario</span>
+                                </div>
+                                <input type="text" class="form-control" aria-label="Usuario" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Contraseña</span>
+                                </div>
+                                <input type="text" class="form-control" aria-label="Contrasenaa" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary">Iniciar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalEmpresa" tabindex="-1" role="dialog" aria-labelledby="modalEmpresa" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Empresa</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Usuario</span>
+                                </div>
+                                <input type="text" class="form-control" aria-label="Usuario" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Contraseña</span>
+                                </div>
+                                <input type="text" class="form-control" aria-label="Contrasenaa" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary">Iniciar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalAlumno" tabindex="-1" role="dialog" aria-labelledby="modalAlumno" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Alumno UNACH</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Usuario</span>
+                                </div>
+                                <input ng-model="ctrl.UsuarioUnach" type="text" class="form-control" aria-label="Usuario" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Contraseña</span>
+                                </div>
+                                <input ng-model="ctrl.ContrasenaUnach" type="password" class="form-control" aria-label="Contrasenaa" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" ng-click="ctrl.IniciarSesion('UNACH')">Iniciar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </div>

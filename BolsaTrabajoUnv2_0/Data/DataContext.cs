@@ -63,5 +63,93 @@ namespace BolsaTrabajoUnv2_0.Data
             return list;
             //return registroAgregado;
         }
+
+        public static List<Btu_Sesion> InciarSesion(Btu_Sesion objSesion, ref string Verificador)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            List<Btu_Sesion> list = new List<Btu_Sesion>();
+            Btu_Sesion objDatosSesion = new Btu_Sesion();
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { "P_TIPO", "P_EMAIL", "P_PASSWORD"};
+                object[] Valores = { objSesion.Tipo, objSesion.Email, objSesion.Password };
+                string[] ParametrosOut = {"P_EXISTE", "P_MATRICULA", "P_NOMBRE", "P_REGISTRADO", "P_ID", "P_EMAIL_2", "p_bandera" };
+                cmd = exeProc.GenerarOracleCommand("VAL_USUARIO", ref Verificador, ref dr, Parametros, Valores, ParametrosOut);
+
+                if (Verificador == "0")
+                {
+                    objDatosSesion.Tipo = objSesion.Tipo;
+                    objDatosSesion.Email = objSesion.Email;
+                    objDatosSesion.Password = objSesion.Password;
+                    objDatosSesion.Existe = Convert.ToString(cmd.Parameters["P_EXISTE"].Value);
+                    objDatosSesion.Matricula = Convert.ToString(cmd.Parameters["P_MATRICULA"].Value);
+                    objDatosSesion.Nombre = Convert.ToString(cmd.Parameters["P_NOMBRE"].Value);
+                    objDatosSesion.Registrado = Convert.ToString(cmd.Parameters["P_REGISTRADO"].Value);
+                    objDatosSesion.Id = Convert.ToString(cmd.Parameters["P_ID"].Value);
+                    objDatosSesion.Email2 = Convert.ToString(cmd.Parameters["P_EMAIL_2"].Value);
+                }
+                list.Add(objDatosSesion);
+            }
+            catch (Exception ex)
+            {
+                Verificador = ex.Message;
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+            return list;
+        }
+
+
+        public static List<Btu_Curriculum> DatosRegistroUnach(Btu_Curriculum objSesion, ref string Verificador)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            List<Btu_Curriculum> list = new List<Btu_Curriculum>();
+            Btu_Curriculum objDatosUnach = new Btu_Curriculum();
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { "p_matricula" };
+                object[] Valores = { objSesion.Matricula};
+                string[] ParametrosOut = { "p_paterno", "p_materno", "p_nombre", "p_domicilio", "p_municipio", "p_estado","p_nacimiento", "p_telefono", "p_celular","p_correo",
+                    "p_contrasena", "p_genero", "p_dep", "p_carrera", "p_id_carrera","p_id_registrado", "p_bandera" };
+                cmd = exeProc.GenerarOracleCommand("SEL_ALUMNO_UNACH", ref Verificador, ref dr, Parametros, Valores, ParametrosOut);
+
+                if (Verificador == "0")
+                {
+                    objDatosUnach.Matricula = objSesion.Matricula;
+                    objDatosUnach.Paterno = Convert.ToString(cmd.Parameters["p_paterno"].Value);
+                    objDatosUnach.Materno = Convert.ToString(cmd.Parameters["p_materno"].Value);
+                    objDatosUnach.Nombre = Convert.ToString(cmd.Parameters["p_nombre"].Value);
+                    objDatosUnach.Domicilio = Convert.ToString(cmd.Parameters["p_domicilio"].Value);
+                    objDatosUnach.Municipio = Convert.ToString(cmd.Parameters["p_municipio"].Value);
+                    objDatosUnach.Estado = Convert.ToString(cmd.Parameters["p_estado"].Value);
+                    objDatosUnach.Fecha_Nacimiento = Convert.ToString(cmd.Parameters["p_nacimiento"].Value);
+                    objDatosUnach.Telefono = Convert.ToString(cmd.Parameters["p_telefono"].Value);
+                    objDatosUnach.Celular = Convert.ToString(cmd.Parameters["p_celular"].Value);
+                    objDatosUnach.Correo = Convert.ToString(cmd.Parameters["p_correo"].Value);
+                    objDatosUnach.Contrasena = Convert.ToString(cmd.Parameters["p_contrasena"].Value);
+                    objDatosUnach.Genero = Convert.ToString(cmd.Parameters["p_genero"].Value);
+                    objDatosUnach.Dependencia = Convert.ToString(cmd.Parameters["p_dep"].Value);
+                    objDatosUnach.Carrera = Convert.ToString(cmd.Parameters["p_carrera"].Value);
+                    objDatosUnach.IdCarrera = Convert.ToString(cmd.Parameters["p_id_carrera"].Value);
+                    objDatosUnach.Id = Convert.ToString(cmd.Parameters["p_id_registrado"].Value);
+                }
+                list.Add(objDatosUnach);
+            }
+            catch (Exception ex)
+            {
+                Verificador = ex.Message;
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+            return list;
+        }
     }
 }

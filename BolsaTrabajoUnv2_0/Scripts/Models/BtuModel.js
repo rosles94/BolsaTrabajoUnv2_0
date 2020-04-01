@@ -12,7 +12,12 @@ var btuContext =
     listAreaConocimiento: [],
     listNvlSoft: [],
     listNvlIdi: [],
-    listTipoCurso : [],
+    listTipoCurso: [],
+    listSesionUnach: [],
+    listDatosRegistroUnach: [],
+    listEstAcadGuardados: [],
+    listSoftware: [],
+    listIdioma:[],
 
 
     BuscarEmpresa: function (Rfc, callBackResult) {
@@ -155,7 +160,7 @@ var btuContext =
                 RazonSocial, NombreComercial, Actividad, CodigoPostal, Estado, Ciudad, Colonia, Domicilio, Rfc,
                 Contacto, ContactoCargo, Telefono, Celular, Email, MedioContacto, Contrasena, TipoPersona},
             success: function (resp) {
-                if (resp.Error === false)                    
+                if (resp.Error === false)                
                     callBackResult({ ressult: 'tgp', message: resp.MensajeError });
                 else
                     callBackResult({ ressult: 'notgp', message: resp.MensajeError });
@@ -188,6 +193,8 @@ var btuContext =
     },
 
     GuardarEstudiosAcademicos: function (GradoEst, NombEsc, IdCarrera, AreaConoc, FechaIni, FechaFin, Carrera, DescGradoEstu, callBackResult) {
+        let self = this;
+        self.listEstAcadGuardados.length = 0;
         $.ajax({
             type: "POST",
             url: urlServer + "Btu/GuardarEstudiosAcademicos",
@@ -195,8 +202,19 @@ var btuContext =
                 GradoEst, NombEsc, IdCarrera, AreaConoc, FechaIni, FechaFin, Carrera, DescGradoEstu
             },
             success: function (resp) {
-                if (resp.Error === false)
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listEstAcadGuardados.push({
+                            Tipo: resp.Resultado[i].Tipo, Subtipo: resp.Resultado[i].Subtipo,
+                            Institucion: resp.Resultado[i].Institucion, Id_Carrera: resp.Resultado[i].Id_Carrera,
+                            Carrera: resp.Resultado[i].Carrera, Area: resp.Resultado[i].Area,
+                            Fecha_Inicio: resp.Resultado[i].Fecha_Inicio, Fecha_Fin: resp.Resultado[i].Fecha_Fin,
+                            Descripcion: resp.Resultado[i].Descripcion, Principal: resp.Resultado[i].Principal,
+                            Contacto: resp.Resultado[i].Contacto, Posicion: i
+                        });
+                    }
                     callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
                 else
                     callBackResult({ ressult: 'notgp', message: resp.MensajeError });
             },
@@ -337,7 +355,7 @@ var btuContext =
         $.ajax({
             type: "POST",
             url: urlServer + "Btu/ComboTipoCurso",
-            data: { Subtipo },
+            data: { },
             success: function (resp) {
                 if (resp.Error === false) {
                     for (var i = 0; i < resp.Resultado.length; i++) {
@@ -357,6 +375,8 @@ var btuContext =
     },
 
     GuardarSoftware: function (Software, Nivel, callBackResult) {
+        let self = this;
+        self.listSoftware.length = 0;
         $.ajax({
             type: "POST",
             url: urlServer + "Btu/GuardarSoftware",
@@ -364,8 +384,16 @@ var btuContext =
                 Software, Nivel
             },
             success: function (resp) {
-                if (resp.Error === false)
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listSoftware.push({
+                            Tipo: resp.Resultado[i].Tipo, Subtipo: resp.Resultado[i].Subtipo, Descripcion: resp.Resultado[i].Descripcion,
+                            Principal: resp.Resultado[i].Principal, Fecha_Inicio: resp.Resultado[i].Fecha_Inicio, Fecha_Fin: resp.Resultado[i].Fecha_Fin,
+                            Posicion: i
+                        });
+                    }
                     callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
                 else
                     callBackResult({ ressult: 'notgp', message: resp.MensajeError });
             },
@@ -376,6 +404,8 @@ var btuContext =
     },   
 
     GuardarIdioma: function (Idioma, Nivel, callBackResult) {
+        let self = this;
+        self.listIdioma.length = 0;
         $.ajax({
             type: "POST",
             url: urlServer + "Btu/GuardarIdioma",
@@ -383,8 +413,16 @@ var btuContext =
                 Idioma, Nivel
             },
             success: function (resp) {
-                if (resp.Error === false)
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listIdioma.push({
+                            Tipo: resp.Resultado[i].Tipo, Subtipo: resp.Resultado[i].Subtipo, Descripcion: resp.Resultado[i].Descripcion,
+                            Principal: resp.Resultado[i].Principal, Fecha_Inicio: resp.Resultado[i].Fecha_Inicio, Fecha_Fin: resp.Resultado[i].Fecha_Fin,
+                            Posicion : i
+                        });
+                    }
                     callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
                 else
                     callBackResult({ ressult: 'notgp', message: resp.MensajeError });
             },
@@ -411,10 +449,172 @@ var btuContext =
                 callBackResult({ ressult: 'notgp', message: ex });
             }
         });
-    }
+    },
 
+    IniciarSesion: function (Usuario, Contrasena, Tipo, callBackResult) {
+        let self = this;
+        self.listSesionUnach.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/IniciarSesion",
+            data: {
+                Usuario, Contrasena, Tipo
+            },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listSesionUnach.push({
+                            Existe: resp.Resultado[i].Existe, Matricula: resp.Resultado[i].Matricula, Nombre: resp.Resultado[i].Nombre, Registrado: resp.Resultado[i].Registrado,
+                            Id: resp.Resultado[i].Id, Email2: resp.Resultado[i].Email2
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }                    
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: ex });
+            }
+        });
+    },
 
-    
+    DatosRegistroUnach: function (callBackResult) {
+        let self = this;
+        self.listDatosRegistroUnach.length = 0;
+        $.ajax({
+            beforeSend: function () {
+                $("#cargandoDatos").show();
+            },
+            type: "POST",
+            url: urlServer + "Btu/DatosRegistroUnach",
+            data: {                
+            },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listDatosRegistroUnach.push({
+                            Matricula: resp.Resultado[i].Matricula, Paterno: resp.Resultado[i].Paterno,
+                            Materno: resp.Resultado[i].Materno, Nombre: resp.Resultado[i].Nombre,
+                            Domicilio: resp.Resultado[i].Domicilio, Municipio: resp.Resultado[i].Municipio,
+                            Estado: resp.Resultado[i].Estado, FechaNacimiento: resp.Resultado[i].Fecha_Nacimiento,
+                            Telefono: resp.Resultado[i].Telefono, Celular: resp.Resultado[i].Celular,
+                            Correo: resp.Resultado[i].Correo, Contrasena: resp.Resultado[i].Contrasena,
+                            Genero: resp.Resultado[i].Genero, Dependencia: resp.Resultado[i].Dependencia,
+                            Carrera: resp.Resultado[i].Carrera, IdCarrera: resp.Resultado[i].IdCarrera,
+                            Id: resp.Resultado[i].Id
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: ex });
+            },
+            complete: function () {
+                $("#cargandoDatos").hide();
+                $("#formularioDatos").show();
+            }
+        });
+    },
+
+    EliminarEstudioAcademico: function (Posicion, callBackResult) {
+        let self = this;
+        self.listEstAcadGuardados.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/EliminarEstudioAcademico",
+            data: {
+                Posicion
+            },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listEstAcadGuardados.push({
+                            Tipo: resp.Resultado[i].Tipo, Subtipo: resp.Resultado[i].Subtipo,
+                            Institucion: resp.Resultado[i].Institucion, Id_Carrera: resp.Resultado[i].Id_Carrera,
+                            Carrera: resp.Resultado[i].Carrera, Area: resp.Resultado[i].Area,
+                            Fecha_Inicio: resp.Resultado[i].Fecha_Inicio, Fecha_Fin: resp.Resultado[i].Fecha_Fin,
+                            Descripcion: resp.Resultado[i].Descripcion, Principal: resp.Resultado[i].Principal,
+                            Contacto: resp.Resultado[i].Contacto, Posicion: i
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: ex });
+            }
+        });
+    },
+
+    EliminarSoftware: function (Posicion, callBackResult) {
+        let self = this;
+        self.listSoftware.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/EliminarSoftware",
+            data: {
+                Posicion
+            },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listSoftware.push({
+                            Tipo: resp.Resultado[i].Tipo, Subtipo: resp.Resultado[i].Subtipo,
+                            Institucion: resp.Resultado[i].Institucion, Id_Carrera: resp.Resultado[i].Id_Carrera,
+                            Carrera: resp.Resultado[i].Carrera, Area: resp.Resultado[i].Area,
+                            Fecha_Inicio: resp.Resultado[i].Fecha_Inicio, Fecha_Fin: resp.Resultado[i].Fecha_Fin,
+                            Descripcion: resp.Resultado[i].Descripcion, Principal: resp.Resultado[i].Principal,
+                            Contacto: resp.Resultado[i].Contacto, Posicion: i
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: ex });
+            }
+        });
+    },
+
+    EliminarIdioma: function (Posicion, callBackResult) {
+        let self = this;
+        self.listIdioma.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/EliminarIdioma",
+            data: {
+                Posicion
+            },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listIdioma.push({
+                            Tipo: resp.Resultado[i].Tipo, Subtipo: resp.Resultado[i].Subtipo,
+                            Institucion: resp.Resultado[i].Institucion, Id_Carrera: resp.Resultado[i].Id_Carrera,
+                            Carrera: resp.Resultado[i].Carrera, Area: resp.Resultado[i].Area,
+                            Fecha_Inicio: resp.Resultado[i].Fecha_Inicio, Fecha_Fin: resp.Resultado[i].Fecha_Fin,
+                            Descripcion: resp.Resultado[i].Descripcion, Principal: resp.Resultado[i].Principal,
+                            Contacto: resp.Resultado[i].Contacto, Posicion: i
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: ex });
+            }
+        });
+    }    
 };
 
 

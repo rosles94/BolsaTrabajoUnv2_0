@@ -3,7 +3,27 @@
     ViewBag.Title = "DatosCandidato";
 }
 
-<div class="container-fluid py-5" ng-init="ctrl.CargarDatosPrincipales()">
+    <div id="cargandoDatos" class="row py-5" style="display:none">
+        <div class="col-md-5">
+
+        </div>
+        <div class="col-md-7">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-border text-warning" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-border text-warning" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+<div id="formularioDatos" class="container-fluid py-5" ng-init="ctrl.CargarDatosPrincipales()" style="display:none">
     <div class="row">
         <div class="col-md-2">
 
@@ -13,10 +33,10 @@
         </div>
         <div class="col-md-8">
             <ul>
-                <li>Matrícula: </li>
-                <li>Carrera: </li>
-                <li>Áreas de Interes: </li>
-                <li>Objetivo Profesional: </li>
+                <li>Matrícula: {{ctrl.Matricula}} </li>
+                <li>Carrera: {{ctrl.DescCarrera}} </li>
+                <li>Áreas de Interes: {{ctrl.AreaInt}} </li>
+                <li>Objetivo Profesional: {{ctrl.ObjPersonal}}</li>
             </ul>
         </div>
     </div>
@@ -197,12 +217,12 @@
                             <div class="col-md-6">
                                 <label>Genero</label>
                                 <div class="form-check">
-                                    <input class="form-check-input" ng-model="ctrl.SexoM" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+                                    <input class="form-check-input" ng-model="ctrl.SexoM" type="radio" name="exampleRadios" id="exampleRadios1" value="M" >
                                     <label class="form-check-label" for="exampleRadios1">
                                         Masculino
                                     </label>
                                     <br />
-                                    <input class="form-check-input" ng-model="ctrl.SexoF" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+                                    <input class="form-check-input" ng-model="ctrl.SexoF" type="radio" name="exampleRadios" id="exampleRadios1" value="F" >
                                     <label class="form-check-label" for="exampleRadios1">
                                         Femenino
                                     </label>
@@ -269,7 +289,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Carrera</span>
                                     </div>
-                                    <select ng-model="ctrl.Carrera" id="Carrera" name="Carrera" ng-change="ctrl.GlobalInfoAcademica()" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listCarreras"  style="max-width:100%" required></select>
+                                    <select ng-model="ctrl.Carrera" id="Carrera" name="Carrera" ng-change="ctrl.GlobalInfoAcademica()" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listCarreras" style="max-width:100%" required></select>
                                 </div>
                                 <span style="color:red" ng-show="myForm2.Carrera.$invalid" />
                                 <span ng-show="myForm2.Carrera.$error.required">*Carrera requerida</span>
@@ -279,7 +299,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Área de Conocimientos</span>
                                     </div>
-                                    <select ng-model="ctrl.AreaConoc" id="AreaConoc" name="AreaConoc" ng-change="ctrl.GlobalInfoAcademica()" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listAreaConocimiento" ng-click="ctrl.ComboMunicipios()" style="max-width:100%" required></select>
+                                    <select ng-model="ctrl.AreaConoc" id="AreaConoc" name="AreaConoc" ng-change="ctrl.GlobalInfoAcademica()" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listAreaConocimiento" style="max-width:100%" required></select>
                                 </div>
                                 <span style="color:red" ng-show="myForm2.AreaConoc.$invalid" />
                                 <span ng-show="myForm2.AreaConoc.$error.required">*Área requerida</span>
@@ -289,12 +309,12 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Fecha Inicio</span>
                                     </div>
-                                    <input ng-model="ctrl.FechaIniCarrera" id="FechaIniCarrera" name="FechaIniCarrera" type="date" ng-change="ctrl.GlobalInfoAcademica()" class="form-control"  aria-label="FechaInicio" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.FechaIniCarrera" id="FechaIniCarrera" name="FechaIniCarrera" type="date" ng-change="ctrl.GlobalInfoAcademica()" class="form-control" aria-label="FechaInicio" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm2.FechaIniCarrera.$invalid" />
                                 <span ng-show="myForm2.FechaIniCarrera.$error.required">*Fecha Inicio requerida</span>
                             </div>
-                            <div class="col-md-6 py-2">
+                            <div class="col-md-6 py-3">
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Fecha Fin</span>
@@ -303,18 +323,50 @@
                                 </div>
                                 <span style="color:red" ng-show="myForm2.FechaFinCarrera.$invalid" />
                                 <span ng-show="myForm2.FechaFinCarrera.$error.required">*Fecha Fin requerida</span>
-                            </div>                            
-                            <div class="col-md-1">
-                                <input id="datosContactoRegresar" type="button" class="btn btn-info" value="Regresar" />
                             </div>
-                            <div class="col-md-9">
-                            </div>
-                            <div class="col-md-1">
-                                <input id="datosContacto" type="button" class="btn btn-info" value="Continuar"
+
+                            <div class="col-md-2 py-2">
+                                <input id="datosContacto" type="button" class="btn btn-success" value="Guardar Datos Academicos"
                                        ng-disabled="myForm2.GradoEst.$invalid || myForm2.NombEsc.$invalid
                                        || myForm2.Carrera.$invalid || myForm2.AreaConoc.$invalid
                                        || myForm2.FechaIniCarrera.$invalid || myForm2.FechaFinCarrera.$invalid" ng-click="ctrl.GuardarEstudiosAcademicos()" />
                             </div>
+                            <div class="col-md-10">
+
+                            </div>
+
+                            <div class="col-md-12 py-2">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Grado de estudio</th>
+                                            <th scope="col">Institución</th>
+                                            <th scope="col">Carrera</th>
+                                            <th scope="col">Principal</th>
+                                            <th scope="col">Eliminar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody ng-repeat="list in ctrl.listEstAcadGuardados">
+                                        <tr>
+                                            <td>{{list.Descripcion}}</td>
+                                            <td>{{list.Institucion}}</td>
+                                            <td>{{list.Carrera}}</td>
+                                            <td>{{list.Principal}}</td>
+                                            <td><a class="fas fa-trash" ng-click="ctrl.EliminarEstudioAcademico(list.Posicion)"></a></td>
+                                        </tr>                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                           
+                            <div class="col-md-1 py-3">
+                                <input id="datosContactoRegresar" type="button" class="btn btn-info" value="Regresar" />
+                            </div>
+                            <div class="col-md-9 py-3">
+                            </div>
+                            <div class="col-md-1 py-3">
+                                <input id="datosContactoContinuar" type="button" class="btn btn-info" value="Continuar" />
+                            </div>
+                            
                         </div>
                     </form>
                 </div>
@@ -340,8 +392,32 @@
                                     <select ng-model="ctrl.NivelSoftware" id="NivelSoftware" name="NivelSoftware" ng-change="" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listNivelSoftware" style="max-width:100%" required></select>
                                 </div>
                                 @*<span style="color:red" ng-show="myForm3.Contrasena2.$invalid" />
-                                <span ng-show="myForm3.Contrasena2.$error.required">*Razón social requerida</span>*@
+            <span ng-show="myForm3.Contrasena2.$error.required">*Razón social requerida</span>*@
                             </div>
+
+                            <div class="col-md-2">
+                                <input type="button" class="btn btn-success" value="Agregar Software" ng-click="ctrl.GuardarSoftware()" />
+                            </div>
+
+                            <div class="col-md-12 py-2">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Software</th>
+                                            <th scope="col">Nivel</th>
+                                            <th scope="col">Eliminar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody ng-repeat="list in ctrl.listSoftware">
+                                        <tr>
+                                            <td>{{list.Descripcion}}</td>
+                                            <td>{{list.Subtipo}}</td>                                            
+                                            <td><a class="fas fa-trash" ng-click="ctrl.EliminarSoftware(list.Posicion)"></a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
 
                             <div class="col-md-6 py-2">
                                 <div class="input-group mb-3 ">
@@ -361,8 +437,32 @@
                                     <select ng-model="ctrl.NivelIdioma" id="NivelIdioma" name="NivelIdioma" ng-change="" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listNivelIdioma" style="max-width:100%" required></select>
                                 </div>
                                 @*<span style="color:red" ng-show="myForm3.Contrasena2.$invalid" />
-                                <span ng-show="myForm3.Contrasena2.$error.required">*Razón social requerida</span>*@
+            <span ng-show="myForm3.Contrasena2.$error.required">*Razón social requerida</span>*@
                             </div>
+
+                            <div class="col-md-2">
+                                <input type="button" class="btn btn-success" value="Agregar Idioma" ng-click="ctrl.GuardarIdioma()" />
+                            </div>
+
+                            <div class="col-md-12 py-2">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Idioma</th>
+                                            <th scope="col">Nivel</th>
+                                            <th scope="col">Eliminar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody ng-repeat="list in ctrl.listEstAcadGuardados">
+                                        <tr>
+                                            <td>{{list.Descripcion}}</td>
+                                            <td>{{list.Subtipo}}</td>                                            
+                                            <td><a class="fas fa-trash" ng-click="ctrl.EliminarIdioma(list.Posicion)"></a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
                             <div class="col-md-1">
                                 <input id="infoLogRegresar" type="button" class="btn btn-info" value="Regresar" />
                             </div>
@@ -429,6 +529,11 @@
                                 <span style="color:red" ng-show="myForm3.ReferenciaTrabajo.$invalid" />
                                 <span ng-show="myForm3.ReferenciaTrabajo.$error.required">*Datos de Contato requeridos</span>
                             </div>
+                            <div class="col-md-12">
+                                <input type="button" class="btn btn-success" value="Guardar" ng-click="ctrl.GuardarExperienciaProfesional()"
+                                       ng-disabled="myForm3.NombreEmpresa.$invalid || myForm3.FechaIniExpProf.$invalid|| myForm3.FechaFinExpProf.$invalid
+                                       || myForm3.DescAct.$invalid || myForm3.ReferenciaTrabajo.$invalid" />
+                            </div>
                             <div class="col-md-1">
                                 <input id="infoLogRegresar" type="button" class="btn btn-info" value="Regresar" />
                             </div>
@@ -436,9 +541,7 @@
 
                             </div>
                             <div class="col-md-1">
-                                <input type="button" class="btn btn-info" value="Guardar" ng-click="ctrl.RegistrarDatosEmpresa()"
-                                       ng-disabled="myForm3.NombreEmpresa.$invalid || myForm3.FechaIniExpProf.$invalid|| myForm3.FechaFinExpProf.$invalid
-                                       || myForm3.DescAct.$invalid || myForm3.ReferenciaTrabajo.$invalid" />
+                                <input id="infoLogContinuar" type="button" class="btn btn-info" value="Continuar" />
                             </div>
                         </div>
                     </form>

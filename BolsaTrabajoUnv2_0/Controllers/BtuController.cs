@@ -75,6 +75,13 @@ namespace BolsaTrabajoUnv2_0.Controllers
                     objResultado.MensajeError = "";
                     objResultado.Resultado = null;
                 }
+                else
+                {
+                    objResultado.Error = true;
+                    objResultado.MensajeError = Verificador;
+                    objResultado.Resultado = null;
+
+                }
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -164,7 +171,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 }
                 objResultado.Error = false;
                 objResultado.MensajeError = "";
-                objResultado.Resultado = null;
+                objResultado.Resultado = list;
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex )
@@ -270,6 +277,179 @@ namespace BolsaTrabajoUnv2_0.Controllers
             }
         }
 
+        public JsonResult GuardarExpProfesional()
+        {
+            try
+            {
+
+            }
+            catch(Exception ex)
+            {
+
+            }
+        }
+
+
+        public JsonResult DatosRegistroUnach()
+        {
+            Btu_Curriculum objDatosUnach = new Btu_Curriculum();
+            List<Btu_Sesion> list = new List<Btu_Sesion>();
+            ResultadoBtuCurriculum objResultado = new ResultadoBtuCurriculum();
+            list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
+            string Verificador = string.Empty;
+            try
+            {
+                objDatosUnach.Matricula = list[0].Matricula;
+                objResultado.Resultado = DataContext.DatosRegistroUnach(objDatosUnach, ref Verificador);
+                if(Verificador == "0")
+                {
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";
+                }
+                else
+                {
+                    objResultado.Error = true;
+                    objResultado.MensajeError = Verificador;
+                }
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult EliminarEstudioAcademico(int Posicion)
+        {
+            List<Btu_Curriculum_Informacion> list = new List<Btu_Curriculum_Informacion>();
+            ResultadoCurriculmInformacion objResultado = new ResultadoCurriculmInformacion();
+            try
+            {
+                if(System.Web.HttpContext.Current.Session["SessionInformacionAcademicaCandidato"] != null)
+                {
+                    list = (List<Btu_Curriculum_Informacion>)System.Web.HttpContext.Current.Session["SessionInformacionAcademicaCandidato"];
+                    list.RemoveAt(Posicion);
+                    System.Web.HttpContext.Current.Session["SessionInformacionAcademicaCandidato"] = list;
+                    objResultado.Resultado = list;
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";                    
+                }
+                else
+                {
+                    objResultado.Resultado = null;
+                    objResultado.Error = true;
+                    objResultado.MensajeError = "No hay elementos en la lista";
+                }
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Resultado = null;
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult EliminarSoftware(int Posicion)
+        {
+            List<Btu_Curriculum_Informacion> list = new List<Btu_Curriculum_Informacion>();
+            ResultadoCurriculmInformacion objResultado = new ResultadoCurriculmInformacion();
+            try
+            {
+                if (System.Web.HttpContext.Current.Session["SessionInformacionSoftwareCandidato"] != null)
+                {
+                    list = (List<Btu_Curriculum_Informacion>)System.Web.HttpContext.Current.Session["SessionInformacionSoftwareCandidato"];
+                    list.RemoveAt(Posicion);
+                    System.Web.HttpContext.Current.Session["SessionInformacionSoftwareCandidato"] = list;
+                    objResultado.Resultado = list;
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";
+                }
+                else
+                {
+                    objResultado.Resultado = null;
+                    objResultado.Error = true;
+                    objResultado.MensajeError = "No hay elementos en la lista";
+                }
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                objResultado.Resultado = null;
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult EliminarIdioma(int Posicion)
+        {
+            List<Btu_Curriculum_Informacion> list = new List<Btu_Curriculum_Informacion>();
+            ResultadoCurriculmInformacion objResultado = new ResultadoCurriculmInformacion();
+            try
+            {
+                if (System.Web.HttpContext.Current.Session["SessionInformacionIdiomaCandidato"] != null)
+                {
+                    list = (List<Btu_Curriculum_Informacion>)System.Web.HttpContext.Current.Session["SessionInformacionIdiomaCandidato"];
+                    list.RemoveAt(Posicion);
+                    System.Web.HttpContext.Current.Session["SessionInformacionIdiomaCandidato"] = list;
+                    objResultado.Resultado = list;
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";
+                }
+                else
+                {
+                    objResultado.Resultado = null;
+                    objResultado.Error = true;
+                    objResultado.MensajeError = "No hay elementos en la lista";
+                }
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                objResultado.Resultado = null;
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+        //Metodos para la vista Btu
+        public JsonResult IniciarSesion(string Usuario, string Contrasena ,string Tipo)
+        {
+            ResultadoSesion objResultado = new ResultadoSesion();
+            Btu_Sesion objSesion = new Btu_Sesion();
+            string Verificador = string.Empty;
+            try
+            {
+                objSesion.Email = Usuario;
+                objSesion.Password = Contrasena;
+                objSesion.Tipo = Tipo;
+                objResultado.Resultado = DataContext.InciarSesion(objSesion, ref Verificador);
+                System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] = objResultado.Resultado;
+                if (Verificador == "0")
+                {
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";
+                }
+                else
+                {
+                    objResultado.Error = true;
+                    objResultado.MensajeError = Verificador;
+                }
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
         //Combos
         public JsonResult ComboEstados() //Se utiliza en la vista Registrar Empresa,
         {
@@ -488,6 +668,11 @@ namespace BolsaTrabajoUnv2_0.Controllers
         }
 
         public ActionResult PanelEmpresas()
+        {
+            return View();
+        }
+
+        public ActionResult Btu()
         {
             return View();
         }
