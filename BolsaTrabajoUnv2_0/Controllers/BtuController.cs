@@ -486,5 +486,10 @@ namespace BolsaTrabajoUnv2_0.Controllers
         {
             return View();
         }
+
+        public ActionResult PanelEmpresas()
+        {
+            return View();
+        }
     }
 }

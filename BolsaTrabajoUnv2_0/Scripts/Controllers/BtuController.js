@@ -101,7 +101,7 @@
                             alert("La empresa ya ha sido registrada, comuniquese con el personal de BTU para más detalles");
                         break;
                     case "notgp":
-                        alert(resp.MensajeError);
+                        alert(resp.message);
                         break;
                     default:
                         break;
@@ -131,7 +131,7 @@
                                 alert("Los datos se han guardado correctamente");
                                 break;
                             case "notgp":
-                                alert(resp.MensajeError);
+                                alert(resp.message);
                                 break;
                             default:
                                 break;
@@ -150,7 +150,7 @@
                         self.listTipoPersona = btuContext.listTipoPersona;
                         break;
                     case "notgp":
-                        alert(resp.MensajeError);
+                        alert(resp.message);
                         break;
                     default:
                         break;
@@ -166,7 +166,7 @@
                         self.listMedioContacto = btuContext.listMedioContacto;
                         break;
                     case "notgp":
-                        alert(resp.MensajeError);
+                        alert(resp.message);
                         break;
                     default:
                         break;
@@ -195,6 +195,34 @@
             }
         };
 
+        this.GlobalInfoAcademica = () => {
+            if (self.GradoEst !== undefined && self.NombEsc !== undefined && self.Carrera !== undefined && self.AreaConoc !== undefined && self.FechaIniCarrera !== undefined && self.FechaFinCarrera !== undefined &&
+                self.GradoEst !== '' && self.NombEsc !== '' && self.Carrera !== '' && self.AreaConoc !== '' && self.FechaIniCarrera !== '' && self.FechaFinCarrera !== '') {
+                $("#estuacad1").show();
+                $("#estuacad2").hide();
+                $("#globalEstuAcd").css('background-color', 'green');
+            }
+            else {
+                $("#estuacad1").hide();
+                $("#estuacad2").show();
+                $("#globalEstuAcd").css('background-color', 'yellow');
+            }
+        };
+
+        this.GlobalExpProf = () => {
+            if (self.NombreEmpresa !== undefined && self.FechaIniExpProf !== undefined && self.FechaFinExpProf !== undefined && self.DescAct !== undefined && self.ReferenciaTrabajo !== undefined && 
+                self.NombreEmpresa !== '' && self.FechaIniExpProf !== '' && self.FechaFinExpProf !== '' && self.DescAct !== '' && self.ReferenciaTrabajo !== '') {                
+                $("#expprof1").show();
+                $("#expprof2").hide();
+                $("#globalExpProf").css('background-color', 'green');
+            }
+            else {
+                $("#expprof1").hide();
+                $("#expprof2").show();
+                $("#globalExpProf").css('background-color', 'yellow');
+            }
+        };
+
         this.CargarDatosPrincipales = () => {
             ComboEstados();
             ComboGradoEstudios();
@@ -212,7 +240,7 @@
                     case "tgp":                        
                         break;
                     case "notgp":
-                        alert(resp.MensajeError);
+                        alert(resp.message);
                         break;
                     default:
                         break;
@@ -232,7 +260,7 @@
                         case "tgp":
                             break;
                         case "notgp":
-                            alert(resp.MensajeError);
+                            alert(resp.message);
                             break;
                         default:
                             break;
@@ -262,7 +290,7 @@
                         self.listEstados = btuContext.listEstados;
                         break;
                     case "notgp":
-                        alert(resp.MensajeError);
+                        alert(resp.message);
                         break;
                     default:
                         break;
@@ -278,7 +306,7 @@
                         self.listMunicipios = btuContext.listMunicipios;
                         break;
                     case "notgp":
-                        alert(resp.MensajeError);
+                        alert(resp.message);
                         break;
                     default:
                         break;
@@ -294,7 +322,7 @@
                         self.listGradoEstudios = btuContext.listGradoEstudios;
                         break;
                     case "notgp":
-                        alert(resp.MensajeError);
+                        alert(resp.message);
                         break;
                     default:
                         break;
@@ -310,7 +338,7 @@
                         self.listCarreras = btuContext.listCarreras;
                         break;
                     case "notgp":
-                        alert(resp.MensajeError);
+                        alert(resp.message);
                         break;
                     default:
                         break;
@@ -326,7 +354,7 @@
                         self.listAreaConocimiento = btuContext.listAreaConocimiento;
                         break;
                     case "notgp":
-                        alert(resp.MensajeError);
+                        alert(resp.message);
                         break;
                     default:
                         break;
@@ -342,7 +370,7 @@
                         self.listNivelSoftware = btuContext.listNvlSoft;
                         break;
                     case "notgp":
-                        alert(resp.MensajeError);
+                        alert(resp.message);
                         break;
                     default:
                         break;
@@ -358,7 +386,7 @@
                         self.listNivelIdioma = btuContext.listNvlIdi;
                         break;
                     case "notgp":
-                        alert(resp.MensajeError);
+                        alert(resp.message);
                         break;
                     default:
                         break;
@@ -374,7 +402,7 @@
                         self.listTipoCurso = btuContext.listTipoCurso;
                         break;
                     case "notgp":
-                        alert(resp.MensajeError);
+                        alert(resp.message);
                         break;
                     default:
                         break;
