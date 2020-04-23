@@ -53,6 +53,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -129,7 +130,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Data\CursorDataContext.cs" />
     <Compile Include="Data\DataContext.cs" />
-    <Compile Include="Data\GuardarDartaContext.cs" />
+    <Compile Include="Data\GuardarDataContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -152,6 +153,7 @@
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\imagenPerfil.css" />
     <Content Include="Content\loaderCircle.css" />
     <Content Include="favicon.ico" />
     <Content Include="Icons\fontawesome-free-5.13.0-web\css\all.css" />
@@ -1782,6 +1784,9 @@
     <Content Include="Icons\fontawesome-free-5.13.0-web\webfonts\fa-solid-900.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Imagenes\ImagenesSitio\BTU_Encabezado.jpg" />
+    <Content Include="Imagenes\ImagenesSitio\sysweb.png" />
+    <Content Include="Imagenes\ImgProfileCv\E161113.jpg" />
     <Content Include="Scripts\angular-animate.js" />
     <Content Include="Scripts\angular-animate.min.js" />
     <Content Include="Scripts\angular-aria.js" />
@@ -1818,6 +1823,7 @@
     <Content Include="Scripts\esm\popper-utils.min.js" />
     <Content Include="Scripts\esm\popper.js" />
     <Content Include="Scripts\esm\popper.min.js" />
+    <Content Include="Scripts\funcionesDatosCandidatos.js" />
     <Content Include="Scripts\funcionesRegistrarEmpresa.js" />
     <Content Include="Scripts\global.js" />
     <Content Include="Scripts\i18n\angular-locale_af-na.js" />
@@ -2743,6 +2749,8 @@
     <Content Include="Views\Btu\DatosCandidato.cshtml" />
     <Content Include="Views\Btu\PanelEmpresas.cshtml" />
     <Content Include="Views\Btu\Btu.cshtml" />
+    <Content Include="Views\Btu\PanelCandidato.cshtml" />
+    <Content Include="Views\Btu\PanelAdministrador.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

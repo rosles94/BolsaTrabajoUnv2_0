@@ -2,46 +2,50 @@
 @{
     ViewBag.Title = "DatosCandidato";
 }
+    <link href="~/Content/imagenPerfil.css" rel="stylesheet" />
 
-    <div id="cargandoDatos" class="row py-5" style="display:none">
-        <div class="col-md-5">
+<div id="cargandoDatos" class="row py-5" style="display:none">
+    <div class="col-md-5">
 
+    </div>
+    <div class="col-md-7">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
         </div>
-        <div class="col-md-7">
-            <div class="spinner-border text-primary" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-            <div class="spinner-border text-warning" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-            <div class="spinner-border text-primary" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-            <div class="spinner-border text-warning" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
+        <div class="spinner-border text-warning" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <div class="spinner-border text-warning" role="status">
+            <span class="sr-only">Loading...</span>
         </div>
     </div>
+</div>
 
 <div id="formularioDatos" class="container-fluid py-5" ng-init="ctrl.CargarDatosPrincipales()" style="display:none">
     <div class="row">
-        <div class="col-md-2">
-
+        <div class="col-md-2">            
         </div>
-        <div class="col-md-2">
-
+        <div class="col-md-2">            
+            <img id="imgCadidato" class="user">
+            <label for="cargarFoto" class="fotoPerilCv">Agregar Foto de Perfil</label>
+            <input type="file" id="cargarFoto" multiple accept="image/*" />
+            <br />
+            <input type="button" ng-click="ctrl.cargarFotoPerfilCv()" value="Cargar Imagen" />
         </div>
         <div class="col-md-8">
             <ul>
                 <li>Matrícula: {{ctrl.Matricula}} </li>
                 <li>Carrera: {{ctrl.DescCarrera}} </li>
                 <li>Áreas de Interes: {{ctrl.AreaInt}} </li>
-                <li>Objetivo Profesional: {{ctrl.ObjPersonal}}</li>
+                <li>Objetivo Profesional: {{ctrl.ObjPersonal}}</li>                
             </ul>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row py-2">
         <div class="col-md-2">
             <ul class="list-group">
                 <li id="globalInfoPer" class="list-group-item d-flex justify-content-between align-items-center" style="background-color:yellow">
@@ -149,7 +153,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Fecha de Nacimiento</span>
                                     </div>
-                                    <input ng-model="ctrl.FecNac" id="FecNac" name="FecNac" ng-change="ctrl.GlobalInfoPersonal()" type="date" class="form-control" placeholder="" aria-label="FechaNacimiento" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.FecNac" id="FecNac" name="FecNac" ng-change="ctrl.GlobalInfoPersonal()" class="form-control" type="date" aria-label="FechaNacimiento" aria-describedby="basic-addon1" style="max-width:100%"  required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.FecNac.$invalid" />
                                 <span ng-show="myForm.FecNac.$error.required">*Fecha de Nacimiento requerida</span>
@@ -159,7 +163,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Estado</span>
                                     </div>
-                                    <select name="Estado" id="Estado" ng-model="ctrl.Estado" ng-change="ctrl.GlobalInfoPersonal()" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listEstados" ng-click="ctrl.ComboMunicipios()" style="max-width:100%" required></select>
+                                    <select name="Estado" id="Estado" ng-model="ctrl.Estado" ng-change="ctrl.GlobalInfoPersonal();ctrl.ComboMunicipios()" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listEstados" ng-click="ctrl.ComboMunicipios()" style="max-width:100%" required></select>
                                 </div>
                                 <span style="color:red" ng-show="myForm.Estado.$invalid" />
                                 <span ng-show="myForm.Estado.$error.required">*Estado requerido</span>
@@ -209,24 +213,25 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">E-mail</span>
                                     </div>
-                                    <input ng-model="ctrl.Email" id="Email" name="Email" type="text" ng-change="ctrl.GlobalInfoPersonal()" class="form-control" placeholder="E-mail" aria-label="Email" aria-describedby="basic-addon1" style="max-width:42.5%" required>
+                                    <input ng-model="ctrl.Email" id="Email" name="Email" type="text" ng-change="ctrl.GlobalInfoPersonal()" class="form-control" placeholder="E-mail" aria-label="Email" aria-describedby="basic-addon1" style="max-width:44.5%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.Email.$invalid" />
                                 <span ng-show="myForm.Email.$error.required">*E-mail requerido</span>
                             </div>
                             <div class="col-md-6">
-                                <label>Genero</label>
-                                <div class="form-check">
-                                    <input class="form-check-input" ng-model="ctrl.SexoM" type="radio" name="exampleRadios" id="exampleRadios1" value="M" >
-                                    <label class="form-check-label" for="exampleRadios1">
-                                        Masculino
-                                    </label>
-                                    <br />
-                                    <input class="form-check-input" ng-model="ctrl.SexoF" type="radio" name="exampleRadios" id="exampleRadios1" value="F" >
-                                    <label class="form-check-label" for="exampleRadios1">
-                                        Femenino
-                                    </label>
+
+                                <div class="input-group">
+                                    <label class="input-group-text" for="radioGender">Genero</label>
+                                    <div class="custom-control custom-radio py-2">
+                                        <input ng-model="ctrl.Hombre" type="radio" id="radioMale" name="radioGender" class="custom-control-input">
+                                        <label class="custom-control-label" for="radioMale">Masculino</label>
+                                    </div>
+                                    <div class="custom-control custom-radio py-2">
+                                        <input ng-model="ctrl.Mujer" type="radio" id="radioFemale" name="radioGender" class="custom-control-input">
+                                        <label class="custom-control-label" for="radioFemale">Femenino</label>
+                                    </div>
                                 </div>
+
                             </div>
                             <div class="col-md-12 py-2">
                                 <div class="input-group mb-3">
@@ -249,12 +254,12 @@
                                 <span ng-show="myForm.ObjPersonal.$error.required">*Objetivo Personal requerido</span>
                             </div>
                             <div class="col-md-1">
-                                <input id="informacionEmpresa" type="button" class="btn btn-info" value="Continuar"
+                                <input id="btninformacionCandidato" type="button" class="btn btn-info" value="Continuar"
                                        ng-disabled="myForm.Matricula.$invalid || myForm.NombreCandidato.$invalid || myForm.ApePatCandidato.$invalid
                                        || myForm.ApeMatCandidato.$invalid || myForm.FecNac.$invalid || myForm.Estado.$invalid
                                        || myForm.Municipio.$invalid || myForm.Domicilio.$invalid || myForm.TelCel.$invalid|| myForm.TelAd.$invalid
-                                       || myForm.Email.$invalid|| myForm.AreaInt.$invalid|| myForm.ObjPersonal.$invalid" 
-                                       ng-click="ctrl.GuardarInformacionCandidato()"/>
+                                       || myForm.Email.$invalid|| myForm.AreaInt.$invalid|| myForm.ObjPersonal.$invalid"
+                                       ng-click="ctrl.GuardarInformacionCandidato()" />
                             </div>
 
                         </div>
@@ -264,6 +269,19 @@
                 <div class="tab-pane fade" id="estAcad" role="tabpanel" aria-labelledby="profile-tab">
                     <form name="myForm2">
                         <div class="row">
+
+                            <div class="col-md-6 py-3">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">Institución</span>
+                                    </div>
+                                    <select class="custom-select" style="max-width:100%" ng-model="ctrl.instExt" ng-change="ctrl.GlobalInfoAcademica(); ctrl.TipoInstitucionEducativa()">
+                                        <option value="001UN">UNACH</option>
+                                        <option value="002EXT">OTRA</option>
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="col-md-6 py-3">
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
@@ -274,6 +292,30 @@
                                 <span style="color:red" ng-show="myForm2.GradoEst.$invalid" />
                                 <span ng-show="myForm2.GradoEst.$error.required">*Grado de Estudios requerido</span>
                             </div>
+
+
+                            <div id="estInt" class="col-md-6 py-3">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">Carrera</span>
+                                    </div>
+                                    <select ng-model="ctrl.Carrera" id="Carrera" name="Carrera" ng-change="ctrl.GlobalInfoAcademica()" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listCarreras" style="max-width:100%" required></select>
+                                </div>
+                                <span style="color:red" ng-show="myForm2.Carrera.$invalid" />
+                                <span ng-show="myForm2.Carrera.$error.required">*Carrera requerida</span>
+                            </div>
+
+                            <div id="estExt" class="col-md-6 py-3" style="display:none">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">Carrera</span>
+                                    </div>
+                                    <input ng-model="ctrl.CarreraExt" id="CarreraExt" name="CarreraExt" type="text" ng-change="ctrl.GlobalInfoAcademica()" class="form-control" placeholder="" aria-label="NombreCarreraExt" aria-describedby="basic-addon1" style="max-width:100%" required />
+                                </div>
+                                <span style="color:red" ng-show="myForm2.CarreraExt.$invalid" />
+                                <span ng-show="myForm2.CarreraExt.$error.required">*Carrera requerida</span>
+                            </div>
+
                             <div class="col-md-6 py-3">
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
@@ -284,22 +326,12 @@
                                 <span style="color:red" ng-show="myForm2.NombEsc.$invalid" />
                                 <span ng-show="myForm2.NombEsc.$error.required">*Institución Educativa requerida</span>
                             </div>
-                            <div class="col-md-6 py-3">
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="basic-addon1">Carrera</span>
-                                    </div>
-                                    <select ng-model="ctrl.Carrera" id="Carrera" name="Carrera" ng-change="ctrl.GlobalInfoAcademica()" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listCarreras" style="max-width:100%" required></select>
-                                </div>
-                                <span style="color:red" ng-show="myForm2.Carrera.$invalid" />
-                                <span ng-show="myForm2.Carrera.$error.required">*Carrera requerida</span>
-                            </div>
-                            <div class="col-md-6 py-3">
+                            <div class="col-md-12 py-3">
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Área de Conocimientos</span>
                                     </div>
-                                    <select ng-model="ctrl.AreaConoc" id="AreaConoc" name="AreaConoc" ng-change="ctrl.GlobalInfoAcademica()" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listAreaConocimiento" style="max-width:100%" required></select>
+                                    <select ng-model="ctrl.AreaConoc" id="AreaConoc" name="AreaConoc" ng-change="ctrl.GlobalInfoAcademica()" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listAreaConocimiento" style="max-width:36.8%" required></select>
                                 </div>
                                 <span style="color:red" ng-show="myForm2.AreaConoc.$invalid" />
                                 <span ng-show="myForm2.AreaConoc.$error.required">*Área requerida</span>
@@ -309,7 +341,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Fecha Inicio</span>
                                     </div>
-                                    <input ng-model="ctrl.FechaIniCarrera" id="FechaIniCarrera" name="FechaIniCarrera" type="date" ng-change="ctrl.GlobalInfoAcademica()" class="form-control" aria-label="FechaInicio" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.FechaIniCarrera" id="FechaIniCarrera" name="FechaIniCarrera" type="date" lang="es-mx" ng-change="ctrl.GlobalInfoAcademica()" class="form-control" aria-label="FechaInicio" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm2.FechaIniCarrera.$invalid" />
                                 <span ng-show="myForm2.FechaIniCarrera.$error.required">*Fecha Inicio requerida</span>
@@ -319,17 +351,17 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Fecha Fin</span>
                                     </div>
-                                    <input ng-model="ctrl.FechaFinCarrera" name="FechaFinCarrera" id="FechaFinCarrera" type="date" ng-change="ctrl.GlobalInfoAcademica()" class="form-control" aria-label="FechaFin" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.FechaFinCarrera" name="FechaFinCarrera" id="FechaFinCarrera" type="date" lang="es-mx" ng-change="ctrl.GlobalInfoAcademica()" class="form-control" aria-label="FechaFin" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm2.FechaFinCarrera.$invalid" />
                                 <span ng-show="myForm2.FechaFinCarrera.$error.required">*Fecha Fin requerida</span>
                             </div>
 
                             <div class="col-md-2 py-2">
-                                <input id="datosContacto" type="button" class="btn btn-success" value="Guardar Datos Academicos"
+                                <input id="datosAcademicos" type="button" class="btn btn-success" value="Guardar Datos Academicos"
                                        ng-disabled="myForm2.GradoEst.$invalid || myForm2.NombEsc.$invalid
                                        || myForm2.Carrera.$invalid || myForm2.AreaConoc.$invalid
-                                       || myForm2.FechaIniCarrera.$invalid || myForm2.FechaFinCarrera.$invalid" ng-click="ctrl.GuardarEstudiosAcademicos()" />
+                                       || myForm2.FechaIniCarrera.$invalid || myForm2.FechaFinCarrera.$invalid || myForm2.CarreraExt.$invalid" ng-click="ctrl.GuardarEstudiosAcademicos()" />
                             </div>
                             <div class="col-md-10">
 
@@ -351,22 +383,22 @@
                                             <td>{{list.Descripcion}}</td>
                                             <td>{{list.Institucion}}</td>
                                             <td>{{list.Carrera}}</td>
-                                            <td>{{list.Principal}}</td>
+                                            <td><i data-toggle="tooltip" title="¿Convertir {{list.Carrera}} en Principal?"><a class="{{list.IsPrincipal}}" id="{{list.Posicion}}" ng-click="ctrl.GuardarIdCarrera(list.Id_Carrera, list.Carrera)" data-toggle="modal" data-target="#estudiosModal"></a></i></td>
                                             <td><a class="fas fa-trash" ng-click="ctrl.EliminarEstudioAcademico(list.Posicion)"></a></td>
-                                        </tr>                                        
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
-                           
+
                             <div class="col-md-1 py-3">
-                                <input id="datosContactoRegresar" type="button" class="btn btn-info" value="Regresar" />
+                                <input id="btnDatosContactoRegrear" type="button" class="btn btn-info" value="Regresar" />
                             </div>
                             <div class="col-md-9 py-3">
                             </div>
                             <div class="col-md-1 py-3">
-                                <input id="datosContactoContinuar" type="button" class="btn btn-info" value="Continuar" />
+                                <input id="btnDatosContactoContinuar" type="button" class="btn btn-info" value="Continuar" />
                             </div>
-                            
+
                         </div>
                     </form>
                 </div>
@@ -382,7 +414,7 @@
                                     <input id="Software" name="Software" ng-model="ctrl.Software" type="text" ng-change="" class="form-control" placeholder="Software" aria-label="Software" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 @*<span style="color:red" ng-show="myForm3.Software.$invalid" />
-            <span ng-show="myForm3.Software.$error.required">*R requerida</span>*@
+                                    <span ng-show="myForm3.Software.$error.required">*R requerida</span>*@
                             </div>
                             <div class="col-md-6 py-2">
                                 <div class="input-group mb-3">
@@ -392,7 +424,7 @@
                                     <select ng-model="ctrl.NivelSoftware" id="NivelSoftware" name="NivelSoftware" ng-change="" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listNivelSoftware" style="max-width:100%" required></select>
                                 </div>
                                 @*<span style="color:red" ng-show="myForm3.Contrasena2.$invalid" />
-            <span ng-show="myForm3.Contrasena2.$error.required">*Razón social requerida</span>*@
+                                    <span ng-show="myForm3.Contrasena2.$error.required">*Razón social requerida</span>*@
                             </div>
 
                             <div class="col-md-2">
@@ -411,7 +443,7 @@
                                     <tbody ng-repeat="list in ctrl.listSoftware">
                                         <tr>
                                             <td>{{list.Descripcion}}</td>
-                                            <td>{{list.Subtipo}}</td>                                            
+                                            <td>{{list.Subtipo}}</td>
                                             <td><a class="fas fa-trash" ng-click="ctrl.EliminarSoftware(list.Posicion)"></a></td>
                                         </tr>
                                     </tbody>
@@ -427,7 +459,7 @@
                                     <input id="Idioma" name="Idioma" ng-model="ctrl.Idioma" type="text" ng-change="" class="form-control" placeholder="Idioma" aria-label="Idioma" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 @*<span style="color:red" ng-show="myForm3.Software.$invalid" />
-            <span ng-show="myForm3.Software.$error.required">*R requerida</span>*@
+                                    <span ng-show="myForm3.Software.$error.required">*R requerida</span>*@
                             </div>
                             <div class="col-md-6 py-2">
                                 <div class="input-group mb-3">
@@ -437,7 +469,7 @@
                                     <select ng-model="ctrl.NivelIdioma" id="NivelIdioma" name="NivelIdioma" ng-change="" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listNivelIdioma" style="max-width:100%" required></select>
                                 </div>
                                 @*<span style="color:red" ng-show="myForm3.Contrasena2.$invalid" />
-            <span ng-show="myForm3.Contrasena2.$error.required">*Razón social requerida</span>*@
+                                    <span ng-show="myForm3.Contrasena2.$error.required">*Razón social requerida</span>*@
                             </div>
 
                             <div class="col-md-2">
@@ -453,10 +485,10 @@
                                             <th scope="col">Eliminar</th>
                                         </tr>
                                     </thead>
-                                    <tbody ng-repeat="list in ctrl.listEstAcadGuardados">
+                                    <tbody ng-repeat="list in ctrl.listIdioma">
                                         <tr>
                                             <td>{{list.Descripcion}}</td>
-                                            <td>{{list.Subtipo}}</td>                                            
+                                            <td>{{list.Subtipo}}</td>
                                             <td><a class="fas fa-trash" ng-click="ctrl.EliminarIdioma(list.Posicion)"></a></td>
                                         </tr>
                                     </tbody>
@@ -464,14 +496,13 @@
                             </div>
 
                             <div class="col-md-1">
-                                <input id="infoLogRegresar" type="button" class="btn btn-info" value="Regresar" />
+                                <input id="btnInfoSotIdioRegresar" type="button" class="btn btn-info" value="Regresar" />
                             </div>
                             <div class="col-md-9">
 
                             </div>
                             <div class="col-md-1">
-                                <input type="button" class="btn btn-info" value="Guardar" ng-click="ctrl.RegistrarDatosEmpresa()"
-                                       ng-disabled="myForm3.Contrasena.$invalid || myForm3.Contrasena2.$invalid" />
+                                <input id="btninfoSoftIdioContinuar" type="button" class="btn btn-info" value="Continuar" />
                             </div>
                         </div>
                     </form>
@@ -515,7 +546,8 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Puesto / Actividades que Desempeñaba</span>
                                     </div>
-                                    <input id="DescAct" name="DescAct" ng-model="ctrl.DescAct" type="text" ng-change="ctrl.GlobalExpProf()" class="form-control" placeholder="Descripcion de Activades Realizadas" aria-label="DescripcionActividades" aria-describedby="basic-addon1" style="max-width:100%" required>                                </div>
+                                    <textarea id="DescAct" name="DescAct" ng-model="ctrl.DescAct" type="text" ng-change="ctrl.GlobalExpProf()" class="form-control" placeholder="Descripcion de Activades Realizadas" aria-label="DescripcionActividades" aria-describedby="basic-addon1" style="max-width:100%; min-height:30%;  max-height:30%" rows="7" required></textarea>                                    
+                                </div>
                                 <span style="color:red" ng-show="myForm3.DescAct.$invalid" />
                                 <span ng-show="myForm3.DescAct.$error.required">*Puesto / Actividades requerido</span>
                             </div>
@@ -534,14 +566,32 @@
                                        ng-disabled="myForm3.NombreEmpresa.$invalid || myForm3.FechaIniExpProf.$invalid|| myForm3.FechaFinExpProf.$invalid
                                        || myForm3.DescAct.$invalid || myForm3.ReferenciaTrabajo.$invalid" />
                             </div>
+                            <div class="col-md-12 py-2">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Empresa</th>
+                                            <th scope="col">Contacto</th>
+                                            <th scope="col">Eliminar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody ng-repeat="list in ctrl.listExperienciaProf">
+                                        <tr>
+                                            <td>{{list.Institucion}}</td>
+                                            <td>{{list.Contacto}}</td>
+                                            <td><a class="fas fa-trash" ng-click="ctrl.EliminarExperienciaProfesional(list.Posicion)"></a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                             <div class="col-md-1">
-                                <input id="infoLogRegresar" type="button" class="btn btn-info" value="Regresar" />
+                                <input id="btninfoExpProfRegrear" type="button" class="btn btn-info" value="Regresar" />
                             </div>
                             <div class="col-md-9">
 
                             </div>
                             <div class="col-md-1">
-                                <input id="infoLogContinuar" type="button" class="btn btn-info" value="Continuar" />
+                                <input id="btninfoExpProfContinuar" type="button" class="btn btn-info" value="Continuar" />
                             </div>
                         </div>
                     </form>
@@ -557,8 +607,8 @@
                                     </div>
                                     <input id="CursoTaller" name="CursoTaller" ng-model="ctrl.CursoTaller" type="text" ng-change="" class="form-control" placeholder="Curso / Taller" aria-label="CursoTaller" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
-                                @*<span style="color:red" ng-show="myForm4.Contrasena.$invalid" />
-            <span ng-show="myForm4.Contrasena.$error.required">*Curso o Taller requerido</span>*@
+                                <span style="color:red" ng-show="myForm4.CursoTaller.$invalid" />
+                                <span ng-show="myForm4.CursoTaller.$error.required">*Curso o Taller requerido</span>
                             </div>
                             <div class="col-md-6 py-2">
                                 <div class="input-group mb-3">
@@ -567,8 +617,8 @@
                                     </div>
                                     <select name="TipoCurso" id="TipoCurso" ng-model="ctrl.TipoCurso" ng-change="" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listTipoCurso" style="max-width:100%" required></select>
                                 </div>
-                                @*<span style="color:red" ng-show="myForm4.TipoCurso.$invalid" />
-            <span ng-show="myForm4.TipoCurso.$error.required">*Razón social requerida</span>*@
+                                <span style="color:red" ng-show="myForm4.TipoCurso.$invalid" />
+                                <span ng-show="myForm4.TipoCurso.$error.required">*Tipo de Curso requerido</span>
                             </div>
                             <div class="col-md-12 py-2">
                                 <div class="input-group mb-3 ">
@@ -577,8 +627,8 @@
                                     </div>
                                     <input id="InstTaller" name="InstTaller" ng-model="ctrl.InstTaller" type="text" ng-change="" class="form-control" placeholder="Institución" aria-label="InstTaller" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
-                                @*<span style="color:red" ng-show="myForm4.Contrasena.$invalid" />
-            <span ng-show="myForm4.Contrasena.$error.required">*Curso o Taller requerido</span>*@
+                                <span style="color:red" ng-show="myForm4.InstTaller.$invalid" />
+                                <span ng-show="myForm4.InstTaller.$error.required">*Institución requerida</span>
                             </div>
                             <div class="col-md-6 py-2">
                                 <div class="input-group mb-3 ">
@@ -587,28 +637,52 @@
                                     </div>
                                     <input id="FecIniCur" name="FecIniCur" ng-model="ctrl.FecIniCur" type="date" ng-change="" class="form-control" aria-label="FecIniCur" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
-                                @*<span style="color:red" ng-show="myForm4.Contrasena.$invalid" />
-            <span ng-show="myForm4.Contrasena.$error.required">*Curso o Taller requerido</span>*@
+                                <span style="color:red" ng-show="myForm4.FecIniCur.$invalid" />
+                                <span ng-show="myForm4.FecIniCur.$error.required">*Fecha Inicio requerida</span>
                             </div>
                             <div class="col-md-6 py-2">
                                 <div class="input-group mb-3 ">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Fecha Fin del Curso</span>
                                     </div>
-                                    <input id="FecFinCur" name="FecFinCur" ng-model="ctrl.FecFinCur" type="date" ng-change="" class="form-control"  aria-label="FecFinCur" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input id="FecFinCur" name="FecFinCur" ng-model="ctrl.FecFinCur" type="date" ng-change="" class="form-control" aria-label="FecFinCur" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
-                                @*<span style="color:red" ng-show="myForm4.Contrasena.$invalid" />
-            <span ng-show="myForm4.Contrasena.$error.required">*Curso o Taller requerido</span>*@
+                                <span style="color:red" ng-show="myForm4.FecFinCur.$invalid" />
+                                <span ng-show="myForm4.FecFinCur.$error.required">*Fecha Fin requerida</span>
+                            </div>
+                            <div class="col-md-12">
+                                <input type="button" class="btn btn-success" value="Guardar" ng-click="ctrl.GuardarCursoTaller()"
+                                       ng-disabled="myForm4.CursoTaller.$invalid || myForm4.TipoCurso.$invalid|| myForm4.InstTaller.$invalid
+                                       || myForm4.FecIniCur.$invalid || myForm4.FecFinCur.$invalid"/>
+                            </div>
+
+                            <div class="col-md-12 py-2">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Curso / Taller</th>
+                                            <th scope="col">Institución</th>
+                                            <th scope="col">Eliminar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody ng-repeat="list in ctrl.listCursoTaller">
+                                        <tr>
+                                            <td>{{list.Descripcion}}</td>
+                                            <td>{{list.Institucion}}</td>
+                                            <td><a class="fas fa-trash" ng-click="ctrl.EliminarCursoTaller(list.Posicion)"></a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                             <div class="col-md-1">
-                                <input id="infoLogRegresar" type="button" class="btn btn-info" value="Regresar" />
+                                <input id="btninfoCursosRegresar" type="button" class="btn btn-info" value="Regresar" />
                             </div>
                             <div class="col-md-9">
 
                             </div>
                             <div class="col-md-1">
-                                <input type="button" class="btn btn-info" value="Guardar" ng-click="ctrl.RegistrarDatosEmpresa()"
-                                       />
+                                <input id="guardarDatosCandidato" type="button" class="btn btn-info" value="Guardar" ng-click="ctrl.GuardarDatosCandidato()" />
+                                <input id="editarDatosCandidato" type="button" class="btn btn-info" value="Guardar" ng-click="ctrl.EditarDatosCandidato()"style="display:none" />
                             </div>
                         </div>
                     </form>
@@ -616,6 +690,62 @@
             </div>
         </div>
 
+        <!--Modal estudios principales-->
+        <div class="modal fade" id="estudiosModal" tabindex="-1" role="dialog" aria-labelledby="estudiosModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Estudios Principales</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <label>¿Establecer {{ctrl.CarreraPrincipal}} como estudios principales?</label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                        <button type="button" class="btn btn-primary" ng-click="ctrl.EditarPrincipalEstAcad()">Si</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
 </div>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+
+<script src="~/Scripts/funcionesDatosCandidatos.js"></script>
+
+@*<script type="text/javascript">
+        jQuery(function ($) {
+            $.datepicker.regional['es'] = {
+                closeText: 'Cerrar',
+                prevText: '&#x3c;Ant',
+                nextText: 'Sig&#x3e;',
+                currentText: 'Hoy',
+                monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+                    'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                dayNames: ['Domingo', 'Lunes', 'Martes', 'Mi&eacute;rcoles', 'Jueves', 'Viernes', 'S&aacute;bado'],
+                dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mi&eacute;', 'Juv', 'Vie', 'S&aacute;b'],
+                dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'S&aacute;'],
+                weekHeader: 'Sm',
+                dateFormat: 'dd/mm/yy',
+                firstDay: 1,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: '',
+                useCurrent: true
+            };
+            $.datepicker.setDefaults($.datepicker.regional['es']);
+        });
+        $('#FecNac').datepicker();
+        $('#fechaIniCarreaAlumno').datepicker();
+        $('#fechaEgresoCarreaAlumno').datepicker();
+        $('#fecIniExpAlumno').datepicker();
+        $('#fecFinExpAlumno').datepicker();
+        $('#fecIniCursoTallerAlumno').datepicker();
+        $('#fecFinCursoTallerAlumno').datepicker();
+    </script>*@

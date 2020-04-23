@@ -35,8 +35,8 @@ namespace BolsaTrabajoUnv2_0.Models
         public bool Edita { get; set; }
         public string Dependencia { get; set; }
         public string Carrera { get; set; }
-
         public string IdCarrera { get; set; }
+        public string Registrado { get; set; }
 
 
     }

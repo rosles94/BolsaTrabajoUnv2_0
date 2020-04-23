@@ -3,6 +3,26 @@
     ViewBag.Title = "Btu";
 }
 
+    <div id="cargandoDatos" class="row py-5" style="display:none">
+        <div class="col-md-5">
+
+        </div>
+        <div class="col-md-7">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-border text-warning" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-border text-warning" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+
     <ul>
         <li data-toggle="modal" data-target="#modalAdministrador">ADMINISTRADOR </li>
         <li data-toggle="modal" data-target="#modalEmpresa">EMPRESA </li>
@@ -27,7 +47,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="inputGroup-sizing-default">Usuario</span>
                                 </div>
-                                <input type="text" class="form-control" aria-label="Usuario" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
+                                <input ng-model="ctrl.UsuarioAdmin" type="text" class="form-control" aria-label="Usuario" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -35,14 +55,14 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="inputGroup-sizing-default">Contraseña</span>
                                 </div>
-                                <input type="text" class="form-control" aria-label="Contrasenaa" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
+                                <input ng-model="ctrl.ContrasenaAdmin" type="password" class="form-control" aria-label="Contrasenaa" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary">Iniciar Sesión</button>
+                    <button type="button" class="btn btn-primary" ng-click="ctrl.IniciarSesionAdmin()">Iniciar Sesión</button>
                 </div>
             </div>
         </div>
@@ -99,7 +119,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="inputGroup-sizing-default">Usuario</span>
                                 </div>
-                                <input ng-model="ctrl.UsuarioUnach" type="text" class="form-control" aria-label="Usuario" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
+                                <input value="coragiosso.edr@live.com.mx" ng-model="ctrl.UsuarioUnach" type="text" class="form-control" aria-label="Usuario" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -107,7 +127,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="inputGroup-sizing-default">Contraseña</span>
                                 </div>
-                                <input ng-model="ctrl.ContrasenaUnach" type="password" class="form-control" aria-label="Contrasenaa" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
+                                <input value="Digitalism" ng-model="ctrl.ContrasenaUnach" type="password" class="form-control" aria-label="Contrasenaa" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
                             </div>
                         </div>
                     </div>

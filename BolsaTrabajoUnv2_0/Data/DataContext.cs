@@ -138,6 +138,7 @@ namespace BolsaTrabajoUnv2_0.Data
                     objDatosUnach.Carrera = Convert.ToString(cmd.Parameters["p_carrera"].Value);
                     objDatosUnach.IdCarrera = Convert.ToString(cmd.Parameters["p_id_carrera"].Value);
                     objDatosUnach.Id = Convert.ToString(cmd.Parameters["p_id_registrado"].Value);
+                    objDatosUnach.Registrado = "0";
                 }
                 list.Add(objDatosUnach);
             }
@@ -150,6 +151,114 @@ namespace BolsaTrabajoUnv2_0.Data
                 exeProc.LimpiarOracleCommand(ref cmd);
             }
             return list;
+        }
+
+
+        public static List<Btu_Curriculum> ObtenerDatosCurriculumAlta(Btu_Curriculum objUsuarioAlta, ref string Verificador)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();            
+            string NombreCompleto = string.Empty;
+            List<Btu_Curriculum> listDatosCuentaAlta = new List<Btu_Curriculum>();
+
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { "p_matricula" };
+                object[] Valores = { objUsuarioAlta.Matricula };
+                string[] ParametrosOut = {"p_id", "p_paterno", "p_materno", "p_nombre", "p_domicilio", "p_municipio", "p_estado","p_nacimiento",
+                "p_telefono","p_celular","p_correo", "p_objetivo", "p_interes", "p_tipo", "p_genero", "p_ruta_fotografia", "p_codigo_postal",
+                    "p_colonia", "p_carrera", "p_bandera" };
+                cmd = exeProc.GenerarOracleCommand_Exe("OBT_BTU_CURRICULUM", ref Verificador, ref dr, Parametros, Valores, ParametrosOut);
+
+                if (Verificador == "0")
+                {
+                    objUsuarioAlta.Id = Convert.ToString(cmd.Parameters["p_id"].Value);
+                    objUsuarioAlta.Materno = Convert.ToString(cmd.Parameters["p_materno"].Value);
+                    objUsuarioAlta.Paterno = Convert.ToString(cmd.Parameters["p_paterno"].Value);
+                    objUsuarioAlta.Nombre = Convert.ToString(cmd.Parameters["P_NOMBRE"].Value);
+                    objUsuarioAlta.Domicilio = Convert.ToString(cmd.Parameters["p_domicilio"].Value);
+                    objUsuarioAlta.Municipio = Convert.ToString(cmd.Parameters["p_municipio"].Value);
+                    objUsuarioAlta.Estado = Convert.ToString(cmd.Parameters["p_estado"].Value);
+                    objUsuarioAlta.Fecha_Nacimiento = Convert.ToString(cmd.Parameters["p_nacimiento"].Value);
+                    objUsuarioAlta.Telefono = Convert.ToString(cmd.Parameters["p_telefono"].Value);
+                    objUsuarioAlta.Celular = Convert.ToString(cmd.Parameters["p_celular"].Value);
+                    objUsuarioAlta.Correo = Convert.ToString(cmd.Parameters["p_correo"].Value);
+                    objUsuarioAlta.Objetivo = Convert.ToString(cmd.Parameters["p_objetivo"].Value);
+                    objUsuarioAlta.Intereses = Convert.ToString(cmd.Parameters["p_interes"].Value);
+                    objUsuarioAlta.Tipo = Convert.ToString(cmd.Parameters["p_tipo"].Value);
+                    objUsuarioAlta.Genero = Convert.ToString(cmd.Parameters["p_genero"].Value);
+                    objUsuarioAlta.Ruta_Foto = Convert.ToString(cmd.Parameters["p_ruta_fotografia"].Value);
+                    objUsuarioAlta.Codigo_Postal = Convert.ToString(cmd.Parameters["p_codigo_postal"].Value);
+                    objUsuarioAlta.Colonia = Convert.ToString(cmd.Parameters["p_colonia"].Value);
+                    objUsuarioAlta.Carrera = Convert.ToString(cmd.Parameters["p_carrera"].Value);
+                    objUsuarioAlta.Registrado = "1";
+                    //System.Web.HttpContext.Current.Session["SessionFotoCv"] = objUsuarioAlta;
+                    listDatosCuentaAlta.Add(objUsuarioAlta);
+                }
+            }
+            catch (Exception ex)
+            {
+                Verificador = ex.Message;
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+            return listDatosCuentaAlta;
+        }
+
+
+        public static List<Btu_Curriculum_Informacion> ObtenerInfoCurriculum(Btu_Curriculum objUsuario)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            try
+            {
+            //    int Dias = 0;
+            //    int años = 0;
+            //    int meses = 0;
+            //    int mesesTotales = 0;
+                OracleDataReader dr = null;
+                string[] Parametros = { "p_id_curriculum", "p_tipo" };
+                object[] Valores = { objUsuario.Id, objUsuario.Tipo };
+                cmd = exeProc.GenerarOracleCommandCursor_Grid("PKG_VINCULAR.Obt_Btu_Curriculum_Info", ref dr, Parametros, Valores);
+                List<Btu_Curriculum_Informacion> listInfoCurriculum = new List<Btu_Curriculum_Informacion>();
+                while (dr.Read())
+                {
+                    Btu_Curriculum_Informacion objInfoCurriculum = new Btu_Curriculum_Informacion();
+                    objInfoCurriculum.Id = Convert.ToString(dr[0]);
+                    objInfoCurriculum.Tipo = Convert.ToString(dr[1]);
+                    objInfoCurriculum.Subtipo = Convert.ToString(dr[2]);
+                    objInfoCurriculum.Institucion = Convert.ToString(dr[3]);
+                    objInfoCurriculum.Carrera = Convert.ToString(dr[4]);
+                    objInfoCurriculum.Area = Convert.ToString(dr[5]);
+                    objInfoCurriculum.Descripcion = Convert.ToString(dr[6]);
+                    objInfoCurriculum.Principal = Convert.ToString(dr[7]);
+                    objInfoCurriculum.Fecha_Inicio = Convert.ToString(dr[8]);
+                    objInfoCurriculum.Fecha_Fin = Convert.ToString(dr[9]);
+                    objInfoCurriculum.Id_Carrera = Convert.ToString(dr[10]);
+                    objInfoCurriculum.Contacto = Convert.ToString(dr[11]);
+                    //DateTime fechaInicio = DateTime.ParseExact(objInfoCurriculum.FECHA_INICIO, "dd/MM/yyyy", null);
+                    //DateTime fechaFin = DateTime.ParseExact(objInfoCurriculum.FECHA_FIN, "dd/MM/yyyy", null);
+                    //TimeSpan fechaTotal = fechaFin - fechaInicio;
+                    //Dias = fechaTotal.Days;
+                    //años = Convert.ToInt32(Dias / 365);
+                    //meses = Dias % 365;
+                    //mesesTotales = meses / 30;
+                    //objInfoCurriculum.TIEMPO_LABORADO = años + " Año(s) con " + mesesTotales + " meses";
+                    listInfoCurriculum.Add(objInfoCurriculum);
+                }
+                return listInfoCurriculum;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
         }
     }
 }
