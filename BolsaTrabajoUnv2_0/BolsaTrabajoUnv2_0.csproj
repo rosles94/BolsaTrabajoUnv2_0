@@ -2747,10 +2747,10 @@
     <Content Include="Views\Btu\RegistrarEmpresa.cshtml" />
     <Content Include="Scripts\version.json" />
     <Content Include="Views\Btu\DatosCandidato.cshtml" />
-    <Content Include="Views\Btu\PanelEmpresas.cshtml" />
     <Content Include="Views\Btu\Btu.cshtml" />
     <Content Include="Views\Btu\PanelCandidato.cshtml" />
     <Content Include="Views\Btu\PanelAdministrador.cshtml" />
+    <Content Include="Views\Btu\PanelEmpresa.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

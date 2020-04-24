@@ -20,7 +20,8 @@ var btuContext =
     listIdioma: [],
     listExperienciaProf: [],
     listCursoTaller: [],
-    listDatosPanelCv : [],
+    listDatosPanelCv: [],
+    listDatosPanelEmpresa : [],
 
 
     BuscarEmpresa: function (Rfc, callBackResult) {
@@ -498,6 +499,10 @@ var btuContext =
         let self = this;
         self.listSesionUnach.length = 0;
         $.ajax({
+            beforeSend: function () {
+                $("#cargandoDatos").show();
+                $("#modalEmpresa").modal('toggle');
+            },
             type: "POST",
             url: urlServer + "Btu/IniciarSesion",
             data: {
@@ -518,6 +523,43 @@ var btuContext =
             },
             error: function (ex) {
                 callBackResult({ ressult: 'notgp', message: ex });
+            },
+            complete: function () {
+                $("#cargandoDatos").hide();
+            }
+        });
+    },
+    IniciarSesionEmpresa: function (Usuario, Contrasena, Tipo, callBackResult) {
+        let self = this;
+        self.listSesionUnach.length = 0;
+        $.ajax({
+            beforeSend: function () {
+                $("#cargandoDatos").show();
+                $("#modalEmpresa").modal('toggle');
+            },
+            type: "POST",
+            url: urlServer + "Btu/IniciarSesionEmpresa",
+            data: {
+                Usuario, Contrasena, Tipo
+            },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listSesionUnach.push({
+                            Existe: resp.Resultado[i].Existe, Matricula: resp.Resultado[i].Matricula, Nombre: resp.Resultado[i].Nombre, Registrado: resp.Resultado[i].Registrado,
+                            Id: resp.Resultado[i].Id, Email2: resp.Resultado[i].Email2
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: ex });
+            },
+            complete: function () {
+                $("#cargandoDatos").hide();
             }
         });
     },
@@ -772,6 +814,32 @@ var btuContext =
         });
     },
 
+    EditarInfoGeneralCandidato: function (callBackResult) {
+        $.ajax({
+            beforeSend: function () {
+                $("#cargandoDatos").show();
+            },
+            type: "POST",
+            url: urlServer + "Btu/EditarInfoGeneralCandidato",
+            data: {
+            },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: ex });
+                $("#cargandoDatos").hide();
+            },
+            complete: function () {
+                $("#cargandoDatos").hide();
+            }
+        });
+    },
+
     EditarPrincipalEstAcad: function (Posicion, callBackResult) {
         let self = this;
         self.listEstAcadGuardados.length = 0;
@@ -1006,7 +1074,34 @@ var btuContext =
                 callBackResult({ ressult: 'notgp', message: ex });
             }
         });
+    },
+
+    CargarDatosPanelEmpresa: function (callBackResult) {
+        let self = this;
+        self.listDatosPanelEmpresa.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/CargarDatosPanelEmpresa",
+            data: {
+            },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listDatosPanelEmpresa.push({
+                            Id_Empresa: resp.Resultado[i].Id_Empresa
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: ex });
+            }
+        });
     }
+
 
 };
 

@@ -1,22 +1,23 @@
 ﻿
 @{
-    ViewBag.Title = "PanelEmpresas";
+    ViewBag.Title = "Panel Empresa";
 }
-    <div class="row row-cols-1 row-cols-md-2">
+
+    <div class="row row-cols-1 row-cols-md-2" ng-init="ctrl.CargarDatosPanelEmpresa()">
         <div class="col-md-2">
         </div>
         <div class=" col-md-4 py-5">
-            <div class="card card border-success">                
+            <div class="card card border-success">
                 <div class="card-body">
                     <i class="fas fa-address-card fa-3x"></i>
                     <h5 class="card-title">Datos Generales.</h5>
                     <p class="card-text">En está sección podrá ver los datos de su empresa.</p>
-                    <input type="button" class="btn btn-info" value="Ver Datos Generales" />
+                    <input ng-model="ctrl.IdEmpresa" type="button" class="btn btn-info" value="Ver Datos Generales" ng-click="ctrl.VerDatosEmpresa(ctrl.IdEmpresa)" />
                 </div>
             </div>
         </div>
         <div class="col-md-4 py-5">
-            <div class="card card border-info">                
+            <div class="card card border-info">
                 <div class="card-body">
                     <i class="fas fa-file-contract fa-3x"></i>
                     <h5 class="card-title">Vacantes.</h5>
@@ -29,8 +30,8 @@
         </div>
         <div class="col-md-2">
         </div>
-        <div class="col-md-4 py-3">
-            <div class="card card border-info">                
+        <div class="col-md-4 ">
+            <div class="card card border-info">
                 <div class="card-body">
                     <i class="fas fa-id-badge fa-3x"></i>
                     <h5 class="card-title">Candidatos Interesados.</h5>
@@ -39,8 +40,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4 py-3">
-            <div class="card card border-success">                
+        <div class="col-md-4 ">
+            <div class="card card border-success">
                 <div class="card-body">
                     <i class="fas fa-user-check fa-3x"></i>
                     <h5 class="card-title">Ver Candidatos Disponibles.</h5>

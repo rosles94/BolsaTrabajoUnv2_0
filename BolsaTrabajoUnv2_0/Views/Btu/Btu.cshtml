@@ -83,22 +83,22 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="inputGroup-sizing-default">Usuario</span>
                                 </div>
-                                <input type="text" class="form-control" aria-label="Usuario" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
+                                <input ng-model="ctrl.UsuarioEmpresa" type="text" class="form-control" aria-label="Usuario" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="inputGroup-sizing-default">Contraseña</span>
+                                    <span  class="input-group-text" id="inputGroup-sizing-default">Contraseña</span>
                                 </div>
-                                <input type="text" class="form-control" aria-label="Contrasenaa" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
+                                <input ng-model="ctrl.ContrasenaEmpresa" type="password" class="form-control" aria-label="Contrasenaa" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary">Iniciar Sesión</button>
+                    <button type="button" class="btn btn-primary" ng-click="ctrl.IniciarSesionEmpresa('EMPRESA')">Iniciar Sesión</button>
                 </div>
             </div>
         </div>

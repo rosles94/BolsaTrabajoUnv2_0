@@ -25,6 +25,8 @@
         let listCursoTaller = "";        
         let idCarreraPrincipal = "";      
         let listDatosPanel = "";
+        let listSesionEmpresa = "";
+        let listDatosPanelEmpresa = "";
 
 
         let datosPersonales = false;
@@ -313,8 +315,10 @@
                             else
                                 $('#radioFemale').prop('checked', true);
                         }
-                        if (self.listDatosRegistroUnach[0].Ruta_Foto !== undefined && self.listDatosRegistroUnach[0].Ruta_Foto !== "" && self.listDatosRegistroUnach[0].Ruta_Foto !== null)
-                            $("#imgCadidato").attr("src", self.listDatosRegistroUnach[0].Ruta_Foto);                            
+                        if (self.listDatosRegistroUnach[0].Ruta_Foto !== undefined && self.listDatosRegistroUnach[0].Ruta_Foto !== "" && self.listDatosRegistroUnach[0].Ruta_Foto !== null) {
+                            $("#imgCadidato").attr("src", self.listDatosRegistroUnach[0].Ruta_Foto);
+                            existeImagenPerfilCv = true;
+                        }
                         else
                             obtFotoCandidato(self.Matricula, DependenciaAlumno);
                         if (self.Estado !== "ESTADO")
@@ -327,6 +331,7 @@
                             $("#infper1").show();
                             $("#infper2").hide();
                             $("#globalInfoPer").css('background-color', 'green');
+                            $("#btnBackPanelCand").show();
                             ObtenerEstududiosAcademicos();                            
                         }
                         break;
@@ -566,6 +571,31 @@
             else
                 alert("¡Aún no hay imagen de perfil!");
         };
+
+        this.EditarInfoGeneralCandidato = () => {
+            if (existeImagenPerfilCv !== false) {
+                if (datosAcademicos !== false && datosExpProfesional !== false && datosPersonales !== false) {
+                    btuContext.EditarInfoGeneralCandidato(function (resp) {
+                        switch (resp.ressult) {
+                            case "tgp":
+                                alert("Datos guardarados correctamente.");
+                                window.location.assign(urlServer + "Btu/PanelCandidato");
+                                break;
+                            case "notgp":
+                                alert(resp.message);
+                                break;
+                            default:
+                                break;
+                        }
+                        $scope.$apply();
+                    });
+                }
+                else
+                    alert("No se han completado los campos requeridos.");
+            }
+            else
+                alert("¡Aún no hay imagen de perfil!");
+        }
 
         this.EliminarEstudioAcademico = (Posicion) => {
             let eliminar = confirm('¿Desea eliminar el elemento de la lista?')
@@ -846,6 +876,9 @@
             });
         };
 
+        this.RegresarPanelCandidato = () => {
+            window.location.assign(urlServer + "Btu/PanelCandidato");
+        };
                
         //Funciones para cargar combos compartidos
         var ComboEstados = () => {
@@ -1014,6 +1047,28 @@
                 $scope.$apply();
             });
         };
+
+        this.IniciarSesionEmpresa = (Tipo) => {
+            let UsuarioEmpresa = self.UsuarioEmpresa.toUpperCase();
+            btuContext.IniciarSesionEmpresa(UsuarioEmpresa, self.ContrasenaEmpresa, Tipo, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listSesionEmpresa = btuContext.listSesionUnach;
+                        if (self.listSesionEmpresa[0].Existe === "1")
+                            window.location.assign(urlServer + "Btu/PanelEmpresa");
+                        else
+                            alert("Usuario o contraseña incorrectos");                                                    
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
         this.IniciarSesionAdmin = () => {
             btuContext.IniciarSesionAdmin(self.UsuarioAdmin, self.ContrasenaAdmin, function (resp) {
                 switch (resp.ressult) {
@@ -1072,6 +1127,29 @@
                 }
                 $scope.$apply;
             });
+        };
+
+        //Funciones para la vista Panel Empresa
+
+        this.CargarDatosPanelEmpresa = () => {
+            btuContext.CargarDatosPanelEmpresa(function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listDatosPanelEmpresa = btuContext.listDatosPanelEmpresa;
+                        self.IdEmpresa = self.listDatosPanelEmpresa[0].Id_Empresa;
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
+        this.VerDatosEmpresa = () => {
+            window.location.assign(urlServer + "Btu/RegistrarEmpresa");
         };
     }]);
 })();

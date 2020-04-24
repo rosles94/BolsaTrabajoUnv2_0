@@ -84,6 +84,8 @@
                     </span>
                 </li>
             </ul>
+            <br />
+            <input id="btnBackPanelCand" type="button" value="Regresar al Panel" class="btn btn-danger py-2" style="display:none" ng-click="ctrl.RegresarPanelCandidato()" />
         </div>
         <div class="col-md-10">
             <ul class="nav nav-tabs" id="tabInfoPersonal" role="tablist">
@@ -682,7 +684,7 @@
                             </div>
                             <div class="col-md-1">
                                 <input id="guardarDatosCandidato" type="button" class="btn btn-info" value="Guardar" ng-click="ctrl.GuardarDatosCandidato()" />
-                                <input id="editarDatosCandidato" type="button" class="btn btn-info" value="Guardar" ng-click="ctrl.EditarDatosCandidato()"style="display:none" />
+                                <input id="editarDatosCandidato" type="button" class="btn btn-info" value="Guardar" ng-click="ctrl.EditarInfoGeneralCandidato()"style="display:none" />
                             </div>
                         </div>
                     </form>
