@@ -8,8 +8,6 @@
         $("#estuAcad-tab").tab('show');        
     });
 
-
-
     $('#btnDatosContactoRegrear').on('click', function (e) {
         e.preventDefault();
         $("#infoPersonal-tab").tab('show');
@@ -19,8 +17,6 @@
         e.preventDefault();
         $("#softIdio-tab").tab('show');
     });
-
-
 
     $('#btnInfoSotIdioRegresar').on('click', function (e) {
         e.preventDefault();
@@ -32,7 +28,6 @@
         $("#expProf-tab").tab('show');
     });
 
-
     $('#btninfoExpProfRegrear').on('click', function (e) {
         e.preventDefault();
         $("#softIdio-tab").tab('show');
@@ -42,7 +37,6 @@
         e.preventDefault();
         $("#curTall-tab").tab('show');
     });
-
 
     $('#btninfoCursosRegresar').on('click', function (e) {
         e.preventDefault();

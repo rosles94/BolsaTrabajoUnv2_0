@@ -141,6 +141,7 @@
     <Compile Include="Models\Btu_Curriculum_Informacion.cs" />
     <Compile Include="Models\Btu_Empresa.cs" />
     <Compile Include="Models\Btu_Sesion.cs" />
+    <Compile Include="Models\Btu_Vacante.cs" />
     <Compile Include="Models\Comun.cs" />
     <Compile Include="Models\Conexion.cs" />
     <Compile Include="Models\ExeProcedimiento.cs" />
@@ -2751,6 +2752,7 @@
     <Content Include="Views\Btu\PanelCandidato.cshtml" />
     <Content Include="Views\Btu\PanelAdministrador.cshtml" />
     <Content Include="Views\Btu\PanelEmpresa.cshtml" />
+    <Content Include="Views\Btu\Vacante.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

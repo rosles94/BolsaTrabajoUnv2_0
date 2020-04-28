@@ -140,6 +140,31 @@ namespace BolsaTrabajoUnv2_0.Data
                 exeProc.LimpiarOracleCommand(ref cmd);
             }
         }
+        public static void EditarDatosEmpresa(Btu_Empresa objEmpresa, ref string Verificador)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = {"P_ID","P_RAZON_SOCIAL", "P_NOMBRE_COMERCIAL", "P_ACTIVIDAD", "P_CODIGO_POSTAL", "P_ESTADO",
+                        "P_CIUDAD", "P_COLONIA", "P_DOMICILIO", "P_RFC", "P_CONTACTO", "P_CONTACTO_CARGO", "P_TELEFONO", "P_CELULAR",
+                        "P_EMAIL", "P_MEDIO_CONTACTO", "P_CONTRASENIA" ,"P_LOGOTIPO", "P_TIPO_PERSONA" };
+                object[] Valores = {objEmpresa.Id_Empresa, objEmpresa.Razon_Social, objEmpresa.Nombre_Comercial, objEmpresa.Actividad, objEmpresa.Codigo_Postal, objEmpresa.Estado,
+                objEmpresa.Ciudad, objEmpresa.Colonia, objEmpresa.Domicilio,objEmpresa.Rfc, objEmpresa.Contacto, objEmpresa.Contacto_Cargo, objEmpresa.Telefono, objEmpresa.Celular,
+                objEmpresa.Email, objEmpresa.Medio_Contacto, objEmpresa.Contrasena, objEmpresa.Ruta_Foto, objEmpresa.Tipo_Persona};
+                string[] ParametrosOut = { "P_BANDERA" };
+                cmd = exeProc.GenerarOracleCommand("UPD_DATOS_EMPRESA", ref Verificador, ref dr, Parametros, Valores, ParametrosOut);
+            }
+            catch (Exception ex)
+            {
+                Verificador = ex.Message;
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+        }
 
     }
 }

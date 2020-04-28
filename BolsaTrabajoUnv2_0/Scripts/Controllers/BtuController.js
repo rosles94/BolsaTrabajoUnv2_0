@@ -22,11 +22,17 @@
         let listSoftware = "";
         let listIdioma = "";
         let listExperienciaProf = "";
-        let listCursoTaller = "";        
-        let idCarreraPrincipal = "";      
+        let listCursoTaller = "";
+        let idCarreraPrincipal = "";
         let listDatosPanel = "";
         let listSesionEmpresa = "";
         let listDatosPanelEmpresa = "";
+        let listDatosEmpresa = "";
+        let a1 = 0;
+        let a2 = 0;
+        let a3 = 0;
+        let a4 = 0;
+        let at = 0;  
 
 
         let datosPersonales = false;
@@ -35,6 +41,64 @@
         let existeImagenPerfilCv = false;
 
         //Funciones Vista Registrar Empresas
+
+        this.CargarDatosPrincipalesEmpresa = () => {
+            $('#buscandoEmpresa').show();
+            ComboEstados();
+            TipoPersona();
+            ComboMedioContacto();
+            CargarDatosEmpresa();
+        };
+
+        var CargarDatosEmpresa = () => {
+            btuContext.ObtenerDatosEmpresa(function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listDatosEmpresa = btuContext.listDatosEmpresa;
+                        if (self.listDatosEmpresa.length > 0) {
+                            self.RfcBuscarEmpresa = self.listDatosEmpresa[0].Rfc;
+                            self.RazonSocial = self.listDatosEmpresa[0].Razon_Social;
+                            self.NombreComercial = self.listDatosEmpresa[0].Nombre_Comercial;
+                            self.TipoPersona = self.listDatosEmpresa[0].Tipo_Persona;
+                            self.Actividad = self.listDatosEmpresa[0].Actividad;
+                            self.CodigoPost = self.listDatosEmpresa[0].Codigo_Postal;
+                            self.Estado = self.listDatosEmpresa[0].Estado;
+                            comboMunicipios();
+                            self.Municipio = self.listDatosEmpresa[0].Ciudad;
+                            self.Colonia = self.listDatosEmpresa[0].Colonia;
+                            self.Domicilio = self.listDatosEmpresa[0].Domicilio;
+                            self.PersonaContacto = self.listDatosEmpresa[0].Contacto;
+                            self.Cargo = self.listDatosEmpresa[0].Contacto_Cargo;
+                            self.TelOficina = self.listDatosEmpresa[0].Telefono;
+                            self.Celular = self.listDatosEmpresa[0].Celular;
+                            self.Email = self.listDatosEmpresa[0].Email;
+                            self.MedioContacto = self.listDatosEmpresa[0].Medio_Contacto;
+                            self.Usuario = self.listDatosEmpresa[0].Rfc;
+                            self.Contrasena = self.listDatosEmpresa[0].Contrasena;
+                            self.Contrasena2 = self.listDatosEmpresa[0].Contrasena;
+                            $("#formularioRegistro").show();
+                            $("#RfcEmpresa").prop('disabled', true);
+                            $("#usuarioEmpresa").prop('disabled', true);
+                            $("#Contrasena").prop('disabled', true);
+                            $("#Contrasena2").prop('disabled', true);
+                            $("#globalInfoemp").css('background-color', 'green');
+                            $("#globalDatosCont").css('background-color', 'green');
+                            $("#globalSesion").css('background-color', 'green');
+                            $("#guardarEmpresa").hide();
+                            $("#editarEmpresa").show();
+                            $("#regresarPanelEmpresa").show();
+                        }
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+                $('#buscandoEmpresa').hide();
+            });
+        };
 
         this.GlobalInfoPer = () => {
 
@@ -110,6 +174,8 @@
                             $("#globalSesion").css('background-color', 'yellow');
                             $("#formularioRegistro").show();
                             $("#usuarioEmpresa").prop("disabled", true);
+                            ("#guardarEmpresa").show();
+                            $("#editarEmpresa").hide();
                             alert("La empresa no existe, complete el siguiente formulario para registrarla.");
                         }
                         else
@@ -122,19 +188,7 @@
                         break;
                 }
                 $scope.$apply();
-                ComboEstados();
-                TipoPersona();
-                ComboMedioContacto();
             });
-            //$('#buscandoEmpresa').show();
-            //if (self.RfcBuscarEmpresa !== "" && self.RfcBuscarEmpresa !== undefined) {
-
-            //}
-            //else {
-            //    alert("Introduzca un RFC");
-            //    //$('#buscandoEmpresa').modal("hide");
-            //    $('#buscandoEmpresa').hide();
-            //}
         };
 
         this.RegistrarDatosEmpresa = () => {
@@ -190,6 +244,28 @@
             });
         };
 
+        this.EditarDatosEmpresa = () => {
+            btuContext.EditarDatosEmpresa(self.RazonSocial, self.NombreComercial, self.Actividad, self.CodigoPost, self.Estado, self.Municipio, self.Colonia, self.Domicilio, self.Usuario,
+                self.PersonaContacto, self.Cargo, self.TelOficina, self.Celular, self.Email, self.MedioContacto, self.Contrasena, self.TipoPersona, function (resp) {
+                    switch (resp.ressult) {
+                        case "tgp":
+                            alert("Datos modificados correctamente.");
+                            window.location.assign(urlServer + "Btu/PanelEmpresa");
+                            break;
+                        case "notgp":
+                            alert(resp.message);
+                            break;
+                        default:
+                            break;
+                    }
+                    $scope.$apply();
+                });
+        }
+
+        this.RegresarPanelEmpresa = () => {
+            window.location.assign(urlServer + "Btu/PanelEmpresa");
+        };
+
         //Funciones Vista DatosCandidatos
 
         this.GlobalInfoPersonal = () => {
@@ -223,7 +299,7 @@
             }
             else {
                 if (self.GradoEst !== undefined && self.NombEsc !== undefined && self.Carrera !== undefined && self.AreaConoc !== undefined && self.FechaIniCarrera !== undefined && self.FechaFinCarrera !== undefined &&
-                    self.CarreraExt !== undefined && self.GradoEst !== '' && self.NombEsc !== '' && self.Carrera !== '' && self.AreaConoc !== '' && self.FechaIniCarrera !== '' && self.FechaFinCarrera !== '' && self.CarreraExt !== "" ) {
+                    self.CarreraExt !== undefined && self.GradoEst !== '' && self.NombEsc !== '' && self.Carrera !== '' && self.AreaConoc !== '' && self.FechaIniCarrera !== '' && self.FechaFinCarrera !== '' && self.CarreraExt !== "") {
                     $("#estuacad1").show();
                     $("#estuacad2").hide();
                     $("#globalEstuAcd").css('background-color', 'green');
@@ -289,7 +365,7 @@
             ComboNivelSoftware();
             ComboNivelIdioma();
             ComboTipoCurso();
-            btuContext.DatosRegistroUnach(function (resp) {                
+            btuContext.DatosRegistroUnach(function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
                         self.listDatosRegistroUnach = btuContext.listDatosRegistroUnach;
@@ -298,9 +374,9 @@
                         self.NombreCandidato = self.listDatosRegistroUnach[0].Nombre;
                         self.ApePatCandidato = self.listDatosRegistroUnach[0].Paterno;
                         self.ApeMatCandidato = self.listDatosRegistroUnach[0].Materno;
-                        fechaNac = self.listDatosRegistroUnach[0].FechaNacimiento;                        
+                        fechaNac = self.listDatosRegistroUnach[0].FechaNacimiento;
                         self.Estado = self.listDatosRegistroUnach[0].Estado === "ESTADO" ? "" : self.listDatosRegistroUnach[0].Estado;
-                        self.Municipio = self.listDatosRegistroUnach[0].Municipio === "MUNICIPIO" ? "" : self.listDatosRegistroUnach[0].Municipio;                        
+                        self.Municipio = self.listDatosRegistroUnach[0].Municipio === "MUNICIPIO" ? "" : self.listDatosRegistroUnach[0].Municipio;
                         self.Domicilio = self.listDatosRegistroUnach[0].Domicilio;
                         self.TelCel = self.listDatosRegistroUnach[0].Celular;
                         self.TelAd = self.listDatosRegistroUnach[0].Telefono;
@@ -332,7 +408,7 @@
                             $("#infper2").hide();
                             $("#globalInfoPer").css('background-color', 'green');
                             $("#btnBackPanelCand").show();
-                            ObtenerEstududiosAcademicos();                            
+                            ObtenerEstududiosAcademicos();
                         }
                         break;
                     case "notgp":
@@ -341,7 +417,7 @@
                     default:
                         break;
                 }
-                $scope.$apply();                
+                $scope.$apply();
             });
         };
 
@@ -349,7 +425,7 @@
             let isSexM = $("#radioMale").is(':checked');
             let isSexF = $("#radioFemale").is(':checked');
             let genero = false;
-            let sexo = "";           
+            let sexo = "";
 
             if (isSexM === true || isSexF === true) {
                 genero = true;
@@ -381,16 +457,16 @@
             }
             else
                 alert("No se ha seleccionado un sexo");
-        };      
+        };
 
-        this.GuardarEstudiosAcademicos = () => {          
+        this.GuardarEstudiosAcademicos = () => {
             let Carrera = "";
             let Id_Carrera = "";
             let DescGradoEstu = $("#GradoEst option:selected").text();
             let FechaInicio = $("#FechaIniCarrera").val();
-            let FechaFin = $("#FechaFinCarrera").val();            
+            let FechaFin = $("#FechaFinCarrera").val();
 
-            let d1 = new Date(FechaInicio);            
+            let d1 = new Date(FechaInicio);
             let month = (d1.getMonth() + 1);
             let nuevomes = month >= 10 ? month : '0' + month;
             let day = d1.getDate();
@@ -412,7 +488,7 @@
             btuContext.GuardarEstudiosAcademicos(self.GradoEst, self.NombEsc, Id_Carrera, self.AreaConoc, date1, date2, Carrera, DescGradoEstu, function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
-                        self.listEstAcadGuardados = btuContext.listEstAcadGuardados;                                              
+                        self.listEstAcadGuardados = btuContext.listEstAcadGuardados;
                         self.GradoEst = "";
                         self.NombEsc = "";
                         self.Carrera = "";
@@ -427,7 +503,7 @@
                     default:
                         break;
                 }
-                $scope.$apply(); 
+                $scope.$apply();
             });
         };
 
@@ -745,7 +821,7 @@
                             let nombreFoto = $("#Matricula").val();
                             let formatoFoto = nombreArchivo.slice((nombreArchivo.lastIndexOf(".") - 1 >>> 0) + 2);
                             alert("Archivos subidos correctamente.");
-                            var rutaImg = "../Imagenes/ImgProfileCv/" + nombreFoto  +"."+ formatoFoto;
+                            var rutaImg = "../Imagenes/ImgProfileCv/" + nombreFoto + "." + formatoFoto;
                             $("#imgCadidato").attr("src", rutaImg);
                             //$("#btnVerDoc").show();
                             //$("#btnUploadDoc").hide();                            
@@ -779,7 +855,7 @@
                 $("#estInt").hide();
                 self.Carrera = "0";
                 self.CarreraExt = "";
-            }                
+            }
         };
 
         var ObtenerEstududiosAcademicos = () => {
@@ -872,14 +948,14 @@
                     default:
                         break;
                 }
-                $scope.$apply();                
+                $scope.$apply();
             });
         };
 
         this.RegresarPanelCandidato = () => {
             window.location.assign(urlServer + "Btu/PanelCandidato");
         };
-               
+
         //Funciones para cargar combos compartidos
         var ComboEstados = () => {
             btuContext.ComboEstados(function (resp) {
@@ -947,7 +1023,7 @@
         };
 
         var ComboCarreras = () => {
-            btuContext.ComboCarreras( function (resp) {
+            btuContext.ComboCarreras(function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
                         self.listCarreras = btuContext.listCarreras;
@@ -1028,7 +1104,7 @@
 
         //Funciones para la vista Btu
 
-        this.IniciarSesion = (Tipo) =>{
+        this.IniciarSesion = (Tipo) => {
             btuContext.IniciarSesion(self.UsuarioUnach, self.ContrasenaUnach, Tipo, function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
@@ -1057,7 +1133,7 @@
                         if (self.listSesionEmpresa[0].Existe === "1")
                             window.location.assign(urlServer + "Btu/PanelEmpresa");
                         else
-                            alert("Usuario o contraseña incorrectos");                                                    
+                            alert("Usuario o contraseña incorrectos");
                         break;
                     case "notgp":
                         alert(resp.message);
@@ -1150,6 +1226,24 @@
 
         this.VerDatosEmpresa = () => {
             window.location.assign(urlServer + "Btu/RegistrarEmpresa");
+        };
+
+
+        //Funciones para la vista Vacante
+
+        this.GlobalInfovacante = () => {            
+            if (self.NombreVacante !== "" || self.NombreVacante !== undefined && a1 !== 1)
+                a1 = 1;            
+            else if (self.NumeroVacantes !== "" || self.NumeroVacantes !== undefined && a2 !== 1)
+                a2 = 1;
+            else if (self.EdadMin !== "" || self.EdadMin !== undefined && a3 !== 1)
+                a3 = 1;
+            else if (self.EdadMax !== "" || self.EdadMax !== undefined && a4 !== 1)
+                a4 = 1;
+
+            at = ((a1 + a2 + a3 + a4) * 100) / 4;
+            console.log(at);
+            self.totalDatos = at;
         };
     }]);
 })();

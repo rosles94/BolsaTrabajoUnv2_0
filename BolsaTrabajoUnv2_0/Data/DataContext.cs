@@ -63,7 +63,6 @@ namespace BolsaTrabajoUnv2_0.Data
             return list;
             //return registroAgregado;
         }
-
         public static List<Btu_Sesion> InciarSesion(Btu_Sesion objSesion, ref string Verificador)
         {
             OracleCommand cmd = null;
@@ -102,8 +101,6 @@ namespace BolsaTrabajoUnv2_0.Data
             }
             return list;
         }
-
-
         public static List<Btu_Curriculum> DatosRegistroUnach(Btu_Curriculum objSesion, ref string Verificador)
         {
             OracleCommand cmd = null;
@@ -152,8 +149,6 @@ namespace BolsaTrabajoUnv2_0.Data
             }
             return list;
         }
-
-
         public static List<Btu_Curriculum> ObtenerDatosCurriculumAlta(Btu_Curriculum objUsuarioAlta, ref string Verificador)
         {
             OracleCommand cmd = null;
@@ -207,8 +202,6 @@ namespace BolsaTrabajoUnv2_0.Data
             }
             return listDatosCuentaAlta;
         }
-
-
         public static List<Btu_Curriculum_Informacion> ObtenerInfoCurriculum(Btu_Curriculum objUsuario)
         {
             OracleCommand cmd = null;
@@ -260,5 +253,143 @@ namespace BolsaTrabajoUnv2_0.Data
                 exeProc.LimpiarOracleCommand(ref cmd);
             }
         }
+        public static List<Btu_Empresa> ObtenerDatosEmpresaRegistrada(Btu_Empresa objEmpresa, ref string Verificador)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            Btu_Empresa objFotoEmpresa = new Btu_Empresa();
+            string NombreCompleto = string.Empty;
+            List<Btu_Empresa> list = new List<Btu_Empresa>();
+            List<string> lista = new List<string>();
+
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { "p_rfc" };
+                object[] Valores = { objEmpresa.Rfc };
+                string[] ParametrosOut = {"p_actividad", "p_giro", "p_status", "p_valido", "p_contrasenia",
+              "p_medio_contacto", "p_celular", "p_contacto_cargo", "p_email", "p_contacto", "p_telefono", "p_estado",
+              "p_ciudad", "p_codigo_postal", "p_colonia", "p_domicilio", "p_nombre_comercial", "p_razon_social","p_logotipo",
+                    "p_tipo_persona","p_id_empresa", "p_bandera" };
+                cmd = exeProc.GenerarOracleCommand_Exe("OBT_DATOS_EMPRESA_REGISTRADA", ref Verificador, ref dr, Parametros, Valores, ParametrosOut);
+
+                if (Verificador == "0")
+                {
+                    objEmpresa.Actividad = Convert.ToString(cmd.Parameters["p_actividad"].Value);
+                    objEmpresa.Giro = Convert.ToString(cmd.Parameters["p_giro"].Value);
+                    objEmpresa.Status = Convert.ToString(cmd.Parameters["p_status"].Value);
+                    objEmpresa.Validado = Convert.ToString(cmd.Parameters["p_valido"].Value);
+                    objEmpresa.Contrasena = Convert.ToString(cmd.Parameters["p_contrasenia"].Value);
+                    objEmpresa.Medio_Contacto = Convert.ToString(cmd.Parameters["p_medio_contacto"].Value);
+                    objEmpresa.Celular = Convert.ToString(cmd.Parameters["p_celular"].Value);
+                    objEmpresa.Contacto_Cargo = Convert.ToString(cmd.Parameters["p_contacto_cargo"].Value);
+                    objEmpresa.Email = Convert.ToString(cmd.Parameters["p_email"].Value);
+                    objEmpresa.Contacto = Convert.ToString(cmd.Parameters["p_contacto"].Value);
+                    objEmpresa.Telefono = Convert.ToString(cmd.Parameters["p_telefono"].Value);
+                    objEmpresa.Estado = Convert.ToString(cmd.Parameters["p_estado"].Value);
+                    objEmpresa.Ciudad = Convert.ToString(cmd.Parameters["p_ciudad"].Value);
+                    objEmpresa.Codigo_Postal = Convert.ToString(cmd.Parameters["p_codigo_postal"].Value);
+                    objEmpresa.Colonia = Convert.ToString(cmd.Parameters["p_colonia"].Value);
+                    objEmpresa.Domicilio = Convert.ToString(cmd.Parameters["p_domicilio"].Value);
+                    objEmpresa.Nombre_Comercial = Convert.ToString(cmd.Parameters["p_nombre_comercial"].Value);
+                    objEmpresa.Razon_Social = Convert.ToString(cmd.Parameters["p_razon_social"].Value);
+                    objEmpresa.Ruta_Foto = Convert.ToString(cmd.Parameters["p_logotipo"].Value);
+                    objEmpresa.Tipo_Persona = Convert.ToString(cmd.Parameters["p_tipo_persona"].Value);
+                    objEmpresa.Id_Empresa = Convert.ToString(cmd.Parameters["p_id_empresa"].Value);                    
+                    System.Web.HttpContext.Current.Session["SessionRutaImagenEmpresa"] = objEmpresa;
+                    list.Add(objEmpresa);
+                }
+            }
+            catch (Exception ex)
+            {
+                Verificador = ex.Message;
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+            return list;
+        }
+        public static List<Btu_Curriculum> ObtenerGridAlumnosRegistrados()
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { };
+                object[] Valores = { };
+                cmd = exeProc.GenerarOracleCommandCursor_Grid("PKG_VINCULAR.Obt_Grid_Candidatos", ref dr, Parametros, Valores);
+                List<Btu_Curriculum> list = new List<Btu_Curriculum>();
+                while (dr.Read())
+                {
+                    Btu_Curriculum objCv = new Btu_Curriculum();
+                    objCv.Matricula = Convert.ToString(dr[0]);
+                    objCv.Nombre = Convert.ToString(dr[1]);
+                    objCv.Domicilio = Convert.ToString(dr[2]);
+                    objCv.Fecha_Nacimiento = Convert.ToString(dr[3]);
+                    objCv.Telefono = Convert.ToString(dr[4]);
+                    objCv.Celular = Convert.ToString(dr[5]);
+                    objCv.Correo = Convert.ToString(dr[6]);
+                    objCv.Contrasena = Convert.ToString(dr[7]);
+                    objCv.Status = Convert.ToString(dr[8]);
+                    objCv.Fecha_Creacion = Convert.ToString(dr[9]);
+                    objCv.Id = Convert.ToString(dr[10]);
+                    objCv.Ruta_Foto = Convert.ToString(dr[11]);
+                    list.Add(objCv);
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+        }
+        public static List<Btu_Vacante> ObtenerGridVacantes(string IdEmpresa)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            List<Btu_Vacante> list = new List<Btu_Vacante>();
+            Btu_Vacante objVacante = new Btu_Vacante();
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { "p_id" };
+                object[] Valores = { IdEmpresa };
+                cmd = exeProc.GenerarOracleCommandCursor_Grid("PKG_VINCULAR.Obt_Grid_Vacantes", ref dr, Parametros, Valores);                
+                while (dr.Read())
+                {                    
+                    objVacante.Nombre = Convert.ToString(dr[0]);
+                    objVacante.Total = Convert.ToString(dr[1]);
+                    objVacante.Edad_Minima = Convert.ToString(dr[2]);
+                    objVacante.Edad_Maxima = Convert.ToString(dr[3]);
+                    objVacante.Salario = Convert.ToString(dr[4]);
+                    objVacante.Vigencia_Inicio = Convert.ToString(dr[5]);
+                    objVacante.Vigencia_Fin = Convert.ToString(dr[6]);
+                    objVacante.Direccion_Entrevista = Convert.ToString(dr[7]);
+                    objVacante.Telefono = Convert.ToString(dr[8]);
+                    objVacante.Correo = Convert.ToString(dr[9]);
+                    objVacante.Area_Conocimientos = Convert.ToString(dr[10]);
+                    objVacante.Id = Convert.ToString(dr[11]);
+                    objVacante.Actividades = Convert.ToString(dr[12]);
+                    objVacante.Flayer_Empresa = Convert.ToString(dr[13]);
+                    list.Add(objVacante);
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+        }
+
     }
 }

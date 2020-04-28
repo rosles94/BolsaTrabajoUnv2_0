@@ -3,8 +3,7 @@
     ViewBag.Title = "Registrar Datos de la Empresa";
 }
 
-@*<script src="~/Scripts/funcionesRegistrarEmpresa.js"></script>*@
-<div class="container-fluid py-5">
+<div class="container-fluid py-5" ng-init="ctrl.CargarDatosPrincipalesEmpresa()">
 
     <div class="row">
         <div class="col-md-2">
@@ -15,7 +14,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text">RFC</span>
                 </div>
-                <input placeholder="RFC" type="text" class="form-control" ng-model="ctrl.RfcBuscarEmpresa">
+                <input id="RfcEmpresa" placeholder="RFC" type="text" class="form-control" ng-model="ctrl.RfcBuscarEmpresa">
                 <div class="input-group-append">
                     <span class="input-group-text"><i class="fas fa-search" ng-click="ctrl.BuscarEmpresa()"></i></span>
                 </div>
@@ -36,7 +35,7 @@
             </div>
         </div>
     </div>
-    
+
 
     <div id="formularioRegistro" class="row" style="display:none">
         <div class="col-md-2">
@@ -63,7 +62,10 @@
                     </span>
                 </li>
             </ul>
+            <br />
+            <input type="button" class="btn btn-danger" value="Regresar" ng-click="ctrl.RegresarPanelEmpresa()" />
         </div>
+
         <div class="col-md-10">
             <ul class="nav nav-tabs" id="tabInfoEmpresa" role="tablist">
                 <li class="nav-item">
@@ -74,8 +76,8 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="infoLogin-tab" data-toggle="tab" href="#infoLog" role="tab" aria-controls="infoLog" aria-selected="false">Usuario y Contraseña</a>
-                </li>
-            </ul>
+                </li>                
+            </ul>            
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="infoEmp" role="tabpanel" aria-labelledby="home-tab">
                     <form name="myForm">
@@ -88,7 +90,7 @@
                                     <input ng-model="ctrl.RazonSocial" id="razonSocial" name="razonSocial" ng-change="ctrl.GlobalInfoPer()" type="text" class="form-control" placeholder="Razón Social" aria-label="RazonSocial" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.razonSocial.$invalid" />
-                                <span ng-show="myForm.razonSocial.$error.required">*Razón social requerida</span>
+                                <span ng-show="myForm.razonSocial.$error.required">*Razón Social requerida</span>
                             </div>
                             <div class="col-md-6 py-3">
                                 <div class="input-group mb-3">
@@ -98,7 +100,7 @@
                                     <input ng-model="ctrl.NombreComercial" id="NombreComercial" name="NombreComercial" ng-change="ctrl.GlobalInfoPer()" type="text" class="form-control" placeholder="Nombre Comercial" aria-label="NombrComercial" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.NombreComercial.$invalid" />
-                                <span ng-show="myForm.NombreComercial.$error.required">*Razón social requerida</span>
+                                <span ng-show="myForm.NombreComercial.$error.required">*Nombre Comercial requerido</span>
                             </div>
                             <div class="col-md-6 py-1">
                                 <div class="input-group mb-3">
@@ -108,7 +110,7 @@
                                     <select name="TipoPersona" id="TipoPersona" ng-change="ctrl.GlobalInfoPer()" ng-model="ctrl.TipoPersona" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listTipoPersona" style="max-width:100%" required></select>
                                 </div>
                                 <span style="color:red" ng-show="myForm.TipoPersona.$invalid" />
-                                <span ng-show="myForm.TipoPersona.$error.required">*Razón social requerida</span>
+                                <span ng-show="myForm.TipoPersona.$error.required">*Tipo de Persona requerido</span>
                             </div>
                             <div class="col-md-6 py-1">
                                 <div class="input-group mb-3">
@@ -118,7 +120,7 @@
                                     <input ng-model="ctrl.Actividad" id="Actividad" name="Actividad" type="text" ng-change="ctrl.GlobalInfoPer()" class="form-control" placeholder="Actividad" aria-label="Actividad" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.Actividad.$invalid" />
-                                <span ng-show="myForm.Actividad.$error.required">*Razón social requerida</span>
+                                <span ng-show="myForm.Actividad.$error.required">*Actividad requerida</span>
                             </div>
                             <div class="col-md-6 py-2">
                                 <div class="input-group mb-3">
@@ -128,7 +130,7 @@
                                     <input ng-model="ctrl.CodigoPost" id="CodigoPost" name="CodigoPost" type="text" ng-change="ctrl.GlobalInfoPer()" class="form-control" placeholder="Código Postal" aria-label="CódigoPostal" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.CodigoPost.$invalid" />
-                                <span ng-show="myForm.CodigoPost.$error.required">*Razón social requerida</span>
+                                <span ng-show="myForm.CodigoPost.$error.required">*Código Postal requerido</span>
                             </div>
                             <div class="col-md-6 py-2">
                                 <div class="input-group mb-3">
@@ -138,7 +140,7 @@
                                     <select name="Estado" id="Estado" ng-model="ctrl.Estado" ng-change="ctrl.GlobalInfoPer()" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listEstados" ng-click="ctrl.ComboMunicipios()" style="max-width:100%" required></select>
                                 </div>
                                 <span style="color:red" ng-show="myForm.Estado.$invalid" />
-                                <span ng-show="myForm.Estado.$error.required">*Razón social requerida</span>
+                                <span ng-show="myForm.Estado.$error.required">*Estado requerido</span>
                             </div>
                             <div class="col-md-6 py-2">
                                 <div class="input-group mb-3">
@@ -148,7 +150,7 @@
                                     <select name="Municipio" id="Municipio" ng-change="ctrl.GlobalInfoPer()" ng-model="ctrl.Municipio" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listMunicipios" style="max-width:100%" required></select>
                                 </div>
                                 <span style="color:red" ng-show="myForm.Municipio.$invalid" />
-                                <span ng-show="myForm.Municipio.$error.required">*Razón social requerida</span>
+                                <span ng-show="myForm.Municipio.$error.required">*Municipio requerido</span>
                             </div>
                             <div class="col-md-6 py-2">
                                 <div class="input-group mb-3">
@@ -158,7 +160,7 @@
                                     <input ng-model="ctrl.Colonia" id="Colonia" name="Colonia" type="text" ng-change="ctrl.GlobalInfoPer()" class="form-control" placeholder="Cólonia" aria-label="Cólonia" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.Colonia.$invalid" />
-                                <span ng-show="myForm.Colonia.$error.required">*Razón social requerida</span>
+                                <span ng-show="myForm.Colonia.$error.required">*Cólonia requerida</span>
                             </div>
                             <div class="col-md-12 py-2">
                                 <div class="input-group mb-3">
@@ -168,12 +170,12 @@
                                     <input ng-model="ctrl.Domicilio" id="Domicilio" name="Domicilio" type="text" ng-change="ctrl.GlobalInfoPer()" class="form-control" placeholder="Domicilio" aria-label="Domicilio" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.Domicilio.$invalid" />
-                                <span ng-show="myForm.Domicilio.$error.required">*Razón social requerida</span>
+                                <span ng-show="myForm.Domicilio.$error.required">*Domicilio requerido</span>
                             </div>
                             <div class="col-md-1">
-                                <input id="informacionEmpresa" type="button" class="btn btn-info" value="Continuar" 
+                                <input id="informacionEmpresa" type="button" class="btn btn-info" value="Continuar"
                                        ng-disabled="myForm.razonSocial.$invalid || myForm.NombreComercial.$invalid || myForm.TipoPersona.$invalid
-                                       || myForm.Actividad.$invalid || myForm.CodigoPost.$invalid || myForm.Estado.$invalid 
+                                       || myForm.Actividad.$invalid || myForm.CodigoPost.$invalid || myForm.Estado.$invalid
                                        || myForm.Municipio.$invalid || myForm.Colonia.$invalid || myForm.Domicilio.$invalid" />
                             </div>
 
@@ -192,7 +194,7 @@
                                     <input ng-model="ctrl.PersonaContacto" id="PersonaContacto" name="PersonaContacto" type="text" ng-change="ctrl.GlobalDatosContacto()" class="form-control" placeholder="Persona de Contacto" aria-label="PersonaContacto" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm2.PersonaContacto.$invalid" />
-                                <span ng-show="myForm2.PersonaContacto.$error.required">*Razón social requerida</span>
+                                <span ng-show="myForm2.PersonaContacto.$error.required">*Persona de Contacto requerida</span>
                             </div>
                             <div class="col-md-6 py-3">
                                 <div class="input-group mb-3">
@@ -202,7 +204,7 @@
                                     <input ng-model="ctrl.Cargo" id="Cargo" name="Cargo" type="text" ng-change="ctrl.GlobalDatosContacto()" class="form-control" placeholder="Cargo" aria-label="Cargo" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm2.Cargo.$invalid" />
-                                <span ng-show="myForm2.Cargo.$error.required">*Razón social requerida</span>
+                                <span ng-show="myForm2.Cargo.$error.required">*Cargo requerido</span>
                             </div>
                             <div class="col-md-6 py-3">
                                 <div class="input-group mb-3">
@@ -212,7 +214,7 @@
                                     <input ng-model="ctrl.TelOficina" id="TelOficina" name="TelOficina" type="text" ng-change="ctrl.GlobalDatosContacto()" class="form-control" placeholder="Teléfono de Oficina" aria-label="TeléfonoOficina" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm2.TelOficina.$invalid" />
-                                <span ng-show="myForm2.TelOficina.$error.required">*Razón social requerida</span>
+                                <span ng-show="myForm2.TelOficina.$error.required">*Teléfono de Oficina requerido</span>
                             </div>
                             <div class="col-md-6 py-2">
                                 <div class="input-group mb-3">
@@ -222,7 +224,7 @@
                                     <input ng-model="ctrl.Celular" name="Celular" id="Celular" type="text" ng-change="ctrl.GlobalDatosContacto()" class="form-control" placeholder="Celular" aria-label="Celular" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm2.Celular.$invalid" />
-                                <span ng-show="myForm2.Celular.$error.required">*Razón social requerida</span>
+                                <span ng-show="myForm2.Celular.$error.required">*Celular requerido</span>
                             </div>
                             <div class="col-md-6 py-2">
                                 <div class="input-group mb-3">
@@ -232,7 +234,7 @@
                                     <input ng-model="ctrl.Email" name="Email" id="Email" type="text" ng-change="ctrl.GlobalDatosContacto()" class="form-control" placeholder="E-mail" aria-label="E-mail" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm2.Email.$invalid" />
-                                <span ng-show="myForm2.Email.$error.required">*Razón social requerida</span>
+                                <span ng-show="myForm2.Email.$error.required">*E-mail requerido</span>
                             </div>
                             <div class="col-md-6 py-2">
                                 <div class="input-group mb-3">
@@ -242,7 +244,7 @@
                                     <select name="Estado" id="Estado" ng-change="ctrl.GlobalDatosContacto()" ng-model="ctrl.MedioContacto" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listMedioContacto" style="max-width:100%" required></select>
                                 </div>
                                 <span style="color:red" ng-show="myForm2.Estado.$invalid" />
-                                <span ng-show="myForm2.Estado.$error.required">*Razón social requerida</span>
+                                <span ng-show="myForm2.Estado.$error.required">*Medio de Contacto requerido</span>
                             </div>
                             <div class="col-md-1">
                                 <input id="datosContactoRegresar" type="button" class="btn btn-info" value="Regresar" />
@@ -252,10 +254,10 @@
                             </div>
 
                             <div class="col-md-1">
-                                <input id="datosContacto" type="button" class="btn btn-info" value="Continuar" 
+                                <input id="datosContacto" type="button" class="btn btn-info" value="Continuar"
                                        ng-disabled="myForm2.PersonaContacto.$invalid || myForm2.Cargo.$invalid
-                                       || myForm2.TelOficina.$invalid || myForm2.Celular.$invalid 
-                                       || myForm2.Email.$invalid || myForm2.Estado.$invalid"/>
+                                       || myForm2.TelOficina.$invalid || myForm2.Celular.$invalid
+                                       || myForm2.Email.$invalid || myForm2.Estado.$invalid" />
                             </div>
                         </div>
                     </form>
@@ -278,17 +280,17 @@
                                     <input id="Contrasena" name="Contrasena" ng-model="ctrl.Contrasena" type="password" ng-change="ctrl.GlobalDatosSesion()" class="form-control" placeholder="Contraseña" aria-label="Contraseña" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm3.Contrasena.$invalid" />
-                                <span ng-show="myForm3.Contrasena.$error.required">*Razón social requerida</span>
+                                <span ng-show="myForm3.Contrasena.$error.required">*Contraseña requerida</span>
                             </div>
                             <div class="col-md-6 py-2">
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Confirmar Contraseña</span>
                                     </div>
-                                    <input ng-model="ctrl.Contrasena2" type="password" ng-change="ctrl.GlobalDatosSesion()" class="form-control" placeholder="Confirmar Contraseña" aria-label="ConfirmarContraseña" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input id="Contrasena2" ng-model="ctrl.Contrasena2" type="password" ng-change="ctrl.GlobalDatosSesion()" class="form-control" placeholder="Confirmar Contraseña" aria-label="ConfirmarContraseña" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm3.Contrasena2.$invalid" />
-                                <span ng-show="myForm3.Contrasena2.$error.required">*Razón social requerida</span>
+                                <span ng-show="myForm3.Contrasena2.$error.required">*Confirmar Contraseña requerido</span>
                             </div>
                             <div class="col-md-1">
                                 <input id="infoLogRegresar" type="button" class="btn btn-info" value="Regresar" />
@@ -297,8 +299,10 @@
 
                             </div>
                             <div class="col-md-1">
-                                <input type="button" class="btn btn-info" value="Guardar" ng-click="ctrl.RegistrarDatosEmpresa()"
+                                <input id="guardarEmpresa" type="button" class="btn btn-info" value="Guardar" ng-click="ctrl.RegistrarDatosEmpresa()"
                                        ng-disabled="myForm3.Contrasena.$invalid || myForm3.Contrasena2.$invalid" />
+                                <input id="editarEmpresa" type="button" class="btn btn-info" value="Guardar" ng-click="ctrl.EditarDatosEmpresa()"
+                                       ng-disabled="myForm3.Contrasena.$invalid || myForm3.Contrasena2.$invalid" style="display:none" />
                             </div>
                         </div>
                     </form>
@@ -307,3 +311,5 @@
         </div>
     </div>
 </div>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/funcionesRegistrarEmpresa.js"></script>

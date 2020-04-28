@@ -21,7 +21,8 @@ var btuContext =
     listExperienciaProf: [],
     listCursoTaller: [],
     listDatosPanelCv: [],
-    listDatosPanelEmpresa : [],
+    listDatosPanelEmpresa: [],
+    listDatosEmpresa : [],
 
 
     BuscarEmpresa: function (Rfc, callBackResult) {
@@ -1098,6 +1099,66 @@ var btuContext =
             },
             error: function (ex) {
                 callBackResult({ ressult: 'notgp', message: ex });
+            }
+        });
+    },
+    ObtenerDatosEmpresa: function (callBackResult) {
+        let self = this;
+        self.listDatosEmpresa.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/ObtenerDatosEmpresa",
+            data: {                
+            },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    if (resp.Resultado !== null) {
+                        for (var i = 0; i < resp.Resultado.length; i++) {
+                            self.listDatosEmpresa.push({
+                                Actividad: resp.Resultado[i].Actividad,
+                                Giro: resp.Resultado[i].Giro, Institucion: resp.Resultado[i].Institucion, Status: resp.Resultado[i].Status, Validado: resp.Resultado[i].Validado,
+                                Contrasena: resp.Resultado[i].Contrasena, Medio_Contacto: resp.Resultado[i].Medio_Contacto, Celular: resp.Resultado[i].Celular,
+                                Contacto_Cargo: resp.Resultado[i].Contacto_Cargo, Email: resp.Resultado[i].Email, Contacto: resp.Resultado[i].Contacto, Telefono: resp.Resultado[i].Telefono,
+                                Estado: resp.Resultado[i].Estado, Ciudad: resp.Resultado[i].Ciudad, Codigo_Postal: resp.Resultado[i].Codigo_Postal, Colonia: resp.Resultado[i].Colonia,
+                                Domicilio: resp.Resultado[i].Domicilio, Nombre_Comercial: resp.Resultado[i].Nombre_Comercial, Razon_Social: resp.Resultado[i].Razon_Social,
+                                Ruta_Foto: resp.Resultado[i].Ruta_Foto, Tipo_Persona: resp.Resultado[i].Tipo_Persona, Id_Empresa: resp.Resultado[i].Id_Empresa, Rfc: resp.Resultado[i].Rfc
+                            });
+                        }
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: ex });
+            }
+        });
+    },
+
+    EditarDatosEmpresa: function (RazonSocial, NombreComercial, Actividad, CodigoPostal, Estado, Ciudad, Colonia, Domicilio, Rfc,
+        Contacto, ContactoCargo, Telefono, Celular, Email, MedioContacto, Contrasena, TipoPersona, callBackResult) {
+        $.ajax({
+            beforeSend: function () {
+                $("#cargandoDatos").show();
+            },
+            type: "POST",
+            url: urlServer + "Btu/EditarDatosEmpresa",
+            data: {
+                RazonSocial, NombreComercial, Actividad, CodigoPostal, Estado, Ciudad, Colonia, Domicilio, Rfc,
+                Contacto, ContactoCargo, Telefono, Celular, Email, MedioContacto, Contrasena, TipoPersona
+            },
+            success: function (resp) {
+                if (resp.Error === false)
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: ex });
+            },
+            complete: function () {
+                $("#cargandoDatos").hide();
             }
         });
     }

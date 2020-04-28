@@ -4,6 +4,7 @@ using Microsoft.Ajax.Utilities;
 using System;
 using System.Collections.Generic;
 using System.DirectoryServices;
+using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -1744,6 +1745,94 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        public JsonResult ObtenerDatosEmpresa()
+        {
+            Btu_Empresa objEmpresa = new Btu_Empresa();
+            List<Btu_Sesion> list = new List<Btu_Sesion>();
+            ResultadoEmpresa objResultado = new ResultadoEmpresa();
+            string Verificador = string.Empty;
+            try
+            {
+                if (System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"] != null) 
+                { 
+                    list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"];
+                    objEmpresa.Rfc = list[0].Email;
+                    objResultado.Resultado = DataContext.ObtenerDatosEmpresaRegistrada(objEmpresa, ref Verificador);
+                    if (Verificador == "0")
+                    {
+                        objResultado.Error = false;
+                        objResultado.MensajeError = "";
+                    }
+                    else
+                    {
+                        objResultado.Error = true;
+                        objResultado.MensajeError = Verificador;
+                    }
+                }
+                else
+                {
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";
+                    objResultado.Resultado = null;
+                }
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public JsonResult EditarDatosEmpresa(string RazonSocial, string NombreComercial, string Actividad, string CodigoPostal, string Estado, string Ciudad, string Colonia, string Domicilio, string Rfc,
+            string Contacto, string ContactoCargo, string Telefono, string Celular, string Email, string MedioContacto, string Contrasena, string TipoPersona)
+        {
+            List<Btu_Sesion> list = new List<Btu_Sesion>();
+            list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"];
+            Btu_Empresa objEmpresa = new Btu_Empresa();
+            ResultadoComun objResultado = new ResultadoComun();
+            string Verificador = string.Empty;
+            try
+            {
+                objEmpresa.Id_Empresa = list[0].Id;
+                objEmpresa.Razon_Social = RazonSocial;
+                objEmpresa.Nombre_Comercial = NombreComercial;
+                objEmpresa.Actividad = Actividad;
+                objEmpresa.Codigo_Postal = CodigoPostal;
+                objEmpresa.Estado = Estado;
+                objEmpresa.Ciudad = Ciudad;
+                objEmpresa.Colonia = Colonia;
+                objEmpresa.Domicilio = Domicilio;
+                objEmpresa.Rfc = Rfc;
+                objEmpresa.Contacto = Contacto;
+                objEmpresa.Contacto_Cargo = ContactoCargo;
+                objEmpresa.Telefono = Telefono;
+                objEmpresa.Celular = Celular;
+                objEmpresa.Email = Email;
+                objEmpresa.Medio_Contacto = MedioContacto;
+                objEmpresa.Contrasena = Contrasena;
+                objEmpresa.Ruta_Foto = "";
+                objEmpresa.Tipo_Persona = TipoPersona;
+                GuardarDataContext.EditarDatosEmpresa(objEmpresa, ref Verificador);
+                if (Verificador == "0")
+                {
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";
+                }
+                else
+                {
+                    objResultado.Error = true;
+                    objResultado.MensajeError = Verificador;
+                }
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
 
         // Metodos compartidos por 2 o más vistas
         public static void EnvioCorreo_Adjunto(ref System.Net.Mail.MailMessage mmsg, string Asunto, string Contenido, string DirCorreo, ref string Error)
@@ -1835,6 +1924,10 @@ namespace BolsaTrabajoUnv2_0.Controllers
             return View();
         }
         public ActionResult PanelAdministrador()
+        {
+            return View();
+        }
+        public ActionResult Vacante()
         {
             return View();
         }
