@@ -165,6 +165,34 @@ namespace BolsaTrabajoUnv2_0.Data
                 exeProc.LimpiarOracleCommand(ref cmd);
             }
         }
+        public static void GuardarVacante(Btu_Vacante objVacante, ref string Verificador)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { "p_nombre", "p_total", "p_edad_minima", "p_edad_maxima", "p_estado_civil", "p_grado", "p_experiencia",
+                    "p_actividades", "p_conocimientos", "p_salario", "p_frecuencia_salario",  "p_prestasiones", "p_ubicacion", "p_licencia",
+                    "p_vigencia_inicio", "p_vigencia_fin", "p_tipo", "p_direccion_entrevista", "p_telefono", "p_correo", "p_comentarios",
+                    "p_responsable_entrevista", "p_especificaciones_entrevista", "p_id_empresa", "p_rfc", "p_idioma", "p_radicar", "p_viajar", "p_flayer", "p_genero", "p_jornada"};
+                object[] Valores = { objVacante.Nombre, objVacante.Total, objVacante.Edad_Minima, objVacante.Edad_Maxima, objVacante.Estado_Civil, objVacante.Grado, objVacante.Experiencia,
+                objVacante.Actividades , objVacante.Conocimientos, objVacante.Salario, objVacante.Frecuencia_Salario ,objVacante.Prestaciones, objVacante.Ubicacion, objVacante.Licencia, objVacante.Vigencia_Inicio,
+                objVacante.Vigencia_Fin, objVacante.Tipo, objVacante.Direccion_Entrevista, objVacante.Telefono, objVacante.Correo, objVacante.Comentarios, objVacante.Responsable_Entrevista, 
+                objVacante.Especificaciones_Entrevista, objVacante.Id_Empresa, objVacante.Rfc, objVacante.Idioma, objVacante.Radicar, objVacante.Viajar, objVacante.Flayer_Empresa, objVacante.Genero, 
+                objVacante.Jornada_Laboral};
+                string[] ParametrosOut = { "P_BANDERA" };
+                cmd = exeProc.GenerarOracleCommand("INS_BTU_VACANTE", ref Verificador, ref dr, Parametros, Valores, ParametrosOut);
+            }
+            catch (Exception ex)
+            {
+                Verificador = ex.Message;
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+        }
 
     }
 }

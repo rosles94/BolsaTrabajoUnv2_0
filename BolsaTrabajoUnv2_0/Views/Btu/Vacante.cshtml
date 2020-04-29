@@ -3,7 +3,7 @@
     ViewBag.Title = "Vacante";
 }
 
-<div class="container-fluid py-5">
+<div class="container-fluid py-5" ng-init="ctrl.CargarDatosPrincipalesVacante()">
 
     <div class="row">
         <div class="col-md-2">
@@ -30,33 +30,26 @@
 
     <div id="formularioRegistro" class="row">
         <div class="col-md-2">
-            <span>Porcentaje de la Información Completada {{ctrl.totalDatos}}%</span>
+            @*<span>Porcentaje de la Información Completada {{ctrl.totalDatos}}%</span>
             <div class="progress">
-                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="{{ctrl.totalDatos}}" aria-valuemin="0" aria-valuemax="100" style="width:"{{ctrl.totalDatos}}%"></div>
-            </div>
-            @*<ul class="list-group">
-            <li id="globalInfoemp" class="list-group-item d-flex justify-content-between align-items-center" style="background-color:yellow">
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="{{ctrl.totalDatos}}" aria-valuemin="0" aria-valuemax="100" style="width:'{{ctrl.totalDatos}}'%"></div>
+            </div>*@
+            <ul class="list-group">
+            <li id="globalPerfilVac" class="list-group-item d-flex justify-content-between align-items-center" style="background-color:yellow">
                 Perfil Vacante
                 <span class="badge badge-primary badge-pill">
-                    <i id="infemp1" style="display:none" class="fas fa-check"></i>
-                    <i id="infemp2" class="fas fa-exclamation"></i>
+                    <i id="infPerfVac1" style="display:none" class="fas fa-check"></i>
+                    <i id="infPerfVac2" class="fas fa-exclamation"></i>
                 </span>
             </li>
-            <li id="globalDatosCont" class="list-group-item d-flex justify-content-between align-items-center" style="background-color:yellow">
-                Información p
+            <li id="globalInfoEntre" class="list-group-item d-flex justify-content-between align-items-center" style="background-color:yellow">
+                Información Para Entrevistas
                 <span class="badge badge-primary badge-pill">
-                    <i id="datcont1" style="display:none" class="fas fa-check"></i>
-                    <i id="datcont2" class="fas fa-exclamation"></i>
+                    <i id="infoEntre1" style="display:none" class="fas fa-check"></i>
+                    <i id="infoEntre2" class="fas fa-exclamation"></i>
                 </span>
-            </li>
-            <li id="globalSesion" class="list-group-item d-flex justify-content-between align-items-center" style="background-color:yellow">
-                Usuario y Contraseña
-                <span class="badge badge-primary badge-pill">
-                    <i id="datossesion1" style="display:none" class="fas fa-check"></i>
-                    <i id="datossesion2" class="fas fa-exclamation"></i>
-                </span>
-            </li>
-        </ul>*@
+            </li>            
+        </ul>
             <br />
             <input type="button" class="btn btn-danger" value="Regresar" ng-click="ctrl.RegresarPanelEmpresa()" />
         </div>
@@ -120,7 +113,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Genero</span>
                                     </div>
-                                    <select name="Genero" id="Genero" ng-model="ctrl.Genero" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listEstados" style="max-width:100%" required></select>
+                                    <select name="Genero" id="Genero" ng-change="ctrl.GlobalInfovacante()" ng-model="ctrl.Genero" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listGenero" style="max-width:100%" required></select>
                                 </div>
                                 <span style="color:red" ng-show="myForm.Genero.$invalid" />
                                 <span ng-show="myForm.Genero.$error.required">*Genero requerido</span>
@@ -130,7 +123,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Estado Cívil</span>
                                     </div>
-                                    <select name="EdoCivil" id="EdoCivil" ng-model="ctrl.EdoCivil" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listEstados" style="max-width:100%" required></select>
+                                    <select name="EdoCivil" id="EdoCivil" ng-change="ctrl.GlobalInfovacante()" ng-model="ctrl.EdoCivil" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listEdoCivil" style="max-width:100%" required></select>
                                 </div>
                                 <span style="color:red" ng-show="myForm.EdoCivil.$invalid" />
                                 <span ng-show="myForm.EdoCivil.$error.required">*Razón social requerida</span>
@@ -140,7 +133,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Grado de Estudios</span>
                                     </div>
-                                    <input ng-model="ctrl.GradoEstu" id="GradoEstu" name="GradoEstu" type="text" class="form-control" placeholder="Grado de Estudios" aria-label="GradoEstu" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.GradoEstu" ng-change="ctrl.GlobalInfovacante()" id="GradoEstu" name="GradoEstu" type="text" class="form-control" placeholder="Grado de Estudios" aria-label="GradoEstu" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.GradoEstu.$invalid" />
                                 <span ng-show="myForm.GradoEstu.$error.required">*Grado de Estudios requerido</span>
@@ -150,7 +143,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Experiencia</span>
                                     </div>
-                                    <textarea ng-model="ctrl.Expe" id="Expe" name="Expe" type="text" class="form-control" aria-label="Experiencia" aria-describedby="basic-addon1" style="max-width:100%; max-height:70%; min-height:70%" required></textarea>
+                                    <textarea ng-model="ctrl.Expe" ng-change="ctrl.GlobalInfovacante()" id="Expe" name="Expe" type="text" class="form-control" aria-label="Experiencia" aria-describedby="basic-addon1" style="max-width:100%; max-height:70%; min-height:70%" required></textarea>
                                 </div>
                                 <span style="color:red" ng-show="myForm.Expe.$invalid" />
                                 <span ng-show="myForm.Expe.$error.required">*Experiencia requerida</span>
@@ -160,7 +153,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Actividades a Realizar</span>
                                     </div>
-                                    <textarea ng-model="ctrl.ActReal" id="ActReal" name="ActReal" type="text" class="form-control" aria-label="ActReal" aria-describedby="basic-addon1" style="max-width:100%; max-height:70%; min-height:70%" required></textarea>
+                                    <textarea ng-model="ctrl.ActReal" ng-change="ctrl.GlobalInfovacante()" id="ActReal" name="ActReal" type="text" class="form-control" aria-label="ActReal" aria-describedby="basic-addon1" style="max-width:100%; max-height:70%; min-height:70%" required></textarea>
                                 </div>
                                 <span style="color:red" ng-show="myForm.ActReal.$invalid" />
                                 <span ng-show="myForm.ActReal.$error.required">*Actividades a Realizar requerido</span>
@@ -170,7 +163,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Conocimientos Requeridos</span>
                                     </div>
-                                    <textarea ng-model="ctrl.ConoReq" id="ConoReq" name="ConoReq" type="text" class="form-control" aria-label="ConoReq" aria-describedby="basic-addon1" style="max-width:100%; max-height:70%; min-height:70%" required></textarea>
+                                    <textarea ng-model="ctrl.ConoReq" ng-change="ctrl.GlobalInfovacante()" id="ConoReq" name="ConoReq" type="text" class="form-control" aria-label="ConoReq" aria-describedby="basic-addon1" style="max-width:100%; max-height:70%; min-height:70%" required></textarea>
                                 </div>
                                 <span style="color:red" ng-show="myForm.ConoReq.$invalid" />
                                 <span ng-show="myForm.ConoReq.$error.required">*Conocimientos requeridos</span>
@@ -180,7 +173,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Horarios y Días a Laborar</span>
                                     </div>
-                                    <textarea ng-model="ctrl.HorioDiaLab" id="HorioDiaLab" name="HorioDiaLab" type="text" class="form-control" aria-label="HorioDiaLab" aria-describedby="basic-addon1" style="max-width:100%; max-height:70%; min-height:70%" required></textarea>
+                                    <textarea ng-model="ctrl.HorioDiaLab" ng-change="ctrl.GlobalInfovacante()" id="HorioDiaLab" name="HorioDiaLab" type="text" class="form-control" aria-label="HorioDiaLab" aria-describedby="basic-addon1" style="max-width:100%; max-height:70%; min-height:70%" required></textarea>
                                 </div>
                                 <span style="color:red" ng-show="myForm.HorioDiaLab.$invalid" />
                                 <span ng-show="myForm.HorioDiaLab.$error.required">*Horarios y Días a Laborar requerido</span>
@@ -190,17 +183,17 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Tipo de Salario</span>
                                     </div>
-                                    <select name="TipoSuedo" id="TipoSuedo" ng-model="ctrl.TipoSuedo" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listEstados" style="max-width:100%" required></select>
+                                    <select name="TipoSuedo" id="TipoSuedo" ng-change="ctrl.GlobalInfovacante()" ng-model="ctrl.TipoSuedo" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listTipoSalario" style="max-width:100%" required></select>
                                 </div>
                                 <span style="color:red" ng-show="myForm.TipoSuedo.$invalid" />
                                 <span ng-show="myForm.TipoSuedo.$error.required">*RTipo de Salario requerido</span>
                             </div>
-                            <div class="col-md-6 py-3">
+                            <div class="col-md-6 py-2">
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Salario</span>
                                     </div>
-                                    <input ng-model="ctrl.Salario" id="Salario" name="Salario" type="text" class="form-control" placeholder="$0000" aria-label="Salario" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.Salario" ng-change="ctrl.GlobalInfovacante()" id="Salario" name="Salario" type="text" class="form-control" placeholder="$0000" aria-label="Salario" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.Salario.$invalid" />
                                 <span ng-show="myForm.Salario.$error.required">*Salario requerido</span>
@@ -210,7 +203,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Prestaciones</span>
                                     </div>
-                                    <input ng-model="ctrl.PrestacionesLab" id="PrestacionesLab" name="PrestacionesLab" type="text" class="form-control" placeholder="Prestaciones Laborales" aria-label="PrestacionesLab" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.PrestacionesLab" ng-change="ctrl.GlobalInfovacante()" id="PrestacionesLab" name="PrestacionesLab" type="text" class="form-control" placeholder="Prestaciones Laborales" aria-label="PrestacionesLab" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.PrestacionesLab.$invalid" />
                                 <span ng-show="myForm.PrestacionesLab.$error.required">*Prestaciones requeridas</span>
@@ -220,47 +213,47 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Ubicación de la Vacante</span>
                                     </div>
-                                    <input ng-model="ctrl.UbicVacante" id="UbicVacante" name="UbicVacante" type="text" class="form-control" placeholder="Ubbicación de la Vacante" aria-label="UbicVacante" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.UbicVacante" ng-change="ctrl.GlobalInfovacante()" id="UbicVacante" name="UbicVacante" type="text" class="form-control" placeholder="Ubbicación de la Vacante" aria-label="UbicVacante" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.UbicVacante.$invalid" />
                                 <span ng-show="myForm.UbicVacante.$error.required">*Ubicación de la Vacante requerida</span>
                             </div>
                             <div class="col-md-6 py-3">
                                 <div class="input-group">
-                                    <label class="input-group-text" for="radioGender">Disponibilidad para Viajar</label>
+                                    <label class="input-group-text" for="radioViaja">Disponibilidad para Viajar</label>
                                     <div class="custom-control custom-radio py-2">
                                         <input ng-model="ctrl.SiViaja" type="radio" id="rSiViaja" name="radioViaja" class="custom-control-input">
-                                        <label class="custom-control-label" for="radioMale">Si</label>
+                                        <label class="custom-control-label" for="rSiViaja">Si</label>
                                     </div>
                                     <div class="custom-control custom-radio py-2">
                                         <input ng-model="ctrl.NoViaja" type="radio" id="rNoViaja" name="radioViaja" class="custom-control-input">
-                                        <label class="custom-control-label" for="radioFemale">No</label>
+                                        <label class="custom-control-label" for="rNoViaja">No</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6 py-3">
                                 <div class="input-group">
-                                    <label class="input-group-text" for="radioGender">Disponibilidad para Rádicar Fuera</label>
+                                    <label class="input-group-text" for="radioRadicar">Disponibilidad para Rádicar Fuera</label>
                                     <div class="custom-control custom-radio py-2">
                                         <input ng-model="ctrl.SiRadica" type="radio" id="rSiRadica" name="radioRadica" class="custom-control-input">
-                                        <label class="custom-control-label" for="radioMale">Si</label>
+                                        <label class="custom-control-label" for="rSiRadica">Si</label>
                                     </div>
                                     <div class="custom-control custom-radio py-2">
                                         <input ng-model="ctrl.NoRadica" type="radio" id="rNoRadica" name="radioRadica" class="custom-control-input">
-                                        <label class="custom-control-label" for="radioFemale">No</label>
+                                        <label class="custom-control-label" for="rNoRadica">No</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6 py-2">
                                 <div class="input-group">
-                                    <label class="input-group-text" for="radioGender">Licencia de Manejo</label>
+                                    <label class="input-group-text" for="radioLicencia">Licencia de Manejo</label>
                                     <div class="custom-control custom-radio py-2">
                                         <input ng-model="ctrl.SiLicencia" type="radio" id="rSiLicencia" name="radioLicencia" class="custom-control-input">
-                                        <label class="custom-control-label" for="radioMale">Si</label>
+                                        <label class="custom-control-label" for="rSiLicencia">Si</label>
                                     </div>
                                     <div class="custom-control custom-radio py-2">
                                         <input ng-model="ctrl.NoLicencia" type="radio" id="rNoLicencia" name="radioLicencia" class="custom-control-input">
-                                        <label class="custom-control-label" for="radioFemale">No</label>
+                                        <label class="custom-control-label" for="rNoLicencia">No</label>
                                     </div>
                                 </div>
                             </div>
@@ -269,7 +262,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Idioma Extra</span>
                                     </div>
-                                    <select name="IdiomaExtra" id="IdiomaExtra" ng-model="ctrl.IdiomaExtra" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listEstados" style="max-width:100%" required></select>
+                                    <select name="IdiomaExtra" id="IdiomaExtra" ng-change="ctrl.GlobalInfovacante()" ng-model="ctrl.IdiomaExtra" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listIdiomaExt" style="max-width:100%" required></select>
                                 </div>
                                 <span style="color:red" ng-show="myForm.IdiomaExtra.$invalid" />
                                 <span ng-show="myForm.IdiomaExtra.$error.required">*Idioma Extra requerido</span>
@@ -279,7 +272,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Vigencia Inicio Vacante</span>
                                     </div>
-                                    <input ng-model="ctrl.VigIniVac" id="VigIniVac" name="VigIniVac" type="text" class="form-control" aria-label="VigIniVac" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.VigIniVac" ng-change="ctrl.GlobalInfovacante()" id="VigIniVac" name="VigIniVac" type="text" class="form-control" aria-label="VigIniVac" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.VigIniVac.$invalid" />
                                 <span ng-show="myForm.VigIniVac.$error.required">*Vigencia de la Vacante requerida</span>
@@ -289,7 +282,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Vigencia Fin Vacante</span>
                                     </div>
-                                    <input ng-model="ctrl.VigFinVac" id="VigFinVac" name="VigFinVac" type="text" class="form-control" aria-label="VigFinVac" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.VigFinVac" ng-change="ctrl.GlobalInfovacante()" id="VigFinVac" name="VigFinVac" type="text" class="form-control" aria-label="VigFinVac" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.VigFinVac.$invalid" />
                                 <span ng-show="myForm.VigFinVac.$error.required">*Vigencia de la Vacante requerida</span>
@@ -299,7 +292,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Tipo Vacante</span>
                                     </div>
-                                    <select name="TipoVacante" id="TipoVacante" ng-model="ctrl.TipoVacante" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listEstados" style="max-width:100%" required></select>
+                                    <select name="TipoVacante" id="TipoVacante" ng-change="ctrl.GlobalInfovacante()" ng-model="ctrl.TipoVacante" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listTipoVacante" style="max-width:100%" required></select>
                                 </div>
                                 <span style="color:red" ng-show="myForm.TipoVacante.$invalid" />
                                 <span ng-show="myForm.TipoVacante.$error.required">*Tipo de Vacante requerida</span>
@@ -308,10 +301,13 @@
 
                             </div>
                             <div class="col-md-1">
-                                <input id="informacionEmpresa" type="button" class="btn btn-info" value="Continuar"
-                                       ng-disabled="myForm.razonSocial.$invalid || myForm.NombreComercial.$invalid || myForm.TipoPersona.$invalid
-                                       || myForm.Actividad.$invalid || myForm.CodigoPost.$invalid || myForm.Estado.$invalid
-                                       || myForm.Municipio.$invalid || myForm.Colonia.$invalid || myForm.Domicilio.$invalid" />
+                                <input id="informacionVacante" type="button" class="btn btn-info" value="Continuar"
+                                       ng-disabled="myForm.NombreVacante.$invalid || myForm.NumeroVacantes.$invalid || myForm.EdadMin.$invalid
+                                       || myForm.EdadMax.$invalid || myForm.Genero.$invalid || myForm.EdoCivil.$invalid
+                                       || myForm.GradoEstu.$invalid || myForm.Expe.$invalid || myForm.ActReal.$invalid
+                                       || myForm.ConoReq.$invalid || myForm.HorioDiaLab.$invalid || myForm.TipoSuedo.$invalid
+                                       || myForm.Salario.$invalid || myForm.PrestacionesLab.$invalid || myForm.UbicVacante.$invalid
+                                       || myForm.IdiomaExtra.$invalid || myForm.VigIniVac.$invalid || myForm.VigFinVac.$invalid || myForm.TipoVacante.$invalid" />
                             </div>
                         </div>
                     </form>
@@ -325,7 +321,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Responsable de la Entrevista</span>
                                     </div>
-                                    <input ng-model="ctrl.PersonaEntrevista" id="PersonaEntrevista" name="PersonaEntrevista" type="text" class="form-control" placeholder="Responsable de la Entrevista" aria-label="PersonaEntrevista" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.PersonaEntrevista" ng-change="ctrl.GlobalInfoEntrevista()" id="PersonaEntrevista" name="PersonaEntrevista" type="text" class="form-control" placeholder="Responsable de la Entrevista" aria-label="PersonaEntrevista" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm2.PersonaEntrevista.$invalid" />
                                 <span ng-show="myForm2.PersonaEntrevista.$error.required">*Responsable de la Entrevista requerido</span>
@@ -335,7 +331,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Días y Horarios de Enrtevistas</span>
                                     </div>
-                                    <input ng-model="ctrl.DiaHorarioEntre" id="DiaHorarioEntre" name="DiaHorarioEntre" type="text"  class="form-control" placeholder="Días y Horarios" aria-label="Cargo" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.DiaHorarioEntre" ng-change="ctrl.GlobalInfoEntrevista()" id="DiaHorarioEntre" name="DiaHorarioEntre" type="text"  class="form-control" placeholder="Días y Horarios" aria-label="Cargo" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm2.DiaHorarioEntre.$invalid" />
                                 <span ng-show="myForm2.DiaHorarioEntre.$error.required">*Días y Horarios de Enrtevistas requerido</span>
@@ -345,7 +341,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Dirección para la Entrevista</span>
                                     </div>
-                                    <input ng-model="ctrl.DircEntre" id="DircEntre" name="DircEntre" type="text"  class="form-control" placeholder="Dirección para la Entrevista" aria-label="DircEntre" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.DircEntre" ng-change="ctrl.GlobalInfoEntrevista()" id="DircEntre" name="DircEntre" type="text"  class="form-control" placeholder="Dirección para la Entrevista" aria-label="DircEntre" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm2.DircEntre.$invalid" />
                                 <span ng-show="myForm2.DircEntre.$error.required">*Dirección para la Entrevista requerido</span>
@@ -355,7 +351,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Teléfono de Oficina</span>
                                     </div>
-                                    <input ng-model="ctrl.TelOfc" name="TelOfc" id="TelOfc" type="text" class="form-control" placeholder="Teléfono de Oficina" aria-label="TelOfc" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.TelOfc" ng-change="ctrl.GlobalInfoEntrevista()" name="TelOfc" id="TelOfc" type="text" class="form-control" placeholder="Teléfono de Oficina" aria-label="TelOfc" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm2.TelOfc.$invalid" />
                                 <span ng-show="myForm2.TelOfc.$error.required">*Teléfono de Oficina requerido</span>
@@ -365,7 +361,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">E-mail</span>
                                     </div>
-                                    <input ng-model="ctrl.Email" name="Email" id="Email" type="text" ng-change="ctrl.GlobalDatosContacto()" class="form-control" placeholder="E-mail" aria-label="E-mail" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.Email" ng-change="ctrl.GlobalInfoEntrevista()" name="Email" id="Email" type="text" ng-change="ctrl.GlobalDatosContacto()" class="form-control" placeholder="E-mail" aria-label="E-mail" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm2.Email.$invalid" />
                                 <span ng-show="myForm2.Email.$error.required">*E-mail requerido</span>
@@ -375,7 +371,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Comentarios</span>
                                     </div>
-                                    <input ng-model="ctrl.Comentarios" name="Comentarios" id="Comentarios" type="text" class="form-control" placeholder="Comentarios" aria-label="E-mail" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.Comentarios" ng-change="ctrl.GlobalInfoEntrevista()" name="Comentarios" id="Comentarios" type="text" class="form-control" placeholder="Comentarios" aria-label="E-mail" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>                                
                             </div>
                             <div class="col-md-1">
@@ -386,10 +382,10 @@
                             </div>
 
                             <div class="col-md-1">
-                                <input id="datosContacto" type="button" class="btn btn-info" value="Guardar"
-                                       ng-disabled="myForm2.PersonaContacto.$invalid || myForm2.Cargo.$invalid
-                                       || myForm2.TelOficina.$invalid || myForm2.Celular.$invalid
-                                       || myForm2.Email.$invalid || myForm2.Estado.$invalid" />
+                                <input id="datosContacto" type="button" class="btn btn-info" value="Guardar" ng-click="ctrl.GuardarVacante()"
+                                       ng-disabled="myForm2.PersonaEntrevista.$invalid || myForm2.DiaHorarioEntre.$invalid
+                                       || myForm2.DircEntre.$invalid || myForm2.TelOfc.$invalid
+                                       || myForm2.Email.$invalid" />
                             </div>
                         </div>
                     </form>
@@ -399,4 +395,4 @@
     </div>
 </div>
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
-<script src="~/Scripts/funcionesRegistrarEmpresa.js"></script>
+<script src="~/Scripts/funcionesVacantes.js"></script>

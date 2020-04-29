@@ -22,8 +22,14 @@ var btuContext =
     listCursoTaller: [],
     listDatosPanelCv: [],
     listDatosPanelEmpresa: [],
-    listDatosEmpresa : [],
-
+    listDatosEmpresa: [],
+    listGenero: [],
+    listEdoCivil: [],
+    listTipoSalario: [],
+    listIdiomaExt: [],
+    listTipoVacante: [],
+    listTipoCurso: [],
+    listVacantesEmpresa:[],
 
     BuscarEmpresa: function (Rfc, callBackResult) {
         let self = this;
@@ -1161,9 +1167,185 @@ var btuContext =
                 $("#cargandoDatos").hide();
             }
         });
+    },
+
+    ComboGenero: function (callBackResult) {
+        let self = this;
+        self.listGenero.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/ComboGenero",
+            data: {},
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listGenero.push({
+                            Id: resp.Resultado[i].Id, Descripcion: resp.Resultado[i].Descripcion
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+
+    ComboEdoCivil: function (callBackResult) {
+        let self = this;
+        self.listEdoCivil.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/ComboEdoCivil",
+            data: {},
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listEdoCivil.push({
+                            Id: resp.Resultado[i].Id, Descripcion: resp.Resultado[i].Descripcion
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+
+    ComboTipoSalario: function (callBackResult) {
+        let self = this;
+        self.listTipoSalario.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/ComboTipoSalario",
+            data: {},
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listTipoSalario.push({
+                            Id: resp.Resultado[i].Id, Descripcion: resp.Resultado[i].Descripcion
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+
+    ComboIdiomaExtra: function (callBackResult) {
+        let self = this;
+        self.listIdiomaExt.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/ComboIdiomaExtra",
+            data: {},
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listIdiomaExt.push({
+                            Id: resp.Resultado[i].Id, Descripcion: resp.Resultado[i].Descripcion
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+
+    ComboTipoVacante: function (callBackResult) {
+        let self = this;
+        self.listTipoVacante.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/ComboTipoVacante",
+            data: {},
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listTipoVacante.push({
+                            Id: resp.Resultado[i].Id, Descripcion: resp.Resultado[i].Descripcion
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+
+    GuardarVacante: function (NombreVacante, NumeroVacantes, EdadMin, EdadMax, Genero, EdoCivil, GradoEstu, Expe, ActReal, ConoReq, HorioDiaLab, TipoSuedo, Salario, PrestacionesLab,
+        UbicVacante, IdiomaExtra, VigIniVac, VigFinVac, TipoVacante, PersonaEntrevista, DiaHorarioEntre, DircEntre, TelOfc, Email, Comentarios, Viaja, Radica, Licencia, callBackResult) {           
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/GuardarVacante",
+            data: {
+                NombreVacante, NumeroVacantes, EdadMin, EdadMax, Genero, EdoCivil, GradoEstu, Expe, ActReal, ConoReq, HorioDiaLab, TipoSuedo, Salario, PrestacionesLab,
+                UbicVacante, IdiomaExtra, VigIniVac, VigFinVac, TipoVacante, PersonaEntrevista, DiaHorarioEntre, DircEntre, TelOfc, Email, Comentarios, Viaja, Radica, Licencia
+            },
+            success: function (resp) {
+                if (resp.Error === false) {                    
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+
+    ObtenerGridVacantes: function (callBackResult) {
+        let self = this;
+        self.listVacantesEmpresa.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/ObtenerGridVacantes",
+            data: {},
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listVacantesEmpresa.push({
+                            Nombre: resp.Resultado[i].Nombre, Total: resp.Resultado[i].Total,
+                            Edad_Minima: resp.Resultado[i].Edad_Minima, Edad_Maxima: resp.Resultado[i].Edad_Maxima,
+                            Salario: resp.Resultado[i].Salario, Vigencia_Inicio: resp.Resultado[i].Vigencia_Inicio,
+                            Vigencia_Fin: resp.Resultado[i].Vigencia_Fin, Direccion_Entrevista: resp.Resultado[i].Direccion_Entrevista,
+                            Telefono: resp.Resultado[i].Telefono, Correo: resp.Resultado[i].Correo,
+                            Area_Conocimientos: resp.Resultado[i].Area_Conocimientos, Id: resp.Resultado[i].Id,
+                            Actividades: resp.Resultado[i].Actividades
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
     }
-
-
 };
 
 

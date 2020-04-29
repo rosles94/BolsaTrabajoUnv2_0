@@ -95,6 +95,56 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+
+        public JsonResult EditarDatosEmpresa(string RazonSocial, string NombreComercial, string Actividad, string CodigoPostal, string Estado, string Ciudad, string Colonia, string Domicilio, string Rfc,
+            string Contacto, string ContactoCargo, string Telefono, string Celular, string Email, string MedioContacto, string Contrasena, string TipoPersona)
+        {
+            List<Btu_Sesion> list = new List<Btu_Sesion>();
+            list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"];
+            Btu_Empresa objEmpresa = new Btu_Empresa();
+            ResultadoComun objResultado = new ResultadoComun();
+            string Verificador = string.Empty;
+            try
+            {
+                objEmpresa.Id_Empresa = list[0].Id;
+                objEmpresa.Razon_Social = RazonSocial;
+                objEmpresa.Nombre_Comercial = NombreComercial;
+                objEmpresa.Actividad = Actividad;
+                objEmpresa.Codigo_Postal = CodigoPostal;
+                objEmpresa.Estado = Estado;
+                objEmpresa.Ciudad = Ciudad;
+                objEmpresa.Colonia = Colonia;
+                objEmpresa.Domicilio = Domicilio;
+                objEmpresa.Rfc = Rfc;
+                objEmpresa.Contacto = Contacto;
+                objEmpresa.Contacto_Cargo = ContactoCargo;
+                objEmpresa.Telefono = Telefono;
+                objEmpresa.Celular = Celular;
+                objEmpresa.Email = Email;
+                objEmpresa.Medio_Contacto = MedioContacto;
+                objEmpresa.Contrasena = Contrasena;
+                objEmpresa.Ruta_Foto = "";
+                objEmpresa.Tipo_Persona = TipoPersona;
+                GuardarDataContext.EditarDatosEmpresa(objEmpresa, ref Verificador);
+                if (Verificador == "0")
+                {
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";
+                }
+                else
+                {
+                    objResultado.Error = true;
+                    objResultado.MensajeError = Verificador;
+                }
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
         //Metodos usados en la vista Datos Candidato
         public JsonResult GuardarInformacionCandidato(string Matricula, string NombreCandidato, string ApePatCandidato, string ApeMatCandidato, string FecNac, string Estado,
             string Municipio, string Domicilio, string TelCel, string TelAd, string Email, string AreaInt, string ObjPersonal, string Sexo)
@@ -1663,6 +1713,101 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        public JsonResult ComboGenero()
+        {
+            Comun objComun = new Comun();
+            ResultadoComun objResultado = new ResultadoComun();
+            try
+            {
+                objResultado.Resultado = CursorDataContext.ComboGenero();
+                objResultado.Error = false;
+                objResultado.MensajeError = "";
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                objResultado.Resultado = null;
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public JsonResult ComboEdoCivil()
+        {
+            Comun objComun = new Comun();
+            ResultadoComun objResultado = new ResultadoComun();
+            try
+            {
+                objResultado.Resultado = CursorDataContext.ComboEdoCivil();
+                objResultado.Error = false;
+                objResultado.MensajeError = "";
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                objResultado.Resultado = null;
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public JsonResult ComboTipoSalario()
+        {
+            Comun objComun = new Comun();
+            ResultadoComun objResultado = new ResultadoComun();
+            try
+            {
+                objResultado.Resultado = CursorDataContext.ComboTipoSalario();
+                objResultado.Error = false;
+                objResultado.MensajeError = "";
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                objResultado.Resultado = null;
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public JsonResult ComboIdiomaExtra()
+        {
+            Comun objComun = new Comun();
+            ResultadoComun objResultado = new ResultadoComun();
+            try
+            {
+                objResultado.Resultado = CursorDataContext.ComboIdiomaExtra();
+                objResultado.Error = false;
+                objResultado.MensajeError = "";
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                objResultado.Resultado = null;
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public JsonResult ComboTipoVacante()
+        {
+            Comun objComun = new Comun();
+            ResultadoComun objResultado = new ResultadoComun();
+            try
+            {
+                objResultado.Resultado = CursorDataContext.ComboTipoVacante();
+                objResultado.Error = false;
+                objResultado.MensajeError = "";
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                objResultado.Resultado = null;
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
         public JsonResult ComboTipoCurso()
         {
             Comun objComun = new Comun();
@@ -1784,37 +1929,76 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
-        public JsonResult EditarDatosEmpresa(string RazonSocial, string NombreComercial, string Actividad, string CodigoPostal, string Estado, string Ciudad, string Colonia, string Domicilio, string Rfc,
-            string Contacto, string ContactoCargo, string Telefono, string Celular, string Email, string MedioContacto, string Contrasena, string TipoPersona)
+        public JsonResult ObtenerGridVacantes()
         {
+            ResultadoVacante objResultado = new ResultadoVacante();
             List<Btu_Sesion> list = new List<Btu_Sesion>();
-            list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"];
-            Btu_Empresa objEmpresa = new Btu_Empresa();
+            string IdEmpresa = "";
+            if(System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"] != null)
+            {
+                list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"];
+                IdEmpresa = list[0].Id;
+            }
+            try
+            {
+                objResultado.Resultado = DataContext.ObtenerGridVacantes(IdEmpresa);
+                objResultado.Error = false;
+                objResultado.Mensaje = "";
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.Mensaje = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        //Metodos para la vista Vacantes
+        public JsonResult GuardarVacante (string NombreVacante, string NumeroVacantes, string EdadMin, string EdadMax, string Genero, string EdoCivil, string GradoEstu, string Expe, string ActReal, string ConoReq,
+            string HorioDiaLab, string TipoSuedo, string Salario, string PrestacionesLab, string UbicVacante, string IdiomaExtra, string VigIniVac, string VigFinVac, string TipoVacante, string PersonaEntrevista,
+            string DiaHorarioEntre, string DircEntre, string TelOfc, string Email, string Comentarios, string Viaja, string Licencia, string Radica)
+        {
             ResultadoComun objResultado = new ResultadoComun();
+            Btu_Vacante objVacante = new Btu_Vacante();
+            List<Btu_Sesion> list = new List<Btu_Sesion>();
             string Verificador = string.Empty;
             try
             {
-                objEmpresa.Id_Empresa = list[0].Id;
-                objEmpresa.Razon_Social = RazonSocial;
-                objEmpresa.Nombre_Comercial = NombreComercial;
-                objEmpresa.Actividad = Actividad;
-                objEmpresa.Codigo_Postal = CodigoPostal;
-                objEmpresa.Estado = Estado;
-                objEmpresa.Ciudad = Ciudad;
-                objEmpresa.Colonia = Colonia;
-                objEmpresa.Domicilio = Domicilio;
-                objEmpresa.Rfc = Rfc;
-                objEmpresa.Contacto = Contacto;
-                objEmpresa.Contacto_Cargo = ContactoCargo;
-                objEmpresa.Telefono = Telefono;
-                objEmpresa.Celular = Celular;
-                objEmpresa.Email = Email;
-                objEmpresa.Medio_Contacto = MedioContacto;
-                objEmpresa.Contrasena = Contrasena;
-                objEmpresa.Ruta_Foto = "";
-                objEmpresa.Tipo_Persona = TipoPersona;
-                GuardarDataContext.EditarDatosEmpresa(objEmpresa, ref Verificador);
-                if (Verificador == "0")
+                list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"];
+                objVacante.Nombre = NombreVacante.ToUpper();
+                objVacante.Total = NumeroVacantes;
+                objVacante.Edad_Minima = EdadMin;
+                objVacante.Edad_Maxima = EdadMax;
+                objVacante.Genero = Genero.ToUpper();
+                objVacante.Estado_Civil = EdoCivil.ToUpper();
+                objVacante.Grado = GradoEstu.ToUpper();
+                objVacante.Experiencia = Expe.ToUpper();
+                objVacante.Actividades = ActReal.ToUpper();
+                objVacante.Conocimientos = ConoReq.ToUpper();
+                objVacante.Jornada_Laboral = HorioDiaLab.ToUpper();
+                objVacante.Frecuencia_Salario = TipoSuedo;
+                objVacante.Salario = Salario;
+                objVacante.Prestaciones = PrestacionesLab.ToUpper();
+                objVacante.Ubicacion = UbicVacante.ToUpper();
+                objVacante.Idioma = IdiomaExtra;
+                objVacante.Vigencia_Inicio = VigIniVac;
+                objVacante.Vigencia_Fin = VigFinVac;
+                objVacante.Tipo = TipoVacante;
+                objVacante.Responsable_Entrevista = PersonaEntrevista.ToUpper();
+                objVacante.Especificaciones_Entrevista = DiaHorarioEntre.ToUpper();
+                objVacante.Direccion_Entrevista = DircEntre.ToUpper();
+                objVacante.Telefono = TelOfc;
+                objVacante.Correo = Email;
+                objVacante.Comentarios = (Comentarios == null) ? "" : Comentarios.ToUpper();
+                objVacante.Viajar = Viaja;
+                objVacante.Licencia = Licencia;
+                objVacante.Radicar = Radica;
+                objVacante.Flayer_Empresa = "";
+                objVacante.Id_Empresa = list[0].Id;
+                objVacante.Rfc = list[0].Email;
+                GuardarDataContext.GuardarVacante(objVacante, ref Verificador);
+                if(Verificador == "0")
                 {
                     objResultado.Error = false;
                     objResultado.MensajeError = "";

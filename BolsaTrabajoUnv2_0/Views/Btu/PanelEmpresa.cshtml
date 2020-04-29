@@ -22,7 +22,7 @@
                     <i class="fas fa-file-contract fa-3x"></i>
                     <h5 class="card-title">Vacantes.</h5>
                     <p class="card-text">En está sección podrá publicar vacantes y ver las vacantes publicadas.</p>
-                    <input type="button" class="btn btn-info" value="Ver Vacantes" />
+                    <input type="button" class="btn btn-info" value="Ver Vacantes" ng-click="ctrl.VerVacantesEmpresa()" />
                 </div>
             </div>
         </div>
@@ -50,4 +50,31 @@
                 </div>
             </div>
         </div>
+
+        <table class="dataTable table table-striped" id="tablaVacantesEmpresa" style="font-size:85%">
+            <thead>
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Edad Min.</th>
+                    <th scope="col">Edad Max.</th>
+                    <th scope="col">Salario</th>
+                    <th></th>
+                    <th></th>                    
+                </tr>
+            </thead>
+            <tbody @*ng-repeat="x in ctrl.ListaCandidatosDisponibles"*@>
+                @*<tr>
+                    <td>{{x.Nombre}}</td>
+                    <td>{{x.Celular}}</td>
+                    <td>{{x.Correo}}</td>
+                    <td>{{x.Genero}}</td>
+                    <td>{{x.Edad}}</td>
+                    <td></td>
+                    <td><i ng-click="ctrl.GenerarCurriculum(x.Id)" class="fas fa-file-alt"></i></td>
+                    <td><span data-toggle="modal" data-target="#modalStatusVacante"><i data-toggle="tooltip" data-placement="top" title="Cambiar estatus candidato" class="fas fa-pencil-alt" ng-click="ctrl.GuardarIdCandidato(x.Id, x.Vacante, x.IdCv)"></i></span></td>
+                </tr>*@
+            </tbody>
+        </table>
+
     </div>

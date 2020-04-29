@@ -95,7 +95,41 @@ namespace BolsaTrabajoUnv2_0.Data
             var Lista = ExeProcedimiento.GenerarOracleCommandCursor_Combo("PKG_VINCULAR.Obt_Area_Conocimiento", Parametros, Valores);
             return Lista;
         }
-        
 
+        public static List<Comun> ComboGenero()
+        {
+            string[] Parametros = { };
+            object[] Valores = { };
+            var Lista = ExeProcedimiento.GenerarOracleCommandCursor_Combo("PKG_VINCULAR.Obt_Combo_Genero", Parametros, Valores);
+            return Lista;
+        }
+        public static List<Comun> ComboEdoCivil()
+        {
+            string[] Parametros = { };
+            object[] Valores = { };
+            var Lista = ExeProcedimiento.GenerarOracleCommandCursor_Combo("PKG_VINCULAR.Obt_Combo_Edo_Civil", Parametros, Valores);
+            return Lista;
+        }
+        public static List<Comun> ComboTipoSalario()
+        {
+            string[] Parametros = { };
+            object[] Valores = { };
+            var Lista = ExeProcedimiento.GenerarOracleCommandCursor_Combo("PKG_VINCULAR.Obt_Combo_Tipo_Salario", Parametros, Valores);
+            return Lista;
+        }
+        public static List<Comun> ComboIdiomaExtra()
+        {
+            string[] Parametros = { };
+            object[] Valores = { };
+            var Lista = ExeProcedimiento.GenerarOracleCommandCursor_Combo("PKG_VINCULAR.Obt_Combo_Idioma_Ext", Parametros, Valores);
+            return Lista;
+        }
+        public static List<Comun> ComboTipoVacante()
+        {
+            string[] Parametros = { };
+            object[] Valores = { };
+            var Lista = ExeProcedimiento.GenerarOracleCommandCursor_Combo("PKG_VINCULAR.Obt_Combo_Tipo_Vac", Parametros, Valores);
+            return Lista;
+        }
     }
 }
