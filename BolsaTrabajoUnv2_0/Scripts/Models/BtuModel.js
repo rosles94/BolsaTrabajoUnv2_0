@@ -29,7 +29,8 @@ var btuContext =
     listIdiomaExt: [],
     listTipoVacante: [],
     listTipoCurso: [],
-    listVacantesEmpresa:[],
+    listVacantesEmpresa: [],
+    listDatosVacante : [],
 
     BuscarEmpresa: function (Rfc, callBackResult) {
         let self = this;
@@ -1320,6 +1321,8 @@ var btuContext =
         let self = this;
         self.listVacantesEmpresa.length = 0;
         $.ajax({
+            beforeSend: function () {
+                $("#buscandoEmpresa").show(); },
             type: "POST",
             url: urlServer + "Btu/ObtenerGridVacantes",
             data: {},
@@ -1343,10 +1346,114 @@ var btuContext =
             },
             error: function (ex) {
                 callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            complete: function () {
+                $('#buscandoEmpresa').hide();
+            }
+        });
+    },
+
+    EditarVacante: function (Nombre, Total, Edad_Minima, Edad_Maxima, Estado_Civil, Grado, Experiencia, Actividades, Conocimientos, Salario, Frecuencia_Salario, Prestaciones, Ubicacion, Licencia,
+        Vigencia_Inicio, Vigencia_Fin, Tipo, Direccion_Entrevista, Telefono, Correo, Comentarios, Responsable_Entrevista, Especificaciones_Entrevista, Idioma, Radicar, Viajar, Genero,
+        Jornada_Laboral, callBackResult) {
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/EditarVacante",
+            data: {
+                Nombre, Total, Edad_Minima, Edad_Maxima, Estado_Civil, Grado, Experiencia, Actividades, Conocimientos, Salario, Frecuencia_Salario, Prestaciones, Ubicacion, Licencia,
+                Vigencia_Inicio, Vigencia_Fin, Tipo, Direccion_Entrevista, Telefono, Correo, Comentarios, Responsable_Entrevista, Especificaciones_Entrevista, Idioma, Radicar, Viajar, Genero,
+                Jornada_Laboral
+            },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+
+    ObtenerDatosVacante: function (callBackResult) {
+        let self = this;
+        self.listDatosVacante.length = 0;
+        $.ajax({
+            beforeSend: function () {
+                $("#buscandoEmpresa").show();
+            },
+            type: "POST",
+            url: urlServer + "Btu/ObtenerDatosVacante",
+            data: {},
+            success: function (resp) {
+                if (resp.Error === false) {
+                    if (resp.Resultado !== null) {
+                        for (var i = 0; i < resp.Resultado.length; i++) {
+                            self.listDatosVacante.push({
+                                Nombre: resp.Resultado[i].Nombre, Total: resp.Resultado[i].Total, Edad_Minima: resp.Resultado[i].Edad_Minima, Edad_Maxima: resp.Resultado[i].Edad_Maxima,
+                                Estado_Civil: resp.Resultado[i].Estado_Civil, Grado: resp.Resultado[i].Grado, Experiencia: resp.Resultado[i].Experiencia, Actividades: resp.Resultado[i].Actividades,
+                                Conocimientos: resp.Resultado[i].Conocimientos, Salario: resp.Resultado[i].Salario, Frecuencia_Salario: resp.Resultado[i].Frecuencia_Salario, Prestaciones: resp.Resultado[i].Prestaciones,
+                                Ubicacion: resp.Resultado[i].Ubicacion, Licencia: resp.Resultado[i].Licencia, Vigencia_Inicio: resp.Resultado[i].Vigencia_Inicio, Vigencia_Fin: resp.Resultado[i].Vigencia_Fin,
+                                Tipo: resp.Resultado[i].Tipo, Direccion_Entrevista: resp.Resultado[i].Direccion_Entrevista, Telefono: resp.Resultado[i].Telefono, Correo: resp.Resultado[i].Correo,
+                                Comentarios: resp.Resultado[i].Comentarios, Responsable_Entrevista: resp.Resultado[i].Responsable_Entrevista, Especificaciones_Entrevista: resp.Resultado[i].Especificaciones_Entrevista,
+                                Idioma: resp.Resultado[i].Idioma, Genero: resp.Resultado[i].Genero, Jornada_Laboral: resp.Resultado[i].Jornada_Laboral, Fecha_Inicio_Labores: resp.Resultado[i].Fecha_Inicio_Labores,
+                                Radicar: resp.Resultado[i].Radicar, Viajar: resp.Resultado[i].Viajar
+                            });
+                        }
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            complete: function () {
+                $('#buscandoEmpresa').hide();
+            }
+        });
+    },
+    GuardarIdVacante: function (Id, callBackResult) {        
+        $.ajax({
+            beforeSend: function () {
+                $("#buscandoEmpresa").show();
+            },
+            type: "POST",
+            url: urlServer + "Btu/GuardarIdVacante",
+            data: {Id},
+            success: function (resp) {
+                if (resp.Error === false) {                    
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            complete: function () {
+                $('#buscandoEmpresa').hide();
+            }
+        });
+    }, 
+    RegresarPanelEmpresa: function (callBackResult) {
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/RegresarPanelEmpresa",
+            data: { },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
             }
         });
     }
 };
-
-
-

@@ -47,12 +47,13 @@ namespace BolsaTrabajoUnv2_0.Models
         public string Todas_Vacantes { get; set; }
         public string Total_Interesados { get; set; }
         public string Empresa_Vigente { get; set; }
+        public string Id_Candidato { get; set; }
     }
 
     public class ResultadoVacante
     {
         public bool Error { get; set; }
-        public string Mensaje { get; set; }
+        public string MensajeError { get; set; }
         public List<Btu_Vacante> Resultado { get; set; }
     }
 }

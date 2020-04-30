@@ -390,6 +390,70 @@ namespace BolsaTrabajoUnv2_0.Data
                 exeProc.LimpiarOracleCommand(ref cmd);
             }
         }
+        public static List<Btu_Vacante> ObtenerDatosVacante(Btu_Vacante objVacante, ref string Verificador)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            string NombreCompleto = string.Empty;
+            List<Btu_Vacante> list = new List<Btu_Vacante>();            
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { "P_ID_VACANTE", "P_ID_CANDIDATO" };
+                object[] Valores = { objVacante.Id, objVacante.Id_Candidato };
+                string[] ParametrosOut = {"P_NOMBRE", "P_TOTAL", "P_EDAD_MINIMA", "P_EDAD_MAXIMA", "P_ESTADO_CIVIL",
+              "P_GRADO", "P_EXPERIENCIA", "P_ACTIVIDADES", "P_CONOCIMIENTOS", "P_SALARIO", "P_FRECUENCIA_SALARIO", "P_PRESTACIONES",
+              "P_UBICACION", "P_LICENCIA", "P_VIGENCIA_INICIO", "P_VIGENCIA_FIN", "P_TIPO", "P_DIRECCION_ENTREVISTA",
+                    "P_TELEFONO", "P_CORREO", "P_COMENTARIOS", "P_RESPONSABLE_ENTREVISTA", "P_ESPECIFICACIONES_ENTREVISTA", "P_IDIOMA", "P_GENERO",
+                    "P_JORNADA_LABORAL", "P_FEC_INICIO_LABORES", "P_FLAYER_EMPRESA","P_RADICAR_FUERA", "P_DIS_VIAJAR","P_ID_VACANTE_CANDIDATO", "p_bandera" };
+                cmd = exeProc.GenerarOracleCommand_Exe("OBT_BTU_VACANTE", ref Verificador, ref dr, Parametros, Valores, ParametrosOut);
+
+                if (Verificador == "0")
+                {
+                    objVacante.Nombre = Convert.ToString(cmd.Parameters["P_NOMBRE"].Value);
+                    objVacante.Total = Convert.ToString(cmd.Parameters["P_TOTAL"].Value);
+                    objVacante.Edad_Minima = Convert.ToString(cmd.Parameters["P_EDAD_MINIMA"].Value);
+                    objVacante.Edad_Maxima = Convert.ToString(cmd.Parameters["P_EDAD_MAXIMA"].Value);
+                    objVacante.Estado_Civil = Convert.ToString(cmd.Parameters["P_ESTADO_CIVIL"].Value);
+                    objVacante.Grado = Convert.ToString(cmd.Parameters["P_GRADO"].Value);
+                    objVacante.Experiencia = Convert.ToString(cmd.Parameters["P_EXPERIENCIA"].Value);
+                    objVacante.Actividades = Convert.ToString(cmd.Parameters["P_ACTIVIDADES"].Value);
+                    objVacante.Conocimientos = Convert.ToString(cmd.Parameters["P_CONOCIMIENTOS"].Value);
+                    objVacante.Salario = Convert.ToString(cmd.Parameters["P_SALARIO"].Value);
+                    objVacante.Frecuencia_Salario = Convert.ToString(cmd.Parameters["P_FRECUENCIA_SALARIO"].Value);
+                    objVacante.Prestaciones = Convert.ToString(cmd.Parameters["P_PRESTACIONES"].Value);
+                    objVacante.Ubicacion = Convert.ToString(cmd.Parameters["P_UBICACION"].Value);
+                    objVacante.Licencia =  Convert.ToString(cmd.Parameters["P_LICENCIA"].Value);
+                    objVacante.Vigencia_Inicio = Convert.ToString(cmd.Parameters["P_VIGENCIA_INICIO"].Value);
+                    objVacante.Vigencia_Fin = Convert.ToString(cmd.Parameters["P_VIGENCIA_FIN"].Value);
+                    objVacante.Tipo = Convert.ToString(cmd.Parameters["P_TIPO"].Value);
+                    objVacante.Direccion_Entrevista = Convert.ToString(cmd.Parameters["P_DIRECCION_ENTREVISTA"].Value);
+                    objVacante.Telefono = Convert.ToString(cmd.Parameters["P_TELEFONO"].Value);
+                    objVacante.Correo = Convert.ToString(cmd.Parameters["P_CORREO"].Value);
+                    objVacante.Comentarios = Convert.ToString(cmd.Parameters["P_COMENTARIOS"].Value);
+                    objVacante.Responsable_Entrevista = Convert.ToString(cmd.Parameters["P_RESPONSABLE_ENTREVISTA"].Value);
+                    objVacante.Especificaciones_Entrevista = Convert.ToString(cmd.Parameters["P_ESPECIFICACIONES_ENTREVISTA"].Value);
+                    objVacante.Idioma = Convert.ToString(cmd.Parameters["P_IDIOMA"].Value);
+                    objVacante.Genero = Convert.ToString(cmd.Parameters["P_GENERO"].Value);
+                    objVacante.Jornada_Laboral = Convert.ToString(cmd.Parameters["P_JORNADA_LABORAL"].Value);
+                    objVacante.Fecha_Inicio_Labores = Convert.ToString(cmd.Parameters["P_FEC_INICIO_LABORES"].Value);
+                    objVacante.Flayer_Empresa = Convert.ToString(cmd.Parameters["P_FLAYER_EMPRESA"].Value);
+                    objVacante.Radicar = Convert.ToString(cmd.Parameters["P_RADICAR_FUERA"].Value);
+                    objVacante.Viajar = Convert.ToString(cmd.Parameters["P_DIS_VIAJAR"].Value);
+                    objVacante.Id_Candidato = Convert.ToString(cmd.Parameters["P_ID_VACANTE_CANDIDATO"].Value);  
+                    list.Add(objVacante);
+                }
+            }
+            catch (Exception ex)
+            {
+                Verificador = ex.Message;
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+            return list;
+        }
 
     }
 }

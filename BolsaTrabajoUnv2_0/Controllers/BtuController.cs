@@ -1943,13 +1943,33 @@ namespace BolsaTrabajoUnv2_0.Controllers
             {
                 objResultado.Resultado = DataContext.ObtenerGridVacantes(IdEmpresa);
                 objResultado.Error = false;
-                objResultado.Mensaje = "";
+                objResultado.MensajeError = "";
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
             catch(Exception ex)
             {
                 objResultado.Error = true;
-                objResultado.Mensaje = ex.Message;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public JsonResult GuardarIdVacante (string Id)
+        {
+            Btu_Vacante objVacante = new Btu_Vacante();
+            ResultadoComun objResultado = new ResultadoComun();
+            try
+            {
+                objVacante.Id = Id;
+                objVacante.Id_Candidato = "0";
+                System.Web.HttpContext.Current.Session["SessionIdVacante"] = objVacante;
+                objResultado.Error = false;
+                objResultado.MensajeError = "";
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
@@ -2017,6 +2037,125 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        public JsonResult EditarVacante(string Nombre, string Total, string Edad_Minima, string Edad_Maxima, string Estado_Civil, string Grado, string Experiencia,
+                string Actividades , string Conocimientos, string Salario, string Frecuencia_Salario , string Prestaciones, string Ubicacion, string Licencia,
+                string Vigencia_Inicio, string Vigencia_Fin, string Tipo, string Direccion_Entrevista, string Telefono, string Correo, string Comentarios,
+                string Responsable_Entrevista, string Especificaciones_Entrevista, string Idioma, string Radicar, string Viajar, string Genero,
+                string Jornada_Laboral)
+        {
+            ResultadoComun objResultado = new ResultadoComun();
+            Btu_Vacante objVacante = new Btu_Vacante();
+            string Verificador = string.Empty;
+            try
+            {
+                objVacante = (Btu_Vacante)System.Web.HttpContext.Current.Session["SessionIdVacante"];                
+                objVacante.Nombre = Nombre;
+                objVacante.Total = Total;
+                objVacante.Edad_Minima = Edad_Minima;
+                objVacante.Edad_Maxima = Edad_Maxima;
+                objVacante.Estado_Civil = Estado_Civil;
+                objVacante.Grado = Grado;
+                objVacante.Experiencia = Experiencia;
+                objVacante.Actividades = Actividades;
+                objVacante.Conocimientos = Conocimientos;
+                objVacante.Salario = Salario;
+                objVacante.Frecuencia_Salario = Frecuencia_Salario;
+                objVacante.Prestaciones = Prestaciones;
+                objVacante.Ubicacion = Ubicacion;
+                objVacante.Licencia = Licencia;
+                objVacante.Vigencia_Inicio = Vigencia_Inicio;
+                objVacante.Vigencia_Fin = Vigencia_Fin;
+                objVacante.Tipo = Tipo;
+                objVacante.Direccion_Entrevista = Direccion_Entrevista;
+                objVacante.Telefono = Telefono;
+                objVacante.Correo = Correo;
+                objVacante.Comentarios = Comentarios;
+                objVacante.Responsable_Entrevista = Responsable_Entrevista;
+                objVacante.Especificaciones_Entrevista = Especificaciones_Entrevista;
+                objVacante.Idioma = Idioma;
+                objVacante.Radicar = Radicar;
+                objVacante.Viajar = Viajar;
+                objVacante.Flayer_Empresa = ""; ;
+                objVacante.Genero = Genero;
+                objVacante.Jornada_Laboral = Jornada_Laboral;
+                GuardarDataContext.EditarVacante(objVacante, ref Verificador);
+                if (Verificador == "0")
+                {
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";
+                }
+                else
+                {
+                    objResultado.Error = true;
+                    objResultado.MensajeError = Verificador;
+                }
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult ObtenerDatosVacante()
+        {
+            ResultadoVacante objResultado = new ResultadoVacante();
+            Btu_Vacante objVacante = new Btu_Vacante();
+            string Verificador = string.Empty;
+            try
+            {
+                if (System.Web.HttpContext.Current.Session["SessionIdVacante"] != null) {
+                    objVacante = (Btu_Vacante)System.Web.HttpContext.Current.Session["SessionIdVacante"];
+                    objResultado.Resultado = DataContext.ObtenerDatosVacante(objVacante, ref Verificador);
+                    if (Verificador == "0")
+                    {
+                        objResultado.Error = false;
+                        objResultado.MensajeError = "";
+                    }
+                    else
+                    {
+                        objResultado.Error = true;
+                        objResultado.MensajeError = Verificador;
+                    }
+                }
+                else
+                {
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";
+                    objResultado.Resultado = null;
+                }
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public JsonResult RegresarPanelEmpresa()
+        {
+            ResultadoComun objResultado = new ResultadoComun();
+            try
+            {
+                if (System.Web.HttpContext.Current.Session["SessionIdVacante"] != null)
+                {
+                    System.Web.HttpContext.Current.Session["SessionIdVacante"] = null;
+                }
+                objResultado.Error = false;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
 
         // Metodos compartidos por 2 o más vistas
         public static void EnvioCorreo_Adjunto(ref System.Net.Mail.MailMessage mmsg, string Asunto, string Contenido, string DirCorreo, ref string Error)

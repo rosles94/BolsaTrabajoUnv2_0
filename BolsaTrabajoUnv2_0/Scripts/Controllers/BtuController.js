@@ -1,8 +1,9 @@
 ﻿/// <reference path="../Models/BtuModel.js"/>
 /// <reference path="../global.js"/>
+
 (function () {
     var app = angular.module('BtuWeb', []);
-    app.controller('BtuController', ['$scope', function ($scope) {
+    app.controller('BtuController', ['$scope', '$compile', function ($scope, $compile) {
 
         var self = this;
         let existeEmpresa = "";
@@ -34,6 +35,7 @@
         let listIdiomaExt = "";
         let listTipoVacante = "";
         let listVacantesEmpresa = "";
+        let listDatosVacante = "";
 
 
 
@@ -90,6 +92,10 @@
                             $("#editarEmpresa").show();
                             $("#regresarPanelEmpresa").show();
                         }
+                        else {
+                            $("#buscarRfc").show();
+                            $("#cargandoEmpresa").hide();
+                        }                            
                         break;
                     case "notgp":
                         alert(resp.message);
@@ -176,7 +182,7 @@
                             $("#globalSesion").css('background-color', 'yellow');
                             $("#formularioRegistro").show();
                             $("#usuarioEmpresa").prop("disabled", true);
-                            ("#guardarEmpresa").show();
+                            $("#guardarEmpresa").show();
                             $("#editarEmpresa").hide();
                             alert("La empresa no existe, complete el siguiente formulario para registrarla.");
                         }
@@ -265,7 +271,19 @@
         }
 
         this.RegresarPanelEmpresa = () => {
-            window.location.assign(urlServer + "Btu/PanelEmpresa");
+            btuContext.RegresarPanelEmpresa(function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        window.location.assign(urlServer + "Btu/PanelEmpresa");
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });            
         };
 
         //Funciones Vista DatosCandidatos
@@ -1312,6 +1330,8 @@
                     case "tgp":
                         self.listVacantesEmpresa = btuContext.listVacantesEmpresa;
                         if (self.listVacantesEmpresa !== undefined && self.listVacantesEmpresa.length > 0) {
+                            $('#cargarTabla').hide();
+                            $('#tablaVacantesEmpresa').show();
                             table = $('#tablaVacantesEmpresa').DataTable({
                                 language: {
                                     "decimal": "",
@@ -1333,9 +1353,19 @@
                                         "previous": "Anterior"
                                     }
                                 },
-                                data: self.ListaCandidatosDisponibles,
+                                data: self.listVacantesEmpresa,
                                 pageLength: 5,
                                 columns: [
+                                    {
+                                        "className": 'details-control',                                        
+                                        "orderable": false,
+                                        "data": null,
+                                        "defaultContent": '',
+                                        "render": function () {
+                                            return '<i class="fa fa-plus-square" aria-hidden="true"></i>';
+                                        },
+                                        width: "15px"
+                                    },
                                     { data: "Nombre" },
                                     { data: "Total" },
                                     { data: "Edad_Minima" },
@@ -1345,7 +1375,7 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<i data-toggle="tooltip"  title="Ver curriculum" class="fas fa-file-alt" ng-click="GenerarCurriculumAdmin(&quot;' + row.Id + '&quot;,&quot;' + row.RutaFoto + '&quot;)"></i>';
+                                            return '<i data-toggle="tooltip"  title="Editar Vacante" class="fas fa-pencil-alt" ng-click="GuardarIdVacante(&quot;' + row.Id + '&quot;,&quot;' + row.RutaFoto + '&quot;)"></i>';
                                         }
 
                                     },
@@ -1353,12 +1383,11 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<i data-toggle="tooltip"  title="Invitar candidato" class="fas fa-envelope" ng-click="InvitarCandidato(&quot;' + row.Id + '&quot;,&quot;' + row.Correo + '&quot;,&quot;' + row.Nombre + '&quot;)"></i>';
+                                            return '<i data-toggle="tooltip"  title="Eliminar Vacante" class="fas fa-trash" ng-click="InvitarCandidato(&quot;' + row.Id + '&quot;,&quot;' + row.Correo + '&quot;,&quot;' + row.Nombre + '&quot;)"></i>';
                                         }
 
                                     }
-                                ]
-                                ,
+                                ],
                                 rowCallback: function (row) {
                                     if (!row.compiled) {
                                         $compile(angular.element(row))($scope);
@@ -1373,8 +1402,29 @@
                     default:
                         break;
                 }
-                $scope.apply();
+                $scope.$apply();
             });
+        };
+
+        $scope.GuardarIdVacante = (Id) => {
+            $('#cargarTabla').hide();
+            btuContext.GuardarIdVacante(Id, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        window.location.assign(urlServer + "Btu/Vacante");
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();                
+            });
+        };
+
+        this.NuevaVacante = () => {
+            window.location.assign(urlServer + "Btu/Vacante");
         };
 
         //Funciones para la vista Vacante
@@ -1435,6 +1485,71 @@
             ComboTipoSalario();
             ComboIdiomaExtra();
             ComboTipoVacante();
+            ObtenerDatosVacante();
+        };
+
+        var ObtenerDatosVacante = () => {
+            btuContext.ObtenerDatosVacante(function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listDatosVacante = btuContext.listDatosVacante;
+                        if (self.listDatosVacante.length > 0) {
+                            let licencia = self.listDatosVacante[0].Licencia;
+                            let radicar = self.listDatosVacante[0].Radicar;
+                            let viajar = self.listDatosVacante[0].Viajar;
+                            self.NombreVacante = self.listDatosVacante[0].Nombre;
+                            self.NumeroVacantes = self.listDatosVacante[0].Total;
+                            self.EdadMin = self.listDatosVacante[0].Edad_Minima;
+                            self.EdadMax = self.listDatosVacante[0].Edad_Maxima;
+                            self.Genero = self.listDatosVacante[0].Genero;
+                            self.EdoCivil = self.listDatosVacante[0].Estado_Civil;
+                            self.GradoEstu = self.listDatosVacante[0].Grado;
+                            self.Expe = self.listDatosVacante[0].Experiencia;
+                            self.ActReal = self.listDatosVacante[0].Actividades;
+                            self.ConoReq = self.listDatosVacante[0].Conocimientos;
+                            self.HorioDiaLab = self.listDatosVacante[0].Jornada_Laboral;
+                            self.TipoSuedo = self.listDatosVacante[0].Frecuencia_Salario;
+                            self.Salario = self.listDatosVacante[0].Salario;
+                            self.PrestacionesLab = self.listDatosVacante[0].Prestaciones;
+                            self.UbicVacante = self.listDatosVacante[0].Ubicacion;
+                            self.IdiomaExtra = self.listDatosVacante[0].Idioma;
+                            self.VigIniVac = self.listDatosVacante[0].Vigencia_Inicio;
+                            self.VigFinVac = self.listDatosVacante[0].Vigencia_Fin;
+                            self.TipoVacante = self.listDatosVacante[0].Tipo;
+                            self.PersonaEntrevista = self.listDatosVacante[0].Responsable_Entrevista;
+                            self.DiaHorarioEntre = self.listDatosVacante[0].Especificaciones_Entrevista;
+                            self.DircEntre = self.listDatosVacante[0].Direccion_Entrevista;
+                            self.TelOfc = self.listDatosVacante[0].Telefono;
+                            self.Email = self.listDatosVacante[0].Correo;
+                            self.Comentarios = self.listDatosVacante[0].Comentarios;
+                            if (licencia === "S")
+                                $('#rSiLicencia').prop('checked', true);
+                            else if (licencia == "N")
+                                $('#rNoLicencia').prop('checked', true);
+                            if (radicar === "S")
+                                $('#SiRadica').prop('checked', true);
+                            else if (radicar == "N")
+                                $('#rNoRadica').prop('checked', true);
+                            if (viajar === "S")
+                                $('#rSiViaja').prop('checked', true);
+                            else if (viajar == "N")
+                                $('#rNoViaja').prop('checked', true);
+                            $("#datosContacto").hide();
+                            $("#EditarVacante").show();
+                        }
+                        else {
+                            $("#datosContacto").show();
+                            $("#EditarVacante").hide();
+                        }
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
         };
 
         this.GuardarVacante = () => {
@@ -1481,6 +1596,50 @@
             });
         }
 
+        this.EditarVacante = () => {
+            let sViaja = $("#rSiViaja").is(':checked');
+            let nViaja = $("#rNoViaja").is(':checked');
+            let sRadica = $("#rSiRadica").is(':checked');
+            let nRadica = $("#rNoRadica").is(':checked');
+            let sLicencia = $("#rSiLicencia").is(':checked');
+            let nLicencia = $("#rNoLicencia").is(':checked');
+
+            let viaja = false;
+            let tipoViaja = "";
+            let radica = false;
+            let tipoRadica = "";
+            let licencia = false;
+            let tipoLicencia = "";
+
+            if (sViaja === true || nViaja === true) {
+                viaja == true;
+                tipoViaja = sViaja === true ? "S" : "N"; // sentencia que devuelve un valor
+            }
+            if (sRadica === true || nRadica === true) {
+                viaja == true;
+                tipoRadica = sRadica === true ? "S" : "N"; // sentencia que devuelve un valor
+            }
+            if (sLicencia === true || nLicencia === true) {
+                viaja == true;
+                tipoLicencia = sLicencia === true ? "S" : "N"; // sentencia que devuelve un valor
+            }
+            btuContext.EditarVacante(self.NombreVacante,
+                self.NumeroVacantes, self.EdadMin, self.EdadMax, self.EdoCivil, self.GradoEstu, self.Expe, self.ActReal, self.ConoReq, self.Salario, self.TipoSuedo, self.PrestacionesLab, self.UbicVacante,
+                tipoLicencia, self.VigIniVac, self.VigFinVac, self.TipoVacante, self.DircEntre, self.TelOfc, self.Email, self.Comentarios, self.PersonaEntrevista, self.DiaHorarioEntre, self.IdiomaExtra,
+                tipoRadica, tipoViaja, self.Genero, self.HorioDiaLab,function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        alert("Vacante editada correctamente.");
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        }
 
         //Funciones para el detalle de las tablas
         function format(data) {
@@ -1531,14 +1690,14 @@
             else if (data.Salario !== null && data.Salario !== "" && data.Salario !== undefined) {
                 return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
                     '<tr>' +
-                    '<th>Direccion</th>' +
+                    '<th>Dirección</th>' +
                     '<th>Teléfono</th>' +
                     '<th>Correo</th>' +
                     '<th>Actividades</th>' +
                     '</tr>' +
                     '<tr>' +
-                    '<td>' + data.Direccion + '</td>' +
-                    '<td>' + data.Telefeno + '</td>' +
+                    '<td>' + data.Direccion_Entrevista + '</td>' +
+                    '<td>' + data.Telefono + '</td>' +
                     '<td>' + data.Correo + '</td>' +
                     '<td>' + data.Actividades + '</td>' +
                     '</tr>' +
@@ -1561,7 +1720,7 @@
 
 
         // Add event listener for opening and closing details
-        $('#tablaVacantes tbody').on('click', 'td.details-control', function () {
+        $('#tablaVacantesEmpresa tbody').on('click', 'td.details-control', function () {
             var tr = $(this).closest('tr');
             var tdi = tr.find("i.fa");
             var row = table.row(tr);
@@ -1582,7 +1741,7 @@
             }
         });
 
-        $('#tablaVacantes').on('draw.dt', function () {
+        $('#tablaVacantesEmpresa').on('draw.dt', function () {
             $('[data-toggle="tooltip"]').tooltip();
         });
 
@@ -1662,5 +1821,7 @@
         $('#tablaEstudiosAcademicos').on('draw.dt', function () {
             $('[data-toggle="tooltip"]').tooltip();
         });
+
+
     }]);
 })();

@@ -386,6 +386,10 @@
                                        ng-disabled="myForm2.PersonaEntrevista.$invalid || myForm2.DiaHorarioEntre.$invalid
                                        || myForm2.DircEntre.$invalid || myForm2.TelOfc.$invalid
                                        || myForm2.Email.$invalid" />
+                                <input id="EditarVacante" type="button" class="btn btn-info" value="Guardar" ng-click="ctrl.EditarVacante()"
+                                       ng-disabled="myForm2.PersonaEntrevista.$invalid || myForm2.DiaHorarioEntre.$invalid
+                                       || myForm2.DircEntre.$invalid || myForm2.TelOfc.$invalid
+                                       || myForm2.Email.$invalid" style="display:none" />
                             </div>
                         </div>
                     </form>
