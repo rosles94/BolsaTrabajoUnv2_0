@@ -142,6 +142,7 @@
     <Compile Include="Models\Btu_Empresa.cs" />
     <Compile Include="Models\Btu_Sesion.cs" />
     <Compile Include="Models\Btu_Vacante.cs" />
+    <Compile Include="Models\Btu_Vacantes_Candidatos.cs" />
     <Compile Include="Models\Comun.cs" />
     <Compile Include="Models\Conexion.cs" />
     <Compile Include="Models\ExeProcedimiento.cs" />

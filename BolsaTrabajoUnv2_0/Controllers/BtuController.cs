@@ -1973,6 +1973,47 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        public JsonResult ObtenerGridInteresados(string Id)
+        {
+            Btu_Vacante objVacante = new Btu_Vacante();
+            ResultadoBtuCurriculum objResultado = new ResultadoBtuCurriculum();
+            try
+            {
+                objVacante.Id = Id;
+                objResultado.Resultado = DataContext.ObtenerGridInteresados(objVacante);
+                objResultado.Error = false;
+                objResultado.MensajeError = "";
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {                
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public JsonResult ObtenerGridVacantesAplicadasEmpresas ()
+        {
+            ResultadoVacante objResultado = new ResultadoVacante();
+            List<Btu_Sesion> listSesion = new List<Btu_Sesion>();
+            Btu_Empresa objEmpresa = new Btu_Empresa();
+            try
+            {
+                listSesion = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"];
+                objEmpresa.Id_Empresa = listSesion[0].Id;
+                objResultado.Resultado = DataContext.ObtenerGridVacantesAplicadasEmpresas(objEmpresa);
+                objResultado.Error = false;
+                objResultado.MensajeError = "";
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+
 
         //Metodos para la vista Vacantes
         public JsonResult GuardarVacante (string NombreVacante, string NumeroVacantes, string EdadMin, string EdadMax, string Genero, string EdoCivil, string GradoEstu, string Expe, string ActReal, string ConoReq,

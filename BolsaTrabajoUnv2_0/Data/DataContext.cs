@@ -454,6 +454,112 @@ namespace BolsaTrabajoUnv2_0.Data
             }
             return list;
         }
+        public static List<Btu_Curriculum> ObtenerGridInteresados(Btu_Vacante objVacante)
+        {
+            DateTime fechanac;
+            DateTime moment = DateTime.Now;
+            int year = moment.Year;
+            int month = moment.Month;
+            int day = moment.Day;
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            try
+            {                
+                OracleDataReader dr = null;
+                string[] Parametros = { "p_id_vacante" };
+                object[] Valores = { objVacante.Id };
+                cmd = exeProc.GenerarOracleCommandCursor_Grid("PKG_VINCULAR.Obt_Grid_Interesados", ref dr, Parametros, Valores);
+                List<Btu_Curriculum> list = new List<Btu_Curriculum>();
+                while (dr.Read())
+                {
+                    Btu_Curriculum objInteresados = new Btu_Curriculum();
+                    objInteresados.Nombre = Convert.ToString(dr[0]);
+                    objInteresados.IdCarrera = Convert.ToString(dr[1]);
+                    objInteresados.Id = Convert.ToString(dr[2]);
+                    objInteresados.objVacantesCandidatos.Status = Convert.ToString(dr[3]);
+                    objInteresados.Correo = Convert.ToString(dr[4]);
+                    objInteresados.Genero = Convert.ToString(dr[5]);
+                    fechanac = Convert.ToDateTime(dr[6]);
+                    objInteresados.Ruta_Foto = Convert.ToString(dr[7]);
+                    int año = fechanac.Year;
+                    int mes = fechanac.Month;
+                    int dia = fechanac.Day;
 
+                    int Edad = (year - año);
+                    if (month < mes)
+                        Edad = Edad - 1;
+                    objInteresados.Fecha_Nacimiento = Convert.ToString(Edad);
+                    list.Add(objInteresados);
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+        }
+        public static List<Btu_Vacante> ObtenerGridVacantesAplicadasEmpresas(Btu_Empresa objEmpresa)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { "p_id" };
+                object[] Valores = { objEmpresa.Id_Empresa };
+                cmd = exeProc.GenerarOracleCommandCursor_Grid("PKG_VINCULAR.Obt_Grid_Vac_Apli_Empresas", ref dr, Parametros, Valores);
+                List<Btu_Vacante> list = new List<Btu_Vacante>();
+                while (dr.Read())
+                {
+                    //DateTime fechanac;
+                    //DateTime moment = DateTime.Now;
+                    //int year = moment.Year;
+                    //int month = moment.Month;
+                    //int day = moment.Day;
+
+
+                    Btu_Vacante objVacante = new Btu_Vacante();
+                    objVacante.Nombre = Convert.ToString(dr[0]);
+                    objVacante.Total = Convert.ToString(dr[1]);
+                    objVacante.Edad_Minima = Convert.ToString(dr[2]);
+                    objVacante.Edad_Maxima = Convert.ToString(dr[3]);
+                    objVacante.Salario = Convert.ToString(dr[4]);
+                    objVacante.Vigencia_Inicio = Convert.ToString(dr[5]);
+                    objVacante.Vigencia_Fin = Convert.ToString(dr[6]);
+                    objVacante.Direccion_Entrevista = Convert.ToString(dr[7]);
+                    objVacante.Telefono = Convert.ToString(dr[8]);
+                    objVacante.Correo = Convert.ToString(dr[9]);
+                    objVacante.Area_Conocimientos = Convert.ToString(dr[10]);
+                    objVacante.Id = Convert.ToString(dr[11]);
+                    objVacante.Actividades = Convert.ToString(dr[12]);
+                    objVacante.Flayer_Empresa = Convert.ToString(dr[13]);
+                    objVacante.Total_Interesados = Convert.ToString(dr[14]);                    
+
+                    //fechanac = Convert.ToDateTime(dr[7]);
+                    //int año = fechanac.Year;
+                    //int mes = fechanac.Month;
+                    //int dia = fechanac.Day;
+
+                    //int Edad =( year - año);
+                    //if (month < mes)
+                    //    Edad = Edad - 1;
+                    //objGridVacantes.FECHA_NACIMIENTO = Convert.ToString(Edad);
+                    list.Add(objVacante);
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+        }
     }
 }

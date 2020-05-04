@@ -36,8 +36,8 @@
         let listTipoVacante = "";
         let listVacantesEmpresa = "";
         let listDatosVacante = "";
-
-
+        let listInteresadosVac = "";
+        let listVacantesApliEmpresa = "";
 
         let datosPersonales = false;
         let datosAcademicos = false;
@@ -1427,6 +1427,91 @@
             window.location.assign(urlServer + "Btu/Vacante");
         };
 
+        $scope.ObtenerGridInteresados = (Id) => {
+            btuContext.ObtenerGridInteresados(Id, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listInteresadosVac = btuContext.listInteresadosVac;
+                        console.log(self.listInteresadosVac);
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
+        this.ObtenerGridVacantesAplicadasEmpresas = () => {
+            btuContext.ObtenerGridVacantesAplicadasEmpresas(function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":                        
+                        self.listVacantesApliEmpresa = btuContext.listVacantesApliEmpresa;
+                        if (self.listVacantesApliEmpresa !== undefined && self.listVacantesApliEmpresa.length > 0) {
+                            $('#cargarTabla').hide();
+                            $('#tablaVacApliEmpresa').show();
+                            table = $('#tablaVacApliEmpresa').DataTable({
+                                language: {
+                                    "decimal": "",
+                                    "emptyTable": "No hay información",
+                                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                                    "infoEmpty": "Mostrando 0 de 0 a 0 Entradas",
+                                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                                    "infoPostFix": "",
+                                    "thousands": ",",
+                                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                                    "loadingRecords": "Cargando...",
+                                    "processing": "Procesando...",
+                                    "search": "Buscar:",
+                                    "zeroRecords": "Sin resultados encontrados",
+                                    "paginate": {
+                                        "first": "Primero",
+                                        "last": "Último",
+                                        "next": "Siguiente",
+                                        "previous": "Anterior"
+                                    }
+                                },
+                                data: self.listVacantesApliEmpresa,
+                                pageLength: 5,
+                                columns: [                                    
+                                    { data: "Nombre" },
+                                    { data: "Total" },
+                                    { data: "Edad_Minima" },
+                                    { data: "Edad_Maxima" },
+                                    { data: "Salario" },
+                                    { data: "Vigencia_Inicio" },
+                                    { data: "Vigencia_Fin" },
+                                    { data: "Total_Interesados" },
+                                    {
+                                        data: "Id",
+                                        "className": "text-center",
+                                        render: function (data, type, row, meta) {
+                                            return '<i data-toggle="tooltip"  title="Ver Interesados" class="fas fa-user" ng-click="ObtenerGridInteresados(&quot;' + row.Id + '&quot;,&quot;' + row.RutaFoto + '&quot;)"></i>';
+                                        }
+
+                                    }
+                                ],
+                                rowCallback: function (row) {
+                                    if (!row.compiled) {
+                                        $compile(angular.element(row))($scope);
+                                        row.compiled = true;
+                                    }
+                                }
+                            });
+                        }
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
         //Funciones para la vista Vacante
 
         this.GlobalInfovacante = () => {            
@@ -1536,6 +1621,13 @@
                                 $('#rNoViaja').prop('checked', true);
                             $("#datosContacto").hide();
                             $("#EditarVacante").show();
+                            $("#infPerfVac1").show();
+                            $("#infPerfVac2").hide();
+                            $("#globalPerfilVac").css('background-color', 'green');
+                            $("#infoEntre1").show();
+                            $("#infoEntre2").hide();
+                            $("#globalInfoEntre").css('background-color', 'green');
+
                         }
                         else {
                             $("#datosContacto").show();

@@ -30,7 +30,9 @@ var btuContext =
     listTipoVacante: [],
     listTipoCurso: [],
     listVacantesEmpresa: [],
-    listDatosVacante : [],
+    listDatosVacante: [],
+    listInteresadosVac: [],
+    listVacantesApliEmpresa:[],
 
     BuscarEmpresa: function (Rfc, callBackResult) {
         let self = this;
@@ -1446,6 +1448,59 @@ var btuContext =
             data: { },
             success: function (resp) {
                 if (resp.Error === false) {
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+    ObtenerGridInteresados: function (Id, callBackResult) {
+        let self = this;
+        self.listInteresadosVac.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/ObtenerGridInteresados",
+            data: {Id},
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listInteresadosVac.push({
+                            Nombre: resp.Resultado[i].Nombre, IdCarrera: resp.Resultado[i].IdCarrera, Id: resp.Resultado[i].Id, Status: resp.Resultado[i].objVacantesCandidatos.Status,
+                            Correo: resp.Resultado[i].Correo, Genero: resp.Resultado[i].Genero, Ruta_Foto: resp.Resultado[i].Ruta_Foto, Fecha_Nacimiento: resp.Resultado[i].Fecha_Nacimiento
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+    ObtenerGridVacantesAplicadasEmpresas: function (callBackResult) {
+        let self = this;
+        self.listVacantesApliEmpresa.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/ObtenerGridVacantesAplicadasEmpresas",
+            data: { },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listVacantesApliEmpresa.push({
+                            Nombre: resp.Resultado[i].Nombre, Total: resp.Resultado[i].Total, Edad_Minima: resp.Resultado[i].Edad_Minima, Edad_Maxima: resp.Resultado[i].Edad_Maxima,
+                            Salario: resp.Resultado[i].Salario, Vigencia_Inicio: resp.Resultado[i].Vigencia_Inicio, Vigencia_Fin: resp.Resultado[i].Vigencia_Fin,
+                            Direccion_Entrevista: resp.Resultado[i].Direccion_Entrevista, Telefono: resp.Resultado[i].Telefono, Correo: resp.Resultado[i].Correo,
+                            Area_Conocimientos: resp.Resultado[i].Area_Conocimientos, Actividades: resp.Resultado[i].Actividades, Total_Interesados: resp.Resultado[i].Total_Interesados,
+                            Id: resp.Resultado[i].Id
+                        });
+                    }
                     callBackResult({ ressult: 'tgp', message: resp.MensajeError });
                 }
                 else
