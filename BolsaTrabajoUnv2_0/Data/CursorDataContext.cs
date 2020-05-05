@@ -64,10 +64,10 @@ namespace BolsaTrabajoUnv2_0.Data
             return Lista;
         }
 
-        public static List<Comun> ComboVacantesEmpresa(String id_empresa)
+        public static List<Comun> ComboVacantesEmpresa(Btu_Empresa objEmpresa)
         {
             string[] Parametros = { "p_id_empresa" };
-            object[] Valores = { id_empresa };
+            object[] Valores = { objEmpresa.Id_Empresa };
             var Lista = ExeProcedimiento.GenerarOracleCommandCursor_Combo("PKG_VINCULAR.Obt_Combo_Vacantes_Empresa", Parametros, Valores);
             return Lista;
         }

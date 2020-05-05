@@ -353,8 +353,7 @@ namespace BolsaTrabajoUnv2_0.Data
         {
             OracleCommand cmd = null;
             ExeProcedimiento exeProc = new ExeProcedimiento();
-            List<Btu_Vacante> list = new List<Btu_Vacante>();
-            Btu_Vacante objVacante = new Btu_Vacante();
+            List<Btu_Vacante> list = new List<Btu_Vacante>();            
             try
             {
                 OracleDataReader dr = null;
@@ -362,7 +361,8 @@ namespace BolsaTrabajoUnv2_0.Data
                 object[] Valores = { IdEmpresa };
                 cmd = exeProc.GenerarOracleCommandCursor_Grid("PKG_VINCULAR.Obt_Grid_Vacantes", ref dr, Parametros, Valores);                
                 while (dr.Read())
-                {                    
+                {
+                    Btu_Vacante objVacante = new Btu_Vacante();
                     objVacante.Nombre = Convert.ToString(dr[0]);
                     objVacante.Total = Convert.ToString(dr[1]);
                     objVacante.Edad_Minima = Convert.ToString(dr[2]);
@@ -561,5 +561,91 @@ namespace BolsaTrabajoUnv2_0.Data
                 exeProc.LimpiarOracleCommand(ref cmd);
             }
         }
+        public static List<Btu_Empresa> ObtenerStatusEmpresa(Btu_Empresa objEmpresa, ref string Verificador)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            string NombreCompleto = string.Empty;
+            List<Btu_Empresa> list = new List<Btu_Empresa>();
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { "P_ID_EMPRESA"};
+                object[] Valores = { objEmpresa.Id_Empresa };
+                string[] ParametrosOut = {"P_STATUS", "p_bandera" };
+                cmd = exeProc.GenerarOracleCommand_Exe("OBT_STATUS_EMPRESA", ref Verificador, ref dr, Parametros, Valores, ParametrosOut);
+
+                if (Verificador == "0")
+                {
+                    objEmpresa.Status = Convert.ToString(cmd.Parameters["P_STATUS"].Value);                    
+                    list.Add(objEmpresa);
+                }
+            }
+            catch (Exception ex)
+            {
+                Verificador = ex.Message;
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+            return list;
+        }
+        public static List<Btu_Curriculum> ObtenerGridCandidatosDisponibles(Btu_Vacante objVacante)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            try
+            {
+                DateTime fechanac;
+                DateTime moment = DateTime.Now;
+                int year = moment.Year;
+                int month = moment.Month;
+                int day = moment.Day;
+
+
+                OracleDataReader dr = null;
+                string[] Parametros = { "p_id_vacante", "p_id_empresa" };
+                object[] Valores = { objVacante.Id, objVacante.Id_Empresa };
+                cmd = exeProc.GenerarOracleCommandCursor_Grid("PKG_VINCULAR.Obt_Grid_CandidatosDisponibles", ref dr, Parametros, Valores);
+                List<Btu_Curriculum> lisCandidatos = new List<Btu_Curriculum>();
+                while (dr.Read())
+                {
+
+
+                    Btu_Curriculum objCandidato = new Btu_Curriculum();
+                    objCandidato.Id = Convert.ToString(dr[0]);
+                    objCandidato.Nombre = (Convert.ToString(dr[0]) == "0") ? "ACTUALIZE EL ESTATUS DE LOS CANDIDATOS ENTREVISTADOS" : Convert.ToString(dr[1]);
+                    fechanac = Convert.ToDateTime(dr[2]);
+                    objCandidato.Celular = Convert.ToString(dr[3]);
+                    objCandidato.Correo = Convert.ToString(dr[4]);
+                    objCandidato.Genero = Convert.ToString(dr[5]);
+                    objCandidato.Ruta_Foto = Convert.ToString(dr[6]);
+                    objCandidato.Carrera = Convert.ToString(dr[7]);
+                    int año = fechanac.Year;
+                    int mes = fechanac.Month;
+                    int dia = fechanac.Day;
+                    int Edad = (year - año);
+                    if (month < mes)
+                        Edad = Edad - 1;
+                    if (Edad == 0)
+                        objCandidato.Fecha_Nacimiento = Convert.ToString("");
+                    else
+                        objCandidato.Fecha_Nacimiento = Convert.ToString(Edad);
+
+                    lisCandidatos.Add(objCandidato);
+                }
+                return lisCandidatos;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+        }
+
     }
 }

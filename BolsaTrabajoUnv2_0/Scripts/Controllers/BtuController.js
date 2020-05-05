@@ -38,6 +38,8 @@
         let listDatosVacante = "";
         let listInteresadosVac = "";
         let listVacantesApliEmpresa = "";
+        let listVacRegEmp = "";
+        let listCandDispo = "";
 
         let datosPersonales = false;
         let datosAcademicos = false;
@@ -1122,6 +1124,24 @@
             });
         };
 
+        var ComboVacantesEmpresa = () => {
+            btuContext.ComboVacantesEmpresa(function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listVacRegEmp = btuContext.listVacRegEmp;
+                        self.Vacante = self.listVacRegEmp[0].Id;
+                        ObtenerGridCandidatosDisponibles(self.listVacRegEmp[0].Id);
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
         var ComboGenero = () => {
             btuContext.ComboGenero(function (resp) {
                 switch (resp.ressult) {
@@ -1308,6 +1328,24 @@
                 switch (resp.ressult) {
                     case "tgp":
                         self.listDatosPanelEmpresa = btuContext.listDatosPanelEmpresa;
+                        if (self.listDatosPanelEmpresa[0].Status === 'A') {
+                            $('#infemp1').show();
+                            $("#globalStatusEmpresa").css('background-color', 'green');
+                            self.StatusEmpresa = 'Alta';
+                        }
+                        else if (self.listDatosPanelEmpresa[0].Status === 'B') {
+                            $('#infemp2').show();
+                            $("#globalStatusEmpresa").css('background-color', 'yellow');
+                            self.StatusEmpresa = 'Baja Temporal';
+                            $('#nuevaVacante').prop('disabled', true);
+                        }
+                        else {
+                            $('#infemp2').show();
+                            $("#globalStatusEmpresa").css('background-color', 'yellow');
+                            self.StatusEmpresa = 'Pendiente Por Activar';
+                            $('#nuevaVacante').prop('disabled', true);
+                        }
+                        $('#statusDesc').show();
                         self.IdEmpresa = self.listDatosPanelEmpresa[0].Id_Empresa;
                         break;
                     case "notgp":
@@ -1316,15 +1354,24 @@
                     default:
                         break;
                 }
-                $scope.$apply();
+                $scope.$apply();                
             });
-        };
+        };        
 
         this.VerDatosEmpresa = () => {
             window.location.assign(urlServer + "Btu/RegistrarEmpresa");
         };
 
         this.VerVacantesEmpresa = () => {
+            $('#tablaVacApliEmpresa').hide();
+            $('#tablaCandDisp').hide();
+            $('#verCandDisp').hide();
+            if (self.listVacantesApliEmpresa !== undefined)
+                $('#tablaVacApliEmpresa').DataTable().clear().destroy();          
+            if (self.listVacantesEmpresa !== undefined)
+                $('#tablaVacantesEmpresa').DataTable().clear().destroy();
+            if (self.listCandDispo !== undefined)
+                $('#tablaCandDisp').DataTable().clear().destroy();
             btuContext.ObtenerGridVacantes(function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
@@ -1383,7 +1430,98 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<i data-toggle="tooltip"  title="Eliminar Vacante" class="fas fa-trash" ng-click="InvitarCandidato(&quot;' + row.Id + '&quot;,&quot;' + row.Correo + '&quot;,&quot;' + row.Nombre + '&quot;)"></i>';
+                                            return '<i data-toggle="tooltip"  title="Eliminar Vacante" class="fas fa-trash" ng-click="EliminarVacante(&quot;' + row.Id + '&quot;,&quot;' + row.Correo + '&quot;,&quot;' + row.Nombre + '&quot;)"></i>';
+                                        }
+
+                                    }
+                                ],
+                                rowCallback: function (row) {
+                                    if (!row.compiled) {
+                                        $compile(angular.element(row))($scope);
+                                        row.compiled = true;
+                                    }
+                                }
+                            });
+                        }
+                        break;
+                    case "notgp":
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
+        var VerVacantesEmpresa = () => {
+            $('#tablaVacApliEmpresa').hide();
+            $('#tablaCandDisp').hide();
+            $('#verCandDisp').hide();
+            if (self.listVacantesApliEmpresa !== undefined)
+                $('#tablaVacApliEmpresa').DataTable().clear().destroy();
+            if (self.listVacantesEmpresa !== undefined)
+                $('#tablaVacantesEmpresa').DataTable().clear().destroy();
+            if (self.listCandDispo !== undefined)
+                $('#tablaCandDisp').DataTable().clear().destroy();
+            btuContext.ObtenerGridVacantes(function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listVacantesEmpresa = btuContext.listVacantesEmpresa;
+                        if (self.listVacantesEmpresa !== undefined && self.listVacantesEmpresa.length > 0) {
+                            $('#cargarTabla').hide();
+                            $('#tablaVacantesEmpresa').show();
+                            table = $('#tablaVacantesEmpresa').DataTable({
+                                language: {
+                                    "decimal": "",
+                                    "emptyTable": "No hay información",
+                                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                                    "infoEmpty": "Mostrando 0 de 0 a 0 Entradas",
+                                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                                    "infoPostFix": "",
+                                    "thousands": ",",
+                                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                                    "loadingRecords": "Cargando...",
+                                    "processing": "Procesando...",
+                                    "search": "Buscar:",
+                                    "zeroRecords": "Sin resultados encontrados",
+                                    "paginate": {
+                                        "first": "Primero",
+                                        "last": "Último",
+                                        "next": "Siguiente",
+                                        "previous": "Anterior"
+                                    }
+                                },
+                                data: self.listVacantesEmpresa,
+                                pageLength: 5,
+                                columns: [
+                                    {
+                                        "className": 'details-control',
+                                        "orderable": false,
+                                        "data": null,
+                                        "defaultContent": '',
+                                        "render": function () {
+                                            return '<i class="fa fa-plus-square" aria-hidden="true"></i>';
+                                        },
+                                        width: "15px"
+                                    },
+                                    { data: "Nombre" },
+                                    { data: "Total" },
+                                    { data: "Edad_Minima" },
+                                    { data: "Edad_Maxima" },
+                                    { data: "Salario" },
+                                    {
+                                        data: "Id",
+                                        "className": "text-center",
+                                        render: function (data, type, row, meta) {
+                                            return '<i data-toggle="tooltip"  title="Editar Vacante" class="fas fa-pencil-alt" ng-click="GuardarIdVacante(&quot;' + row.Id + '&quot;,&quot;' + row.RutaFoto + '&quot;)"></i>';
+                                        }
+
+                                    },
+                                    {
+                                        data: "Id",
+                                        "className": "text-center",
+                                        render: function (data, type, row, meta) {
+                                            return '<i data-toggle="tooltip"  title="Eliminar Vacante" class="fas fa-trash" ng-click="EliminarVacante(&quot;' + row.Id + '&quot;,&quot;' + row.Correo + '&quot;,&quot;' + row.Nombre + '&quot;)"></i>';
                                         }
 
                                     }
@@ -1431,8 +1569,7 @@
             btuContext.ObtenerGridInteresados(Id, function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
-                        self.listInteresadosVac = btuContext.listInteresadosVac;
-                        console.log(self.listInteresadosVac);
+                        self.listInteresadosVac = btuContext.listInteresadosVac;                        
                         break;
                     case "notgp":
                         alert(resp.message);
@@ -1445,6 +1582,15 @@
         };
 
         this.ObtenerGridVacantesAplicadasEmpresas = () => {
+            $('#tablaVacantesEmpresa').hide();            
+            $('#tablaCandDisp').hide();
+            $('#verCandDisp').hide();
+            if (self.listVacantesApliEmpresa !== undefined)
+                $('#tablaVacApliEmpresa').DataTable().clear().destroy()
+            if (self.listVacantesEmpresa !== undefined)
+                $('#tablaVacantesEmpresa').DataTable().clear().destroy()
+            if (self.listCandDispo !== undefined)
+                $('#tablaCandDisp').DataTable().clear().destroy();
             btuContext.ObtenerGridVacantesAplicadasEmpresas(function (resp) {
                 switch (resp.ressult) {
                     case "tgp":                        
@@ -1488,7 +1634,7 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<i data-toggle="tooltip"  title="Ver Interesados" class="fas fa-user" ng-click="ObtenerGridInteresados(&quot;' + row.Id + '&quot;,&quot;' + row.RutaFoto + '&quot;)"></i>';
+                                            return '<p data-toggle="tooltip"  title="Ver Interesados" class"  ><i class="fas fa-user" data-toggle="modal" data-target="#modalIntVac" ng-click="ObtenerGridInteresados(&quot;' + row.Id + '&quot;)"></i></p>';                                            
                                         }
 
                                     }
@@ -1510,6 +1656,186 @@
                 }
                 $scope.$apply();
             });
+        };
+
+        var ObtenerGridCandidatosDisponibles = (Id) => {
+            $('#tablaVacantesEmpresa').hide();
+            $('#tablaVacApliEmpresa').hide();
+            if (self.listVacantesApliEmpresa !== undefined)
+                $('#tablaVacApliEmpresa').DataTable().clear().destroy()
+            if (self.listVacantesEmpresa !== undefined)
+                $('#tablaVacantesEmpresa').DataTable().clear().destroy()
+            if (self.listCandDispo !== undefined)
+                $('#tablaCandDisp').DataTable().clear().destroy();
+            btuContext.ObtenerGridCandidatosDisponibles(Id, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listCandDispo = btuContext.listCandDispo;
+                        if (self.listCandDispo !== undefined && self.listCandDispo.length > 0) {
+                            $('#cargarTabla').hide();
+                            $('#tablaCandDisp').show();
+                            table = $('#tablaCandDisp').DataTable({
+                                language: {
+                                    "decimal": "",
+                                    "emptyTable": "No hay información",
+                                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                                    "infoEmpty": "Mostrando 0 de 0 a 0 Entradas",
+                                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                                    "infoPostFix": "",
+                                    "thousands": ",",
+                                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                                    "loadingRecords": "Cargando...",
+                                    "processing": "Procesando...",
+                                    "search": "Buscar:",
+                                    "zeroRecords": "Sin resultados encontrados",
+                                    "paginate": {
+                                        "first": "Primero",
+                                        "last": "Último",
+                                        "next": "Siguiente",
+                                        "previous": "Anterior"
+                                    }
+                                },
+                                data: self.listCandDispo,
+                                pageLength: 5,
+                                columns: [                                    
+                                    { data: "Nombre" },
+                                    { data: "Genero" },
+                                    { data: "Fecha_Nacimiento" },
+                                    { data: "Carrera" },                                   
+                                    {
+                                        data: "Id",
+                                        "className": "text-center",
+                                        render: function (data, type, row, meta) {
+                                            return '<i data-toggle="tooltip"  title="Ver Curriculum" class="fas fa-file-alt" ng-click="GuardarIdVacante(&quot;' + row.Id + '&quot;,&quot;' + row.RutaFoto + '&quot;)"></i>';
+                                        }
+
+                                    },
+                                    {
+                                        data: "Id",
+                                        "className": "text-center",
+                                        render: function (data, type, row, meta) {
+                                            return '<i data-toggle="tooltip"  title="Invitar a Aplicar a la Vacante" class="fas fa-envelope" ng-click="InvitarCandidato(&quot;' + row.Id + '&quot;,&quot;' + row.Correo + '&quot;,&quot;' + row.Nombre + '&quot;)"></i>';
+                                        }
+
+                                    }
+                                ],
+                                rowCallback: function (row) {
+                                    if (!row.compiled) {
+                                        $compile(angular.element(row))($scope);
+                                        row.compiled = true;
+                                    }
+                                }
+                            });
+                        }
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
+        this.ObtenerGridCandidatosDisponibles = () => {
+            $('#tablaVacantesEmpresa').hide();
+            $('#tablaVacApliEmpresa').hide();
+            if (self.listVacantesApliEmpresa !== undefined)
+                $('#tablaVacApliEmpresa').DataTable().clear().destroy()
+            if (self.listVacantesEmpresa !== undefined)
+                $('#tablaVacantesEmpresa').DataTable().clear().destroy()
+            if (self.listCandDispo !== undefined)
+                $('#tablaCandDisp').DataTable().clear().destroy();
+            btuContext.ObtenerGridCandidatosDisponibles(self.Vacante, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listCandDispo = btuContext.listCandDispo;
+                        if (self.listCandDispo !== undefined && self.listCandDispo.length > 0) {
+                            $('#cargarTabla').hide();
+                            $('#tablaCandDisp').show();
+                            table = $('#tablaCandDisp').DataTable({
+                                language: {
+                                    "decimal": "",
+                                    "emptyTable": "No hay información",
+                                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                                    "infoEmpty": "Mostrando 0 de 0 a 0 Entradas",
+                                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                                    "infoPostFix": "",
+                                    "thousands": ",",
+                                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                                    "loadingRecords": "Cargando...",
+                                    "processing": "Procesando...",
+                                    "search": "Buscar:",
+                                    "zeroRecords": "Sin resultados encontrados",
+                                    "paginate": {
+                                        "first": "Primero",
+                                        "last": "Último",
+                                        "next": "Siguiente",
+                                        "previous": "Anterior"
+                                    }
+                                },
+                                data: self.listCandDispo,
+                                pageLength: 5,
+                                columns: [
+                                    { data: "Nombre" },
+                                    { data: "Genero" },
+                                    { data: "Fecha_Nacimiento" },
+                                    { data: "Carrera" },
+                                    {
+                                        data: "Id",
+                                        "className": "text-center",
+                                        render: function (data, type, row, meta) {
+                                            return '<i data-toggle="tooltip"  title="Ver Curriculum" class="fas fa-file-alt" ng-click="GuardarIdVacante(&quot;' + row.Id + '&quot;,&quot;' + row.RutaFoto + '&quot;)"></i>';
+                                        }
+
+                                    },
+                                    {
+                                        data: "Id",
+                                        "className": "text-center",
+                                        render: function (data, type, row, meta) {
+                                            return '<i data-toggle="tooltip"  title="Invitar a Aplicar a la Vacante" class="fas fa-envelope" ng-click="InvitarCandidato(&quot;' + row.Id + '&quot;,&quot;' + row.Correo + '&quot;,&quot;' + row.Nombre + '&quot;)"></i>';
+                                        }
+
+                                    }
+                                ],
+                                rowCallback: function (row) {
+                                    if (!row.compiled) {
+                                        $compile(angular.element(row))($scope);
+                                        row.compiled = true;
+                                    }
+                                }
+                            });
+                        }
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
+        $scope.EliminarVacante = (Id) => {
+            let respuesta = confirm("¿Desea borrar la vacante?");
+            if (respuesta) {
+                btuContext.EliminarVacante(Id, function (resp) {
+                    switch (resp.ressult) {
+                        case "tgp":
+                            alert("Vacante borrada.");
+                            VerVacantesEmpresa();
+                            break;
+                        case "notgp":
+                            alert(resp.message);
+                            break;
+                        default:
+                            break;
+                    }
+                    $scope.$apply();
+                });
+            }
         };
 
         //Funciones para la vista Vacante
@@ -1612,7 +1938,7 @@
                             else if (licencia == "N")
                                 $('#rNoLicencia').prop('checked', true);
                             if (radicar === "S")
-                                $('#SiRadica').prop('checked', true);
+                                $('#rSiRadica').prop('checked', true);
                             else if (radicar == "N")
                                 $('#rNoRadica').prop('checked', true);
                             if (viajar === "S")
@@ -1677,6 +2003,7 @@
                 switch (resp.ressult) {
                     case "tgp":
                         alert("Vacante agregada correctamente.");
+                        window.location.assign(urlServer + "Btu/PanelEmpresa");
                         break;
                     case "notgp":
                         alert(resp.message);
@@ -1722,6 +2049,7 @@
                 switch (resp.ressult) {
                     case "tgp":
                         alert("Vacante editada correctamente.");
+                        window.location.assign(urlServer + "Btu/PanelEmpresa");
                         break;
                     case "notgp":
                         alert(resp.message);
@@ -1732,6 +2060,12 @@
                 $scope.$apply();
             });
         }
+
+        this.VerCandidatosDisponibles = () => {
+            ComboVacantesEmpresa();
+            ComboAreaConocimiento();
+            $('#verCandDisp').show();
+        };        
 
         //Funciones para el detalle de las tablas
         function format(data) {

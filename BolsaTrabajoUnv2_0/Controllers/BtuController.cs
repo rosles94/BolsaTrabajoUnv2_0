@@ -1827,6 +1827,28 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        public JsonResult ComboVacantesEmpresa(string Id)
+        {
+            List<Btu_Sesion> listSesion = new List<Btu_Sesion>();
+            Btu_Empresa objEmpresa = new Btu_Empresa();
+            Comun objComun = new Comun();
+            ResultadoComun objResultado = new ResultadoComun();
+            try
+            {
+                listSesion = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"];
+                objEmpresa.Id_Empresa = listSesion[0].Id;
+                objResultado.Resultado = CursorDataContext.ComboVacantesEmpresa(objEmpresa);
+                objResultado.Error = false;
+                objResultado.MensajeError = "";
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
         // Metodos para la vista Panel Candidato
         public JsonResult GuardarIdCv (string Id)
         {
@@ -1873,12 +1895,12 @@ namespace BolsaTrabajoUnv2_0.Controllers
             List<Btu_Empresa> listEmpresa = new List<Btu_Empresa>();
             Btu_Empresa objEmpresa = new Btu_Empresa();
             ResultadoEmpresa objResultado = new ResultadoEmpresa();
+            string Verificador = string.Empty;
             try
             {
                 listSesion = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"];
                 objEmpresa.Id_Empresa = listSesion[0].Id;
-                listEmpresa.Add(objEmpresa);
-                objResultado.Resultado = listEmpresa;
+                objResultado.Resultado = DataContext.ObtenerStatusEmpresa(objEmpresa, ref Verificador);
                 objResultado.Error = false;
                 objResultado.MensajeError = "";
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
@@ -2013,6 +2035,28 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        public JsonResult ObtenerGridCandidatosDisponibles(string Id)
+        {
+            Btu_Vacante objVacante = new Btu_Vacante();
+            ResultadoBtuCurriculum objResultado = new ResultadoBtuCurriculum();
+            List<Btu_Sesion> listSesion = new List<Btu_Sesion>();
+            try
+            {
+                listSesion = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"];
+                objVacante.Id_Empresa = listSesion[0].Id;
+                objVacante.Id = Id;
+                objResultado.Resultado = DataContext.ObtenerGridCandidatosDisponibles(objVacante);
+                objResultado.Error = false;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+
 
 
         //Metodos para la vista Vacantes
@@ -2090,35 +2134,35 @@ namespace BolsaTrabajoUnv2_0.Controllers
             try
             {
                 objVacante = (Btu_Vacante)System.Web.HttpContext.Current.Session["SessionIdVacante"];                
-                objVacante.Nombre = Nombre;
+                objVacante.Nombre = Nombre.ToUpper();
                 objVacante.Total = Total;
                 objVacante.Edad_Minima = Edad_Minima;
                 objVacante.Edad_Maxima = Edad_Maxima;
                 objVacante.Estado_Civil = Estado_Civil;
-                objVacante.Grado = Grado;
-                objVacante.Experiencia = Experiencia;
-                objVacante.Actividades = Actividades;
-                objVacante.Conocimientos = Conocimientos;
+                objVacante.Grado = Grado.ToUpper();
+                objVacante.Experiencia = Experiencia.ToUpper();
+                objVacante.Actividades = Actividades.ToUpper();
+                objVacante.Conocimientos = Conocimientos.ToUpper();
                 objVacante.Salario = Salario;
                 objVacante.Frecuencia_Salario = Frecuencia_Salario;
-                objVacante.Prestaciones = Prestaciones;
-                objVacante.Ubicacion = Ubicacion;
+                objVacante.Prestaciones = Prestaciones.ToUpper();
+                objVacante.Ubicacion = Ubicacion.ToUpper();
                 objVacante.Licencia = Licencia;
                 objVacante.Vigencia_Inicio = Vigencia_Inicio;
                 objVacante.Vigencia_Fin = Vigencia_Fin;
                 objVacante.Tipo = Tipo;
-                objVacante.Direccion_Entrevista = Direccion_Entrevista;
+                objVacante.Direccion_Entrevista = Direccion_Entrevista.ToUpper();
                 objVacante.Telefono = Telefono;
                 objVacante.Correo = Correo;
-                objVacante.Comentarios = Comentarios;
-                objVacante.Responsable_Entrevista = Responsable_Entrevista;
-                objVacante.Especificaciones_Entrevista = Especificaciones_Entrevista;
+                objVacante.Comentarios = Comentarios.ToUpper();
+                objVacante.Responsable_Entrevista = Responsable_Entrevista.ToUpper();
+                objVacante.Especificaciones_Entrevista = Especificaciones_Entrevista.ToUpper();
                 objVacante.Idioma = Idioma;
                 objVacante.Radicar = Radicar;
                 objVacante.Viajar = Viajar;
                 objVacante.Flayer_Empresa = ""; ;
                 objVacante.Genero = Genero;
-                objVacante.Jornada_Laboral = Jornada_Laboral;
+                objVacante.Jornada_Laboral = Jornada_Laboral.ToUpper();
                 GuardarDataContext.EditarVacante(objVacante, ref Verificador);
                 if (Verificador == "0")
                 {
@@ -2192,6 +2236,36 @@ namespace BolsaTrabajoUnv2_0.Controllers
             {
                 objResultado.Error = true;
                 objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult EliminarVacante (string Id)
+        {
+            ResultadoComun objResultado = new ResultadoComun();
+            string Verificador = string.Empty;
+            try
+            {
+                Btu_Vacante objVacante = new Btu_Vacante();
+                objVacante.Id = Id;
+                GuardarDataContext.EliminarVacante(objVacante, ref Verificador);
+                if(Verificador == "0")
+                {
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";
+                }
+                else
+                {
+                    objResultado.Error = true;
+                    objResultado.MensajeError = Verificador;
+                }
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;            
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }

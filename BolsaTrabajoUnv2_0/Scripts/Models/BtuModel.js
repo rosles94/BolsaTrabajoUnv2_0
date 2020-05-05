@@ -32,7 +32,9 @@ var btuContext =
     listVacantesEmpresa: [],
     listDatosVacante: [],
     listInteresadosVac: [],
-    listVacantesApliEmpresa:[],
+    listVacantesApliEmpresa: [],
+    listVacRegEmp: [],
+    listCandDispo: [],
 
     BuscarEmpresa: function (Rfc, callBackResult) {
         let self = this;
@@ -1098,7 +1100,7 @@ var btuContext =
                 if (resp.Error === false) {
                     for (var i = 0; i < resp.Resultado.length; i++) {
                         self.listDatosPanelEmpresa.push({
-                            Id_Empresa: resp.Resultado[i].Id_Empresa
+                            Id_Empresa: resp.Resultado[i].Id_Empresa, Status: resp.Resultado[i].Status
                         });
                     }
                     callBackResult({ ressult: 'tgp', message: resp.MensajeError });
@@ -1501,6 +1503,76 @@ var btuContext =
                             Id: resp.Resultado[i].Id
                         });
                     }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+    ComboVacantesEmpresa: function (callBackResult) {
+        let self = this;
+        self.listVacRegEmp.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/ComboVacantesEmpresa",
+            data: {},
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listVacRegEmp.push({
+                            Id: resp.Resultado[i].Id, Descripcion: resp.Resultado[i].Descripcion
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+    ObtenerGridCandidatosDisponibles: function (Id, callBackResult) {
+        let self = this;
+        self.listCandDispo.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/ObtenerGridCandidatosDisponibles",
+            data: { Id },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listCandDispo.push({
+                            Id: resp.Resultado[i].Id, Nombre: resp.Resultado[i].Nombre,
+                            Celular: resp.Resultado[i].Celular, Correo: resp.Resultado[i].Correo,
+                            Genero: resp.Resultado[i].Genero, Ruta_Foto: resp.Resultado[i].Ruta_Foto,
+                            Carrera: resp.Resultado[i].Carrera, Fecha_Nacimiento: resp.Resultado[i].Fecha_Nacimiento
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+    EliminarVacante: function (Id, callBackResult) {
+        let self = this;
+        self.listVacRegEmp.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/EliminarVacante",
+            data: { Id },
+            success: function (resp) {
+                if (resp.Error === false) {                    
                     callBackResult({ ressult: 'tgp', message: resp.MensajeError });
                 }
                 else
