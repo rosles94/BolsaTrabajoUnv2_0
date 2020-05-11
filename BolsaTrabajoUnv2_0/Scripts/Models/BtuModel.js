@@ -38,6 +38,7 @@ var btuContext =
     listTotalVac: [],
     listStatusCand: [],
     listStatusAgrupados: [],
+    listVacantesXstatus : [],
 
     BuscarEmpresa: function (Rfc, callBackResult) {
         let self = this;
@@ -1684,6 +1685,30 @@ var btuContext =
                     for (var i = 0; i < resp.Resultado.length; i++) {
                         self.listStatusAgrupados.push({
                             Status: resp.Resultado[i].Status, Observaciones: resp.Resultado[i].Observaciones
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+    ObtenerVacantesXstatus: function (Id, Status, callBackResult) {
+        let self = this;
+        self.listVacantesXstatus.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/ObtenerVacantesXstatus",
+            data: { Id, Status },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listVacantesXstatus.push({
+                            Nombre: resp.Resultado[i].Nombre, Id: resp.Resultado[i].Id
                         });
                     }
                     callBackResult({ ressult: 'tgp', message: resp.MensajeError });

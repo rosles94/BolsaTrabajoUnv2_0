@@ -6,31 +6,31 @@
         <div class="col-md-2 py-5">
             <ul class="list-group">
                 <li id="" class="list-group-item d-flex justify-content-between align-items-center" style="background-color:forestgreen">
-                    <span id="">Invitado: {{ctrl.StatusInv}}</span>
+                    <span id="" data-toggle="tooltip" title="Ver Vacantes" ng-click="ctrl.ObtenerVacantesXstatus(ctrl.IdUsuario, 'S')">Invitado: {{ctrl.StatusInv}}</span>
                     <span class="badge badge-primary badge-pill">
                         <i id="infemp1" class="fas fa-eye"></i>
                     </span>
                 </li>
                 <li id="" class="list-group-item d-flex justify-content-between align-items-center"style="background-color:forestgreen">
-                    <span id="">Interesado: {{ctrl.StatusInt}}</span>
+                    <span id="" data-toggle="tooltip" title="Ver Vacantes" ng-click="ctrl.ObtenerVacantesXstatus(ctrl.IdUsuario, 'I')">Interesado: {{ctrl.StatusInt}}</span>
                     <span class="badge badge-primary badge-pill">
                         <i id="infemp1" class="fas fa-check-circle"></i>
                     </span>
                 </li>
                 <li id="" class="list-group-item d-flex justify-content-between align-items-center"style="background-color:lightgoldenrodyellow">
-                    <span id="">Entrevista: {{ctrl.StatusEnt}}</span>
+                    <span id="" data-toggle="tooltip" title="Ver Vacantes" ng-click="ctrl.ObtenerVacantesXstatus(ctrl.IdUsuario, 'E')">Entrevista: {{ctrl.StatusEnt}}</span>
                     <span class="badge badge-primary badge-pill">
                         <i id="infemp1" class="fas fa-check"></i>
                     </span>
                 </li>
-                <li id="" class="list-group-item d-flex justify-content-between align-items-center" style="background-color:palegoldenrod">
-                    <span id="">Aceptado: {{ctrl.StatusAcep}}</span>
+                <li id="" data-toggle="tooltip" title="Ver Vacantes" class="list-group-item d-flex justify-content-between align-items-center" style="background-color:palegoldenrod">
+                    <span id="" ng-click="ctrl.ObtenerVacantesXstatus(ctrl.IdUsuario, 'A')">Aceptado: {{ctrl.StatusAcep}}</span>
                     <span class="badge badge-primary badge-pill">
                         <i id="infemp1" class="fas fa-thumbs-up"></i>
                     </span>
                 </li>
                 <li id="" class="list-group-item d-flex justify-content-between align-items-center">
-                    <span id="">No cubre el perfil: {{ctrl.StatusRec}}</span>
+                    <span data-toggle="tooltip" title="Ver Vacantes" id="" ng-click="ctrl.ObtenerVacantesXstatus(ctrl.IdUsuario, 'R')">No cubre el perfil: {{ctrl.StatusRec}}</span>
                     <span class="badge badge-primary badge-pill">
                         <i id="infemp1" class="fas fa-exclamation-circle"></i>
                     </span>

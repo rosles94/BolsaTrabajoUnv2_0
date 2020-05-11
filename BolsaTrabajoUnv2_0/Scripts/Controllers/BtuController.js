@@ -48,6 +48,7 @@
         let listStatusCand = "";
         let idCandidato = "";
         let listStatusAgrupados = "";
+        let listVacantesXstatus = "";
 
         let datosPersonales = false;
         let datosAcademicos = false;
@@ -1378,16 +1379,18 @@
                 switch (resp.ressult) {
                     case "tgp":
                         self.listStatusAgrupados = btuContext.listStatusAgrupados;
-                        if (self.listStatusAgrupados[0].Status === "S")
-                            self.StatusInv = self.listStatusAgrupados[0].Observaciones;
-                        else if (self.listStatusAgrupados[0].Status === "I")
-                            self.StatusInt = self.listStatusAgrupados[0].Observaciones;
-                        else if (self.listStatusAgrupados[0].Status === "E")
-                            self.StatusEnt = self.listStatusAgrupados[0].Observaciones;
-                        else if (self.listStatusAgrupados[0].Status === "C")
-                            self.StatusAcep = self.listStatusAgrupados[0].Observaciones;
-                        else if (self.listStatusAgrupados[0].Status === "R")
-                            self.StatusRec = self.listStatusAgrupados[0].Observaciones;
+                        for (let i = 0; i < self.listStatusAgrupados.length; i++){
+                            if (self.listStatusAgrupados[i].Status === "S")
+                                self.StatusInv = self.listStatusAgrupados[i].Observaciones !== "" ? self.listStatusAgrupados[i].Observaciones : '0';                                 
+                            else if (self.listStatusAgrupados[i].Status === "I")
+                                self.StatusInt = self.listStatusAgrupados[i].Observaciones !== "" ? self.listStatusAgrupados[i].Observaciones : '0';
+                            else if (self.listStatusAgrupados[i].Status === "E")
+                                self.StatusEnt = self.listStatusAgrupados[i].Observaciones !== "" ? self.listStatusAgrupados[i].Observaciones : '0';
+                            else if (self.listStatusAgrupados[i].Status === "C")
+                                self.StatusAcep = self.listStatusAgrupados[i].Observaciones !== "" ? self.listStatusAgrupados[i].Observaciones : '0';
+                            else if (self.listStatusAgrupados[i].Status === "R")
+                                self.StatusRec = self.listStatusAgrupados[i].Observaciones !== "" ? self.listStatusAgrupados[i].Observaciones : '0';
+                        }
                         break;
                     case "notgp":
                         alert(resp.message);
@@ -1398,6 +1401,23 @@
                 $scope.$apply();
             });
         };
+
+        this.ObtenerVacantesXstatus = (id, status) => {
+            btuContext.ObtenerVacantesXstatus(id,status, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listVacantesXstatus = btuContext.listVacantesXstatus;                        
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+                ObtenerGridStatusAplicaciones();
+            });
+        }
 
         //Funciones para la vista Panel Empresa
 

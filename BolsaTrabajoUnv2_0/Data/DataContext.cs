@@ -735,6 +735,36 @@ namespace BolsaTrabajoUnv2_0.Data
                 exeProc.LimpiarOracleCommand(ref cmd);
             }
         }
+        public static List<Btu_Vacante> ObtenerVacantesXstatus(Btu_Vacantes_Candidatos objVacante)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { "p_id_candidato", "p_status" };
+                object[] Valores = { objVacante.Id_Interesado, objVacante.Status};
+                cmd = exeProc.GenerarOracleCommandCursor_Grid("PKG_VINCULAR.Obt_Grid_Vacantes_Status", ref dr, Parametros, Valores);
+                List<Btu_Vacante> list = new List<Btu_Vacante>();
+                while (dr.Read())
+                {
+                    Btu_Vacante objVac = new Btu_Vacante();
+                    objVac.Nombre = Convert.ToString(dr[0]);
+                    objVac.Id = Convert.ToString(dr[1]);
+                    //objVacCand.btuBasicos.TIPO = Convert.ToString(dr[2]);
+                    list.Add(objVac);
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+        }
 
     }
 }

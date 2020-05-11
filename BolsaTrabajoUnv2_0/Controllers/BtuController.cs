@@ -1928,6 +1928,25 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        public JsonResult ObtenerVacantesXstatus(string Id, string Status)
+        {
+            ResultadoVacante objResultado = new ResultadoVacante();
+            Btu_Vacantes_Candidatos objVacante = new Btu_Vacantes_Candidatos();
+            try
+            {
+                objVacante.Id_Interesado = Id;
+                objVacante.Status = Status;
+                objResultado.Resultado = DataContext.ObtenerVacantesXstatus(objVacante);
+                objResultado.Error = false;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
 
         //Metodos para la vista Panel Empresa
         public JsonResult CargarDatosPanelEmpresa()
