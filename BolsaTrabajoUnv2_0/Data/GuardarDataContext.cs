@@ -243,6 +243,48 @@ namespace BolsaTrabajoUnv2_0.Data
                 exeProc.LimpiarOracleCommand(ref cmd);
             }
         }
+        public static void EditarStatusInteresado(Btu_Vacantes_Candidatos objVacante, ref string Verificador)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { "P_ID", "P_STATUS", "P_OBSERVACIONES", "P_IDCV" };
+                object[] Valores = { objVacante.Id, objVacante.Status, objVacante.Observaciones, objVacante.Id_Interesado };
+                string[] ParametrosOut = { "P_BANDERA" };
+                cmd = exeProc.GenerarOracleCommand("UPD_STATUS_VACANTE", ref Verificador, ref dr, Parametros, Valores, ParametrosOut);
+            }
+            catch (Exception ex)
+            {
+                Verificador = ex.Message;
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+        }
+        public static void AplicarVacante(Btu_Vacantes_Candidatos objVacante, int Invitado, ref string Verificador)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { "P_ID_VACANTE", "P_ID_CURRICULUM", "P_INVITADO" };
+                object[] Valores = { objVacante.Id_Vacante, objVacante.Id_Interesado, Invitado };
+                string[] ParametrosOut = { "P_BANDERA" };
+                cmd = exeProc.GenerarOracleCommand("INS_BTU_VACANTES_CANDIDATOS", ref Verificador, ref dr, Parametros, Valores, ParametrosOut);
+            }
+            catch (Exception ex)
+            {
+                Verificador = ex.Message;
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+        }
 
     }
 }

@@ -14,6 +14,7 @@ namespace BolsaTrabajoUnv2_0.Models
         public string Status { get; set; }
         public string Observaciones { get; set; }
         public string Fecha_Captura { get; set; }
+        public string Total_Vacantes { get; set; }
     }
 
     public class ResultadoVacantesCandidatos

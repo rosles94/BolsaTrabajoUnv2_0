@@ -474,7 +474,7 @@ namespace BolsaTrabajoUnv2_0.Data
                 {
                     Btu_Curriculum objInteresados = new Btu_Curriculum();
                     objInteresados.Nombre = Convert.ToString(dr[0]);
-                    objInteresados.IdCarrera = Convert.ToString(dr[1]);
+                    objInteresados.objVacantesCandidatos.Id = Convert.ToString(dr[1]);
                     objInteresados.Id = Convert.ToString(dr[2]);
                     objInteresados.objVacantesCandidatos.Status = Convert.ToString(dr[3]);
                     objInteresados.Correo = Convert.ToString(dr[4]);
@@ -636,6 +636,95 @@ namespace BolsaTrabajoUnv2_0.Data
                     lisCandidatos.Add(objCandidato);
                 }
                 return lisCandidatos;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+        }
+        public static List<Btu_Vacantes_Candidatos> ObtenerTotalVacantes (ref string Verificador)
+        {
+            Btu_Vacantes_Candidatos objVacante = new Btu_Vacantes_Candidatos();
+            List<Btu_Vacantes_Candidatos> list = new List<Btu_Vacantes_Candidatos>();
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { };
+                object[] Valores = { };
+                string[] ParametrosOut = { "P_TOTAL_VACANTES", "P_BANDERA" };
+                cmd = exeProc.GenerarOracleCommand_Exe("OBT_TODAS_VACANTES", ref Verificador, ref dr, Parametros, Valores, ParametrosOut);
+
+                if (Verificador == "0")
+                {
+                    objVacante.Total_Vacantes = Convert.ToString(cmd.Parameters["P_TOTAL_VACANTES"].Value);
+                }
+                list.Add(objVacante);
+            }
+            catch (Exception ex)
+            {
+                Verificador = ex.Message;
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+            return list;
+        }
+        public static List<Btu_Curriculum> ObtenerStatusCandidato(Btu_Curriculum objCv, ref string Verificador)
+        {            
+            List<Btu_Curriculum> list = new List<Btu_Curriculum>();
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { "P_ID" };
+                object[] Valores = { objCv.Id };
+                string[] ParametrosOut = { "P_STATUS", "P_BANDERA" };
+                cmd = exeProc.GenerarOracleCommand_Exe("OBT_STATUS_CANDIDATO", ref Verificador, ref dr, Parametros, Valores, ParametrosOut);
+
+                if (Verificador == "0")
+                {
+                    objCv.Status = Convert.ToString(cmd.Parameters["P_STATUS"].Value);
+                }
+                list.Add(objCv);
+            }
+            catch (Exception ex)
+            {
+                Verificador = ex.Message;
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+            return list;
+        }
+        public static List<Btu_Vacantes_Candidatos> ObtenerGridStatusAplicaciones(Btu_Curriculum objCv)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { "p_id" };
+                object[] Valores = { objCv.Id };
+                cmd = exeProc.GenerarOracleCommandCursor_Grid("PKG_VINCULAR.Obt_Grid_Status_Aplicaciones", ref dr, Parametros, Valores);
+                List<Btu_Vacantes_Candidatos> list = new List<Btu_Vacantes_Candidatos>();
+                while (dr.Read())
+                {
+                    Btu_Vacantes_Candidatos objVacCand = new Btu_Vacantes_Candidatos();
+                    objVacCand.Status = Convert.ToString(dr[0]);
+                    objVacCand.Observaciones = Convert.ToString(dr[1]);
+                    //objVacCand.btuBasicos.TIPO = Convert.ToString(dr[2]);
+                    list.Add(objVacCand);
+                }
+                return list;
             }
             catch (Exception ex)
             {

@@ -35,6 +35,9 @@ var btuContext =
     listVacantesApliEmpresa: [],
     listVacRegEmp: [],
     listCandDispo: [],
+    listTotalVac: [],
+    listStatusCand: [],
+    listStatusAgrupados: [],
 
     BuscarEmpresa: function (Rfc, callBackResult) {
         let self = this;
@@ -513,7 +516,7 @@ var btuContext =
         $.ajax({
             beforeSend: function () {
                 $("#cargandoDatos").show();
-                $("#modalEmpresa").modal('toggle');
+                $("#modalAlumno").modal('toggle');
             },
             type: "POST",
             url: urlServer + "Btu/IniciarSesion",
@@ -885,12 +888,12 @@ var btuContext =
         });
     },
 
-    GuardarIdCv: function (Id, callBackResult) {        
+    GuardarIdCv: function (Id, Matricula, Registrado, callBackResult) {        
         $.ajax({
             type: "POST",
             url: urlServer + "Btu/GuardarIdCv",
             data: {
-                Id
+                Id, Matricula, Registrado
             },
             success: function (resp) {
                 if (resp.Error === false) {                    
@@ -918,7 +921,7 @@ var btuContext =
                 if (resp.Error === false) {
                     for (var i = 0; i < resp.Resultado.length; i++) {                        
                         self.listDatosPanelCv.push({
-                            Id: resp.Resultado[i].Id
+                            Id: resp.Resultado[i].Id, Matricula: resp.Resultado[i].Matricula, Registrado: resp.Resultado[i].Registrado
                         });
                     }
                     callBackResult({ ressult: 'tgp', message: resp.MensajeError });
@@ -1471,7 +1474,7 @@ var btuContext =
                 if (resp.Error === false) {
                     for (var i = 0; i < resp.Resultado.length; i++) {
                         self.listInteresadosVac.push({
-                            Nombre: resp.Resultado[i].Nombre, IdCarrera: resp.Resultado[i].IdCarrera, Id: resp.Resultado[i].Id, Status: resp.Resultado[i].objVacantesCandidatos.Status,
+                            Nombre: resp.Resultado[i].Nombre, Id_Vac_Cand: resp.Resultado[i].objVacantesCandidatos.Id, Id: resp.Resultado[i].Id, Status: resp.Resultado[i].objVacantesCandidatos.Status,
                             Correo: resp.Resultado[i].Correo, Genero: resp.Resultado[i].Genero, Ruta_Foto: resp.Resultado[i].Ruta_Foto, Fecha_Nacimiento: resp.Resultado[i].Fecha_Nacimiento
                         });
                     }
@@ -1564,9 +1567,7 @@ var btuContext =
             }
         });
     },
-    EliminarVacante: function (Id, callBackResult) {
-        let self = this;
-        self.listVacRegEmp.length = 0;
+    EliminarVacante: function (Id, callBackResult) {        
         $.ajax({
             type: "POST",
             url: urlServer + "Btu/EliminarVacante",
@@ -1582,5 +1583,118 @@ var btuContext =
                 callBackResult({ ressult: 'notgp', message: resp.MensajeError });
             }
         });
+    },
+    EditarStatusInteresado: function (Id, Status, Observaciones, Id_Interesado, Vacante, CorreoCand, callBackResult) {        
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/EditarStatusInteresado",
+            data: { Id, Status, Observaciones, Id_Interesado, Vacante, CorreoCand },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+    InvitarCandidato: function (Id_Vacante, Id_Interesado, Vacante, NombreCandidatoInv, CorreoCandidato, callBackResult) {
+        $.ajax({
+            beforeSend: function () {
+                $('#cargandoPanelEmpresa').show();
+            },
+            type: "POST",
+            url: urlServer + "Btu/InvitarCandidato",
+            data: { Id_Vacante, Id_Interesado, Vacante, NombreCandidatoInv, CorreoCandidato },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            complete: function () {
+                $('#cargandoPanelEmpresa').hide();
+            }
+        });
+    },
+    ObtenerTotalVacantes: function (callBackResult) {
+        let self = this;
+        self.listTotalVac.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/ObtenerTotalVacantes",
+            data: { },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listTotalVac.push({
+                            Total_Vacantes: resp.Resultado[i].Total_Vacantes
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+    ObtenerStatusCandidato: function (Id, callBackResult) {
+        let self = this;
+        self.listStatusCand.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/ObtenerStatusCandidato",
+            data: { Id },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listStatusCand.push({
+                            Status: resp.Resultado[i].Status
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+    ObtenerGridStatusAplicaciones: function (Id, callBackResult) {
+        let self = this;
+        self.listStatusAgrupados.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/ObtenerGridStatusAplicaciones",
+            data: { Id },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listStatusAgrupados.push({
+                            Status: resp.Resultado[i].Status, Observaciones: resp.Resultado[i].Observaciones
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
     }
+
 };

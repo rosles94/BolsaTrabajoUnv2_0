@@ -280,7 +280,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Contraseña</span>
                                     </div>
-                                    <input id="Contrasena" name="Contrasena" ng-model="ctrl.Contrasena" type="password" ng-change="ctrl.GlobalDatosSesion()" class="form-control" placeholder="Contraseña" aria-label="Contraseña" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input id="Contrasena" name="Contrasena" ng-model="ctrl.Contrasena" data-toggle="tooltip" title="{{ctrl.Contrasena}}" type="password" ng-change="ctrl.GlobalDatosSesion()" class="form-control" placeholder="Contraseña" aria-label="Contraseña" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm3.Contrasena.$invalid" />
                                 <span ng-show="myForm3.Contrasena.$error.required">*Contraseña requerida</span>
@@ -290,7 +290,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Confirmar Contraseña</span>
                                     </div>
-                                    <input id="Contrasena2" ng-model="ctrl.Contrasena2" type="password" ng-change="ctrl.GlobalDatosSesion()" class="form-control" placeholder="Confirmar Contraseña" aria-label="ConfirmarContraseña" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input id="Contrasena2" ng-model="ctrl.Contrasena2" type="password" data-toggle="tooltip" title="{{ctrl.Contrasena2}}" ng-change="ctrl.GlobalDatosSesion()" class="form-control" placeholder="Confirmar Contraseña" aria-label="ConfirmarContraseña" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm3.Contrasena2.$invalid" />
                                 <span ng-show="myForm3.Contrasena2.$error.required">*Confirmar Contraseña requerido</span>

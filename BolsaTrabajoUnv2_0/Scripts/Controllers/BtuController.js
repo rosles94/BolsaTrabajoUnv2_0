@@ -40,6 +40,14 @@
         let listVacantesApliEmpresa = "";
         let listVacRegEmp = "";
         let listCandDispo = "";
+        let idVacanteCandidato = "";        
+        let idCandInteresado = "";
+        let correoCandidato = "";
+        let nombreVacanteInteresado = "";
+        let listTotalVac = "";
+        let listStatusCand = "";
+        let idCandidato = "";
+        let listStatusAgrupados = "";
 
         let datosPersonales = false;
         let datosAcademicos = false;
@@ -83,10 +91,17 @@
                             self.Contrasena = self.listDatosEmpresa[0].Contrasena;
                             self.Contrasena2 = self.listDatosEmpresa[0].Contrasena;
                             $("#formularioRegistro").show();
+                            $("#razonSocial").prop('disabled', true);
+                            $("#NombreComercial").prop('disabled', true);
+                            $("#TipoPersona").prop('disabled', true);
+                            $("#Actividad").prop('disabled', true);
+                            $("#CodigoPost").prop('disabled', true);
+                            $("#Estado").prop('disabled', true);
+                            $("#Municipio").prop('disabled', true);
+                            $("#Colonia").prop('disabled', true);
+                            $("#Domicilio").prop('disabled', true);
                             $("#RfcEmpresa").prop('disabled', true);
-                            $("#usuarioEmpresa").prop('disabled', true);
-                            $("#Contrasena").prop('disabled', true);
-                            $("#Contrasena2").prop('disabled', true);
+                            $("#usuarioEmpresa").prop('disabled', true);                            
                             $("#globalInfoemp").css('background-color', 'green');
                             $("#globalDatosCont").css('background-color', 'green');
                             $("#globalSesion").css('background-color', 'green');
@@ -1281,7 +1296,9 @@
 
         this.DatosPanelCandidato = () => {
             CargarDatosPanelCV();
-            CargarInfoVacCand();
+            ObtenerTotalVacantes();            
+            $('#totalVac').show();
+            $('#statusCand').show();
         };
 
         var CargarDatosPanelCV = () => {
@@ -1290,6 +1307,26 @@
                     case "tgp":
                         self.listDatosPanel = btuContext.listDatosPanelCv;
                         self.IdUsuario = self.listDatosPanel[0].Id;
+                        self.Matricula = self.listDatosPanel[0].Matricula;
+                        self.Registrado = self.listDatosPanel[0].Registrado;
+                        idCandidato = self.listDatosPanel[0].Id;
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+                ObtenerStatusCandidato();
+            });
+        };        
+
+        this.GuardarIdCv = function (IdCv, Matricula, Registrado) {
+            btuContext.GuardarIdCv(IdCv, Matricula, Registrado, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        window.location.assign(urlServer + "Btu/DatosCandidato");
                         break;
                     case "notgp":
                         alert(resp.message);
@@ -1301,15 +1338,12 @@
             });
         };
 
-        var CargarInfoVacCand = () => {
-
-        };
-
-        this.GuardarIdCv = function (IdCv) {
-            btuContext.GuardarIdCv(IdCv, function (resp) {
+        var ObtenerTotalVacantes = () => {
+            btuContext.ObtenerTotalVacantes(function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
-                        window.location.assign(urlServer + "Btu/DatosCandidato");
+                        self.listTotalVac = btuContext.listTotalVac;
+                        self.TotalVac = self.listTotalVac[0].Total_Vacantes;                        
                         break;
                     case "notgp":
                         alert(resp.message);
@@ -1317,7 +1351,51 @@
                     default:
                         break;
                 }
-                $scope.$apply;
+                $scope.$apply();
+            });
+        };
+
+        var ObtenerStatusCandidato = () => {
+            btuContext.ObtenerStatusCandidato(idCandidato, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listStatusCand = btuContext.listStatusCand;
+                        self.StatusCand = self.listStatusCand[0].Status;                        
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+                ObtenerGridStatusAplicaciones();
+            });
+        };
+
+        var ObtenerGridStatusAplicaciones = () => {
+            btuContext.ObtenerGridStatusAplicaciones(idCandidato, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listStatusAgrupados = btuContext.listStatusAgrupados;
+                        if (self.listStatusAgrupados[0].Status === "S")
+                            self.StatusInv = self.listStatusAgrupados[0].Observaciones;
+                        else if (self.listStatusAgrupados[0].Status === "I")
+                            self.StatusInt = self.listStatusAgrupados[0].Observaciones;
+                        else if (self.listStatusAgrupados[0].Status === "E")
+                            self.StatusEnt = self.listStatusAgrupados[0].Observaciones;
+                        else if (self.listStatusAgrupados[0].Status === "C")
+                            self.StatusAcep = self.listStatusAgrupados[0].Observaciones;
+                        else if (self.listStatusAgrupados[0].Status === "R")
+                            self.StatusRec = self.listStatusAgrupados[0].Observaciones;
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
             });
         };
 
@@ -1565,7 +1643,8 @@
             window.location.assign(urlServer + "Btu/Vacante");
         };
 
-        $scope.ObtenerGridInteresados = (Id) => {
+        $scope.ObtenerGridInteresados = (Id, NombreVacante) => {
+            nombreVacanteInteresado = NombreVacante;
             btuContext.ObtenerGridInteresados(Id, function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
@@ -1634,7 +1713,7 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<p data-toggle="tooltip"  title="Ver Interesados" class"  ><i class="fas fa-user" data-toggle="modal" data-target="#modalIntVac" ng-click="ObtenerGridInteresados(&quot;' + row.Id + '&quot;)"></i></p>';                                            
+                                            return '<p data-toggle="tooltip"  title="Ver Interesados" class"  ><i class="fas fa-user" data-toggle="modal" data-target="#modalIntVac" ng-click="ObtenerGridInteresados(&quot;' + row.Id + '&quot;,&quot;' + row.Nombre + '&quot;)"></i></p>';                                            
                                         }
 
                                     }
@@ -1831,6 +1910,63 @@
                             alert(resp.message);
                             break;
                         default:
+                            break;
+                    }
+                    $scope.$apply();
+                });
+            }
+        };
+
+        this.GuardarIdCandidatoInteresado = (idVacCand, idCandidato, emailCand) => {
+            idVacanteCandidato = idVacCand;
+            idCandInteresado = idCandidato;
+            correoCandidato = emailCand;
+        };
+
+        this.EditarStatusInteresado = () => {
+            let observacionesStatus = "";
+            if (self.observacionesStatus === undefined || self.observacionesStatus === "")
+                observacionesStatus = 'N/A';
+            else
+                observacionesStatus = self.observacionesStatus;
+            if (self.statusCandidato !== undefined) {
+                btuContext.EditarStatusInteresado(idVacanteCandidato, self.statusCandidato, observacionesStatus, idCandInteresado, nombreVacanteInteresado, correoCandidato, function (resp) {
+                    switch (resp.ressult) {
+                        case "tgp":
+                            break;
+                        case "notgp":
+                            alert(resp.message);
+                            break;
+                        default:
+                            break;
+                    }
+                    $scope.$apply();
+                });
+            }
+            else
+                alert('Seleccione un estatus para el candidato');
+        };
+
+        $scope.InvitarCandidato = (Id_Interesado, CorreoCandidato, NombreCandidatoInv) => {               
+            let invitar = confirm('¿Desea invitar al candidato a aplicar a la vacante?');
+            if (invitar) {
+                $('#modalCargandoSolicitud').modal('show')
+                let IdVacante = self.Vacante;
+                let nombreVacEmpresa = $("#Vacante option:selected").text();
+                btuContext.InvitarCandidato(IdVacante, Id_Interesado, nombreVacEmpresa, NombreCandidatoInv, CorreoCandidato, function (resp) {
+                    switch (resp.ressult) {
+                        case "tgp":                            
+                            $("#modalCargandoSolicitud").modal('toggle');
+                            alert('Ha invitado al candidato a aplicar a la vacante: ' + nombreVacEmpresa);
+                            ObtenerGridCandidatosDisponibles(self.listVacRegEmp[0].Id);
+
+                            break;
+                        case "notgp":
+                            $("#modalCargandoSolicitud").modal('toggle');
+                            alert(resp.message);
+                            break;
+                        default:
+                            $("#modalCargandoSolicitud").modal('toggle');
                             break;
                     }
                     $scope.$apply();

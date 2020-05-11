@@ -7,6 +7,7 @@ using System.DirectoryServices;
 using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Web;
 using System.Web.Mvc;
 
@@ -831,15 +832,13 @@ namespace BolsaTrabajoUnv2_0.Controllers
         public JsonResult DatosRegistroUnach()
         {
             Btu_Curriculum objDatosUnach = new Btu_Curriculum();
-            Btu_Curriculum objFotoCv = new Btu_Curriculum();
-            List<Btu_Sesion> list = new List<Btu_Sesion>();
-            ResultadoBtuCurriculum objResultado = new ResultadoBtuCurriculum();
-            list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
+            Btu_Curriculum objFotoCv = new Btu_Curriculum();            
+            ResultadoBtuCurriculum objResultado = new ResultadoBtuCurriculum();            
+            objDatosUnach = (Btu_Curriculum)System.Web.HttpContext.Current.Session["SessionIdCvEditar"];
             string Verificador = string.Empty;
             try
-            {
-                objDatosUnach.Matricula = list[0].Matricula;
-                if (list[0].Registrado == "1")
+            {                
+                if (objDatosUnach.Registrado == "1")
                     objResultado.Resultado = DataContext.ObtenerDatosCurriculumAlta(objDatosUnach, ref Verificador);
                 else
                     objResultado.Resultado = DataContext.DatosRegistroUnach(objDatosUnach, ref Verificador);
@@ -1356,35 +1355,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 objResultado.MensajeError = ex.Message;
                 return objResultado;
             }
-        }
-        public ResultadoComun CorreoAltaCandidato(string Correo)
-        {
-            ResultadoComun objResultado = new ResultadoComun();
-
-            string AsuntoCorreo = "Registro de usuario";
-            string Contenido = "<img src='https://btu.unach.mx/Dsia/imagenes/encabezado_correo.png'>" +
-                "<img src='https://btu.unach.mx/Dsia/imagenes/btu.png'>" +
-                "<br /><div align=center><font size='4'><a href=\'" + "'>Notificación de registros de datos</a></font></div><br /><br />" +
-                "<font size='2'>Tus datos han sido: Registrados y serán validados en los próximos días<br />" +
-                "<br /><strong>DIRECCIÓN DE PERSONAL</strong><br />Teléfono - (961) 61 1 36 39, Ext.: 22/ (961) 61 1 34 78 Correo Electronico : btu@unach.mx<br /><br />";
-            System.Net.Mail.MailMessage mmsg = new System.Net.Mail.MailMessage();
-            string MsjError = string.Empty;
-            EnvioCorreo_Adjunto(ref mmsg, AsuntoCorreo, Contenido, Correo, ref MsjError);
-            if (MsjError == "")
-            {
-                objResultado.Error = false;
-                objResultado.MensajeError = "";
-                return objResultado;
-            }
-                
-            else
-            {
-                objResultado.Error = true;
-                objResultado.MensajeError = MsjError;
-                return objResultado;
-            }
-                
-        }
+        }        
 
         [HttpPost]
         public ActionResult UploadFiles()
@@ -1850,13 +1821,15 @@ namespace BolsaTrabajoUnv2_0.Controllers
             }
         }
         // Metodos para la vista Panel Candidato
-        public JsonResult GuardarIdCv (string Id)
+        public JsonResult GuardarIdCv (string Id, string Matricula, string Registrado)
         {
             ResultadoComun objResultado = new ResultadoComun();
             Btu_Curriculum objCv = new Btu_Curriculum();
             try
             {
                 objCv.Id = Id;
+                objCv.Matricula = Matricula;
+                objCv.Registrado = Registrado;
                 System.Web.HttpContext.Current.Session["SessionIdCvEditar"] = objCv;
                 objResultado.Error = false;
                 objResultado.MensajeError = "";
@@ -1885,6 +1858,74 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 objResultado.MensajeError = ex.Message;
                 objResultado.Resultado = null;
                 return Json (objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public JsonResult ObtenerTotalVacantes ()
+        {
+            ResultadoVacantesCandidatos objResultado = new ResultadoVacantesCandidatos();
+            string Verificador = string.Empty;
+            try
+            {
+                objResultado.Resultado = DataContext.ObtenerTotalVacantes(ref Verificador);
+                if (Verificador == "0")
+                    objResultado.Error = false;
+                else
+                {
+                    objResultado.Error = true;
+                    objResultado.Mensaje_Error = Verificador;
+                }
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.Mensaje_Error = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public JsonResult ObtenerStatusCandidato (string Id)
+        {
+            Btu_Curriculum objCv = new Btu_Curriculum();
+            ResultadoBtuCurriculum objResultado = new ResultadoBtuCurriculum();
+            string Verificador = string.Empty;
+            try
+            {
+                objCv.Id = Id;
+                objResultado.Resultado = DataContext.ObtenerStatusCandidato(objCv, ref Verificador);
+                if (Verificador == "0")
+                    objResultado.Error = false;
+                else
+                {
+                    objResultado.Error = true;
+                    objResultado.MensajeError = Verificador;
+                }
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public JsonResult ObtenerGridStatusAplicaciones (string Id)
+        {
+            ResultadoVacantesCandidatos objResultado = new ResultadoVacantesCandidatos();
+            Btu_Curriculum objCv = new Btu_Curriculum();
+            try
+            {
+                objCv.Id = Id;
+                objResultado.Resultado = DataContext.ObtenerGridStatusAplicaciones(objCv);
+                objResultado.Error = false;
+                objResultado.Mensaje_Error = "";
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Resultado = null;
+                objResultado.Error = true;
+                objResultado.Mensaje_Error = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -2047,6 +2088,78 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 objVacante.Id = Id;
                 objResultado.Resultado = DataContext.ObtenerGridCandidatosDisponibles(objVacante);
                 objResultado.Error = false;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public JsonResult EditarStatusInteresado (string Id, string Status, string Observaciones, string Id_Interesado, string Vacante, string CorreoCand)
+        {
+            Btu_Vacantes_Candidatos objVacante = new Btu_Vacantes_Candidatos();
+            ResultadoComun objResultado = new ResultadoComun();
+            List<Btu_Sesion> list = new List<Btu_Sesion>();
+            string Empresa = "";
+            string Verificador = string.Empty;
+            try
+            {
+                list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"];
+                Empresa = list[0].Nombre;
+                objVacante.Id = Id;
+                objVacante.Status = Status;
+                objVacante.Observaciones = Observaciones;
+                objVacante.Id_Interesado = Id_Interesado;                
+                GuardarDataContext.EditarStatusInteresado(objVacante, ref Verificador);
+                if (Verificador == "0")
+                {
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";
+                    EnviarCorreoCambioEstatus(Vacante, CorreoCand, Status, Empresa);
+                }
+                else
+                {
+                    objResultado.Error = true;
+                    objResultado.MensajeError = Verificador;
+                }
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public JsonResult InvitarCandidato(string Id_Vacante, string Id_Interesado, string Vacante, string NombreCandidatoInv, string CorreoCandidato)
+        {
+            ResultadoComun objResultado = new ResultadoComun();
+            Btu_Vacantes_Candidatos objVacante = new Btu_Vacantes_Candidatos();
+            List<Btu_Sesion> list = new List<Btu_Sesion>();
+            string Verificador = string.Empty;
+            int Interesado = 1;
+            string CorreoEmpresa = "";
+            try
+            {
+                list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"];
+                CorreoEmpresa = list[0].Email2;
+                objVacante.Id_Vacante = Id_Vacante;
+                objVacante.Id_Interesado = Id_Interesado;
+                GuardarDataContext.AplicarVacante(objVacante, Interesado, ref Verificador);
+                if(Verificador == "0")
+                {
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";
+                    EnviarCorreoInfoInvitado(Vacante, CorreoEmpresa, NombreCandidatoInv);
+                    EnviarCorreoInvAplicar(Vacante, CorreoCandidato);
+                }
+                else
+                {
+                    objResultado.Error = true;
+                    objResultado.MensajeError = Verificador;
+                }
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
             catch(Exception ex)
@@ -2239,7 +2352,6 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
-
         public JsonResult EliminarVacante (string Id)
         {
             ResultadoComun objResultado = new ResultadoComun();
@@ -2270,9 +2382,101 @@ namespace BolsaTrabajoUnv2_0.Controllers
             }
         }
 
+        //Metodos para enviar correos
+        public ResultadoComun CorreoAltaCandidato(string Correo)
+        {
+            ResultadoComun objResultado = new ResultadoComun();
 
+            string AsuntoCorreo = "Registro de usuario";
+            string Contenido = "<img src='https://btu.unach.mx/Dsia/imagenes/encabezado_correo.png'>" +
+                "<img src='https://btu.unach.mx/Dsia/imagenes/btu.png'>" +
+                "<br /><div align=center><font size='4'><a href=\'" + "'>Notificación de registros de datos</a></font></div><br /><br />" +
+                "<font size='2'>Tus datos han sido: Registrados y serán validados en los próximos días<br />" +
+                "<br /><strong>DIRECCIÓN DE PERSONAL</strong><br />Teléfono - (961) 61 1 36 39, Ext.: 22/ (961) 61 1 34 78 Correo Electronico : btu@unach.mx<br /><br />";
+            System.Net.Mail.MailMessage mmsg = new System.Net.Mail.MailMessage();
+            string MsjError = string.Empty;
+            EnvioCorreo_Adjunto(ref mmsg, AsuntoCorreo, Contenido, Correo, ref MsjError);
+            if (MsjError == "")
+            {
+                objResultado.Error = false;
+                objResultado.MensajeError = "";
+                return objResultado;
+            }
 
-        // Metodos compartidos por 2 o más vistas
+            else
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = MsjError;
+                return objResultado;
+            }
+
+        }
+        public JsonResult EnviarCorreoCambioEstatus(string Asunto, string Correo, string Status, string Empresa)
+        {
+            string mensaje = "";
+            if (Status == "C")
+            {
+                mensaje = "Le notificamos que ha sido CONTRATADO por la empresa " + Empresa;
+            }
+            else if (Status == "E")
+            {
+                mensaje = "Le notificamos que la empresa " + Empresa + " ha solicitado citarlo a una ENTREVISTA, le sugerimos estar al pendiente de la línea telefónica e email.";
+            }
+            else if (Status == "R")
+            {
+                mensaje = "Le notificamos que de acuerdo con la empresa usted NO CUBRE CON EL PERFIL ADECUADO de la vacante " + Asunto + " de la empresa " + Empresa + " , le invitamos a seguir postulándose en otras ofertas laborales.";
+            }
+
+            string AsuntoCorreo = "Cambio de estatus en la vacante " + Asunto;
+            string Contenido = "<img src='https://btu.unach.mx/Dsia/imagenes/encabezado_correo.png'>" +
+                "<img src='https://btu.unach.mx/Dsia/imagenes/btu.png'>" +
+                "<br />" +
+                "<div align=center><font size='4'>" +
+                "<a href=\'" + "'>Notificación de aplicación a la vacante</a></font></div><br /><br />" +
+                "<font size='2'>" + mensaje + "<br />" +
+                "<br /><strong>DIRECCIÓN DE PERSONAL</strong><br />Teléfono - (961) 61 1 36 39, Ext.: 22/ (961) 61 1 34 78 Correo Electronico : btu@unach.mx<br /><br />";
+            System.Net.Mail.MailMessage mmsg = new System.Net.Mail.MailMessage();
+            string MsjError = string.Empty;
+            EnvioCorreo_Adjunto(ref mmsg, AsuntoCorreo, Contenido, Correo, ref MsjError);
+
+            if (MsjError == "")
+                return Json(true, JsonRequestBehavior.AllowGet);
+            else
+                return Json(MsjError, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult EnviarCorreoInfoInvitado(string Asunto, string Correo, string nombreAplicante)
+        {
+            string AsuntoCorreo = "Invitación a la vacante " + Asunto;
+            string Contenido = "<img src='https://btu.unach.mx/Dsia/imagenes/encabezado_correo.png'>" +
+                "<img src='https://btu.unach.mx/Dsia/imagenes/btu.png'><br /><div align=center><font size='4'><a href=\'" + "'>Invitación a la vacante</a></font></div><br /><br />" +
+                "<font size='2'>Has invitado a el C. " + nombreAplicante + " a aplicar a la vacante: " + Asunto + "<br />" +
+                "<br /><strong>DIRECCIÓN DE PERSONAL</strong><br />Teléfono - (961) 61 1 36 39, Ext.: 22/ (961) 61 1 34 78 Correo Electronico : btu@unach.mx<br /><br />";
+            ;
+            System.Net.Mail.MailMessage mmsg = new System.Net.Mail.MailMessage();
+            string MsjError = string.Empty;
+            EnvioCorreo_Adjunto(ref mmsg, AsuntoCorreo, Contenido, Correo, ref MsjError);
+
+            if (MsjError == "")
+                return Json(true, JsonRequestBehavior.AllowGet);
+            else
+                return Json(MsjError, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult EnviarCorreoInvAplicar(string Asunto, string Correo)
+        {
+            string AsuntoCorreo = "Invitación a la vacante " + Asunto;
+            string Contenido = "<img src='https://btu.unach.mx/Dsia/imagenes/encabezado_correo.png'>" +
+                "<img src='https://btu.unach.mx/Dsia/imagenes/btu.png'>" +
+                "<div align=center><font size='4'><a href=\'" + "'>Notificación de aplicación a la vacante</a></font></div><br /><br />" +
+                "<font size='2'>Has sido invitado a aplicar a la vacante: " + Asunto + " por favor revista tu lista de vacantes<br />" +
+                "<br /><strong>DIRECCIÓN DE PERSONAL</strong><br />Teléfono - (961) 61 1 36 39, Ext.: 22/ (961) 61 1 34 78 Correo Electronico : btu@unach.mx<br /><br />";
+            System.Net.Mail.MailMessage mmsg = new System.Net.Mail.MailMessage();
+            string MsjError = string.Empty;
+            EnvioCorreo_Adjunto(ref mmsg, AsuntoCorreo, Contenido, Correo, ref MsjError);
+            if (MsjError == "")
+                return Json(true, JsonRequestBehavior.AllowGet);
+            else
+                return Json(MsjError, JsonRequestBehavior.AllowGet);
+        }
         public static void EnvioCorreo_Adjunto(ref System.Net.Mail.MailMessage mmsg, string Asunto, string Contenido, string DirCorreo, ref string Error)
         {
 
