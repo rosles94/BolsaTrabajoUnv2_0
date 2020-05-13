@@ -49,6 +49,12 @@
         let idCandidato = "";
         let listStatusAgrupados = "";
         let listVacantesXstatus = "";
+        let statusVacanteCand = "";
+        let idVacanteSeleccionada = "";
+        let eMailCandidato = "";
+        let eMailEmpresa = "";
+        let nombreCandidato = "";
+        let idVacCand = "";
 
         let datosPersonales = false;
         let datosAcademicos = false;
@@ -1311,6 +1317,8 @@
                         self.Matricula = self.listDatosPanel[0].Matricula;
                         self.Registrado = self.listDatosPanel[0].Registrado;
                         idCandidato = self.listDatosPanel[0].Id;
+                        eMailCandidato = self.listDatosPanel[0].Email;
+                        nombreCandidato = self.listDatosPanel[0].NombreCandidato;
                         break;
                     case "notgp":
                         alert(resp.message);
@@ -1406,7 +1414,31 @@
             btuContext.ObtenerVacantesXstatus(id,status, function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
-                        self.listVacantesXstatus = btuContext.listVacantesXstatus;                        
+                        self.listVacantesXstatus = btuContext.listVacantesXstatus;         
+                        idVacCand = self.listVacantesXstatus[0].Id_Vac_Cand;
+                        statusVacanteCand = self.listVacantesXstatus[0].Status;
+                        $('#VacantesXStatus').show();
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();                
+            });
+        }
+
+        this.VerDetallesVac = (Id) => {
+            alert(Id);
+        };
+
+        this.ObtenerGridVacantesCandidatos = (Id, Desde, Hasta) => {
+            btuContext.ObtenerGridVacantesCandidatos(Id,Desde, Hasta, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listVacantesXstatus = btuContext.listVacantesCandidato;
+                        $('#VacantesXStatus').show();
                         break;
                     case "notgp":
                         alert(resp.message);
@@ -1415,9 +1447,82 @@
                         break;
                 }
                 $scope.$apply();
-                ObtenerGridStatusAplicaciones();
             });
-        }
+        };
+
+        this.ObtenerDetalleVacante = (Id_Candidato, Id_Vacante, StatusVacante, Id_Vac_Cand) => {
+            btuContext.ObtenerDatosVacante(Id_Candidato, Id_Vacante,function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listDatosVacante = btuContext.listDatosVacante;
+                        self.DetalleLicencia = self.listDatosVacante[0].Licencia;
+                        self.DetalleDipsRadicar = self.listDatosVacante[0].Radicar;
+                        self.DetalleDispViajar = self.listDatosVacante[0].Viajar;
+                        self.DetalleNombre = self.listDatosVacante[0].Nombre;
+                        self.DetalleTotal = self.listDatosVacante[0].Total;
+                        self.DetalleEdadMin = self.listDatosVacante[0].Edad_Minima;
+                        self.DetalleEdadMax = self.listDatosVacante[0].Edad_Maxima;                                                
+                        self.DetalleEstadoCivil = self.listDatosVacante[0].Estado_Civil;
+                        self.DetalleGradoEstudios = self.listDatosVacante[0].Grado;
+                        self.DetalleExperiencia = self.listDatosVacante[0].Experiencia;
+                        self.DetalleActividades = self.listDatosVacante[0].Actividades;
+                        self.DetalleConocimientos = self.listDatosVacante[0].Conocimientos;
+                        //    self.HorioDiaLab = self.listDatosVacante[0].Jornada_Laboral;
+                        self.DetalleFrecuenciaSalario = self.listDatosVacante[0].Frecuencia_Salario;
+                        self.DetalleSalario = self.listDatosVacante[0].Salario;
+                        self.DetallePrestaciones = self.listDatosVacante[0].Prestaciones;
+                        self.DetalleUbicacion = self.listDatosVacante[0].Ubicacion;
+                        //    self.IdiomaExtra = self.listDatosVacante[0].Idioma;
+                        //    self.VigIniVac = self.listDatosVacante[0].Vigencia_Inicio;
+                        //    self.VigFinVac = self.listDatosVacante[0].Vigencia_Fin;
+                        self.DetalleTipo = self.listDatosVacante[0].Tipo;
+                        self.DetalleResponsableEntrevista = self.listDatosVacante[0].Responsable_Entrevista;
+                        self.DetalleEspecificaciones = self.listDatosVacante[0].Especificaciones_Entrevista;
+                        //    self.DircEntre = self.listDatosVacante[0].Direccion_Entrevista;
+                        //    self.TelOfc = self.listDatosVacante[0].Telefono;
+                        eMailEmpresa = self.listDatosVacante[0].Correo;
+                        self.DetalleComentarios = self.listDatosVacante[0].Comentarios;
+                        if (self.listDatosVacante[0].Genero === 'I')
+                            self.DetalleGenero = 'INDISTINTO';
+                        else if (self.listDatosVacante[0].Genero === 'M')
+                            self.DetalleGenero = 'MASCULINO';
+                        else if (self.listDatosVacante[0].Genero === 'F')
+                            self.DetalleGenero = 'FEMENINO';
+                        statusVacanteCand = StatusVacante;
+                        idVacanteSeleccionada = Id_Vacante;
+                        idVacCand = Id_Vac_Cand;
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
+        this.AplicarVacante = (Id_Candidato, nombreVacante) => {
+            let esInvitado = statusVacanteCand === 'S' ? "1" : "0";
+            btuContext.AplicarVacante(idVacanteSeleccionada, Id_Candidato, esInvitado, eMailEmpresa, eMailCandidato, nombreCandidato, nombreVacante, idVacCand, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        alert('¡Has aplicado a la vacante!');
+                        break;
+                    case "notgp":                        
+                        if (resp.message === '1')
+                            alert('¡Ya has aplicado a esta vacante!.');
+                        else if (resp.message === '2')
+                            alert('Tu usuario no está en estatus alta, por lo que no puedes aplicar a las vacantes.');
+                        else
+                            alert(resp.message);
+                        break;
+                    default:                        
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
 
         //Funciones para la vista Panel Empresa
 
@@ -1953,11 +2058,20 @@
                 btuContext.EditarStatusInteresado(idVacanteCandidato, self.statusCandidato, observacionesStatus, idCandInteresado, nombreVacanteInteresado, correoCandidato, function (resp) {
                     switch (resp.ressult) {
                         case "tgp":
+                            alert('Estatus modificado correctamente');
+                            $('#modalStatusCandidato').modal('toggle');
+                            $('#modalIntVac').modal('toggle');
                             break;
                         case "notgp":
                             alert(resp.message);
+                            alert('Estatus modificado correctamente');
+                            $('#modalStatusCandidato').modal('toggle');
+                            $('#modalIntVac').modal('toggle');
                             break;
                         default:
+                            alert('Estatus modificado correctamente');
+                            $('#modalStatusCandidato').modal('toggle');
+                            $('#modalIntVac').modal('toggle');
                             break;
                     }
                     $scope.$apply();
@@ -1970,7 +2084,7 @@
         $scope.InvitarCandidato = (Id_Interesado, CorreoCandidato, NombreCandidatoInv) => {               
             let invitar = confirm('¿Desea invitar al candidato a aplicar a la vacante?');
             if (invitar) {
-                $('#modalCargandoSolicitud').modal('show')
+                $('#modalCargandoSolicitud').modal('show');
                 let IdVacante = self.Vacante;
                 let nombreVacEmpresa = $("#Vacante option:selected").text();
                 btuContext.InvitarCandidato(IdVacante, Id_Interesado, nombreVacEmpresa, NombreCandidatoInv, CorreoCandidato, function (resp) {
@@ -2056,7 +2170,7 @@
         };
 
         var ObtenerDatosVacante = () => {
-            btuContext.ObtenerDatosVacante(function (resp) {
+            btuContext.ObtenerDatosVacante('', '',function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
                         self.listDatosVacante = btuContext.listDatosVacante;

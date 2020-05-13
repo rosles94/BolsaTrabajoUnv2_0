@@ -11,13 +11,13 @@
                         <i id="infemp1" class="fas fa-eye"></i>
                     </span>
                 </li>
-                <li id="" class="list-group-item d-flex justify-content-between align-items-center"style="background-color:forestgreen">
+                <li id="" class="list-group-item d-flex justify-content-between align-items-center" style="background-color:forestgreen">
                     <span id="" data-toggle="tooltip" title="Ver Vacantes" ng-click="ctrl.ObtenerVacantesXstatus(ctrl.IdUsuario, 'I')">Interesado: {{ctrl.StatusInt}}</span>
                     <span class="badge badge-primary badge-pill">
                         <i id="infemp1" class="fas fa-check-circle"></i>
                     </span>
                 </li>
-                <li id="" class="list-group-item d-flex justify-content-between align-items-center"style="background-color:lightgoldenrodyellow">
+                <li id="" class="list-group-item d-flex justify-content-between align-items-center" style="background-color:lightgoldenrodyellow">
                     <span id="" data-toggle="tooltip" title="Ver Vacantes" ng-click="ctrl.ObtenerVacantesXstatus(ctrl.IdUsuario, 'E')">Entrevista: {{ctrl.StatusEnt}}</span>
                     <span class="badge badge-primary badge-pill">
                         <i id="infemp1" class="fas fa-check"></i>
@@ -44,7 +44,7 @@
                     <h5 class="card-title">Vacantes Disponibles.</h5>
                     <p class="card-text">En esta sección podrás ver las vacantes publicadas por las empresas registradas, para poder verlas da click en el botón de "Ver vacantes".</p>
                     <p class="card-text"><small id="totalVac" class="text-muted" style="display:none">Número de vacantes en el sistema: {{ctrl.TotalVac}}.</small></p>
-                    <input type="button" class="btn btn-success" value="Ver Vacantes" />
+                    <input type="button" class="btn btn-success" value="Ver Vacantes" ng-click="ctrl.ObtenerGridVacantesCandidatos(ctrl.IdUsuario, 1,5)" />
                 </div>
             </div>
         </div>
@@ -56,6 +56,198 @@
                     <p ng-model="ctrl.Registrado" class="card-text">La información de tu curriculum puede ser modificada si lo deseas presionando el  botón que está abajo.</p>
                     <p ng-model="ctrl.Matricula" class="card-text"><small id="statusCand" style="display:none" class="text-muted">El usuario está en estatus {{ctrl.StatusCand}}.</small></p>
                     <input ng-model="ctrl.IdUsuario" type="button" class="btn btn-success" value="Ver Información del Curriculum" ng-click="ctrl.GuardarIdCv(ctrl.IdUsuario, ctrl.Matricula, ctrl.Registrado)" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+
+        </div>
+        <div class="col-md-2">
+
+        </div>
+        <div id="VacantesXStatus" class="card-deck col-md-8" style="display:none">
+            <div class="card" ng-repeat="x in ctrl.listVacantesXstatus">
+                <img src="https://scontent-dfw5-2.xx.fbcdn.net/v/t31.0-8/905430_402189089889179_1981293549_o.jpg?_nc_cat=107&_nc_sid=85a577&_nc_ohc=vHKt3IAIG64AX-g_2_Y&_nc_ht=scontent-dfw5-2.xx&oh=207f66161f498f8138ca10494465e58c&oe=5EE123DC" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{x.Empresa}}</h5>
+                    <p class="card-text">{{x.Nombre}}.</p>
+                    <input type="button" class="btn btn-info" value="Ver Vacante" ng-click="ctrl.ObtenerDetalleVacante(ctrl.IdUsuario, x.Id, x.Status, x.Id_Vac_Cand)" data-toggle="modal" data-target="#modalDetVac"  />
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">Estatus: {{x.Status}}</small>
+                </div>
+            </div>
+        </div>        
+    </div>
+    
+    <div class="modal fade" id="modalDetVac" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class=" modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Vacante Detallada</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="input-group mb-3 col-md-12">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Nombre de la Vacante:</span>
+                            </div>
+                            <label class="form-control" aria-describedby="basic-addon1">{{ctrl.DetalleNombre}}</label>
+                        </div>
+                        <div class="input-group mb-3 col-md-6">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Total de vacantes:</span>
+                            </div>
+                            <label class="form-control" aria-describedby="basic-addon1">{{ctrl.DetalleTotal}}</label>
+                        </div>
+                        <div class="input-group mb-3 col-md-6">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Edad minima:</span>
+                            </div>
+                            <label class="form-control" aria-describedby="basic-addon1">{{ctrl.DetalleEdadMin}}</label>
+                        </div>
+                        <div class="input-group mb-3 col-md-6">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Edad máxima:</span>
+                            </div>
+                            <label class="form-control" aria-describedby="basic-addon1">{{ctrl.DetalleEdadMax}}</label>
+                        </div>
+                        <div class="input-group mb-3 col-md-6">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Estado civil:</span>
+                            </div>
+                            <label class="form-control" aria-describedby="basic-addon1">{{ctrl.DetalleEstadoCivil}}</label>
+                        </div>
+                        <div class="input-group mb-3 col-md-12">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Grado de estudios:</span>
+                            </div>
+                            <label class="form-control" aria-describedby="basic-addon1">{{ctrl.DetalleGradoEstudios}}</label>
+                        </div>
+                        <div class="input-group mb-3 col-md-12">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Experiencia:</span>
+                            </div>
+                            <textarea class="form-control col-md-12" aria-describedby="basic-addon1">{{ctrl.DetalleExperiencia}}</textarea>
+                        </div>
+                        <div class="input-group mb-3 col-md-12">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Salario:</span>
+                            </div>
+                            <label class="form-control" aria-describedby="basic-addon1">{{ctrl.DetalleSalario}}</label>
+                        </div>
+                        <div class="input-group mb-3 col-md-6">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Frecuencia salario:</span>
+                            </div>
+                            <label class="form-control" aria-describedby="basic-addon1">{{ctrl.DetalleFrecuenciaSalario}}</label>
+                        </div>
+                        <div class="input-group mb-3 col-md-12">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Prestaciones:</span>
+                            </div>
+                            <label class="form-control" aria-describedby="basic-addon1">{{ctrl.DetallePrestaciones}}</label>
+                        </div>
+                        <div class="input-group mb-3 col-md-12">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Ubicación:</span>
+                            </div>
+                            <label class="form-control" aria-describedby="basic-addon1">{{ctrl.DetalleUbicacion}}</label>
+                        </div>
+                        <div class="input-group mb-3 col-md-6">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Licencia de conducir:</span>
+                            </div>
+                            <label class="form-control" aria-describedby="basic-addon1">{{ctrl.DetalleLicencia}}</label>
+                        </div>
+                        <div class="input-group mb-3 col-md-6">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Disponibilidad para viajar:</span>
+                            </div>
+                            <label class="form-control" aria-describedby="basic-addon1">{{ctrl.DetalleDispViajar}}</label>
+                        </div>
+                        <div class="input-group mb-3 col-md-6">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Disponibilidad para radicar fuera:</span>
+                            </div>
+                            <label class="form-control" aria-describedby="basic-addon1">{{ctrl.DetalleDipsRadicar}}</label>
+                        </div>
+                        <div class="input-group mb-3 col-md-6">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Genero:</span>
+                            </div>
+                            <label class="form-control" aria-describedby="basic-addon1">{{ctrl.DetalleGenero}}</label>
+                        </div>
+                        <div class="input-group mb-3 col-md-6">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Tipo:</span>
+                            </div>
+                            <label class="form-control" aria-describedby="basic-addon1">{{ctrl.DetalleTipo}}</label>
+                        </div>
+                        <div class="input-group mb-3 col-md-12">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Comentarios:</span>
+                            </div>
+                            <textarea class="form-control col-md-12" aria-describedby="basic-addon1">{{ctrl.DetalleComentarios}}</textarea>
+                        </div>
+                        <div class="input-group mb-3 col-md-12">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Responsable entrevista:</span>
+                            </div>
+                            <textarea class="form-control col-md-12" aria-describedby="basic-addon1">{{ctrl.DetalleResponsableEntrevista}}</textarea>
+                        </div>
+                        <div class="input-group mb-3 col-md-12">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Especificaciones:</span>
+                            </div>
+                            <textarea class="form-control col-md-12" aria-describedby="basic-addon1">{{ctrl.DetalleEspecificaciones}}</textarea>
+                        </div>
+                        <div class="input-group mb-3 col-md-12">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Actividades a realizar:</span>
+                            </div>
+                            <textarea style="min-height:50%" class="form-control col-md-12" aria-describedby="basic-addon1">{{ctrl.DetalleActividades}}</textarea>
+                        </div>
+                        <div class="input-group mb-3 col-md-12">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Conocimientos:</span>
+                            </div>
+                            <textarea class="form-control col-md-12" aria-describedby="basic-addon1">{{ctrl.DetalleConocimientos}}</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" ng-click="ctrl.AplicarVacante(ctrl.IdUsuario, ctrl.DetalleNombre)">Aplicar a la Vacante</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalCargandoSolicitud" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Realizando Solicitud</h5>
+                </div>
+                <div class="modal-body">
+                    <div id="cargandoPanelEmpresa" class="col-md-12">
+                        <div class="spinner-grow text-primary" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <div class="spinner-grow text-success" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <div class="spinner-grow text-warning" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <div class="spinner-grow text-danger" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

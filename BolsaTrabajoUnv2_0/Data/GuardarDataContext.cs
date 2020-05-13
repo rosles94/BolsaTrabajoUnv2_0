@@ -285,6 +285,5 @@ namespace BolsaTrabajoUnv2_0.Data
                 exeProc.LimpiarOracleCommand(ref cmd);
             }
         }
-
     }
 }

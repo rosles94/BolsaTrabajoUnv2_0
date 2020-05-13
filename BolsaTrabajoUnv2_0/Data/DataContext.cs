@@ -751,6 +751,9 @@ namespace BolsaTrabajoUnv2_0.Data
                     Btu_Vacante objVac = new Btu_Vacante();
                     objVac.Nombre = Convert.ToString(dr[0]);
                     objVac.Id = Convert.ToString(dr[1]);
+                    objVac.Empresa = Convert.ToString(dr[2]);
+                    objVac.objVacCand.Id = Convert.ToString(dr[3]);
+                    objVac.objVacCand.Status = objVacante.Status;
                     //objVacCand.btuBasicos.TIPO = Convert.ToString(dr[2]);
                     list.Add(objVac);
                 }
@@ -765,6 +768,49 @@ namespace BolsaTrabajoUnv2_0.Data
                 exeProc.LimpiarOracleCommand(ref cmd);
             }
         }
+        public static List<Btu_Vacante> ObtenerGridVacantesCandidatos(Btu_Curriculum objCv, string from, string until)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { "p_id", "p_from", "p_until" };
+                object[] Valores = { objCv.Id, from, until };
+                cmd = exeProc.GenerarOracleCommandCursor_Grid("PKG_VINCULAR.Obt_Grid_Vacantes_Candidatos", ref dr, Parametros, Valores);
+                List<Btu_Vacante> list = new List<Btu_Vacante>();
+                while (dr.Read())
+                {
+                    Btu_Vacante objVacante = new Btu_Vacante();
+                    objVacante.Nombre = Convert.ToString(dr[1]);
+                    objVacante.Total = Convert.ToString(dr[2]);
+                    objVacante.Edad_Minima = Convert.ToString(dr[3]);
+                    objVacante.Edad_Maxima = Convert.ToString(dr[4]);
+                    objVacante.Salario = Convert.ToString(dr[5]);
+                    objVacante.Area_Conocimientos = Convert.ToString(dr[6]);
+                    objVacante.Id = Convert.ToString(dr[7]);
+                    objVacante.Actividades = Convert.ToString(dr[8]);
+                    objVacante.Logotipo = Convert.ToString(dr[9]);
+                    objVacante.Razon_social = Convert.ToString(dr[10]);
+                    objVacante.Ubicacion = Convert.ToString(dr[11]);
+                    objVacante.objVacCand.Status = Convert.ToString(dr[12]);
+                    objVacante.objVacCand.Observaciones = Convert.ToString(dr[13]);
+                    objVacante.objVacCand.Id = Convert.ToString(dr[14]);
+
+                    list.Add(objVacante);
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+        }
+        
 
     }
 }

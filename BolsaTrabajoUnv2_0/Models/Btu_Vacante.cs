@@ -48,6 +48,9 @@ namespace BolsaTrabajoUnv2_0.Models
         public string Total_Interesados { get; set; }
         public string Empresa_Vigente { get; set; }
         public string Id_Candidato { get; set; }
+        public string Empresa { get; set; }
+
+        public Btu_Vacantes_Candidatos objVacCand = new Btu_Vacantes_Candidatos();
     }
 
     public class ResultadoVacante

@@ -38,7 +38,8 @@ var btuContext =
     listTotalVac: [],
     listStatusCand: [],
     listStatusAgrupados: [],
-    listVacantesXstatus : [],
+    listVacantesXstatus: [],
+    listVacantesCandidato : [],
 
     BuscarEmpresa: function (Rfc, callBackResult) {
         let self = this;
@@ -922,7 +923,7 @@ var btuContext =
                 if (resp.Error === false) {
                     for (var i = 0; i < resp.Resultado.length; i++) {                        
                         self.listDatosPanelCv.push({
-                            Id: resp.Resultado[i].Id, Matricula: resp.Resultado[i].Matricula, Registrado: resp.Resultado[i].Registrado
+                            Id: resp.Resultado[i].Id, Matricula: resp.Resultado[i].Matricula, Registrado: resp.Resultado[i].Registrado, Email: resp.Resultado[i].Email, NombreCandidato: resp.Resultado[i].Nombre
                         });
                     }
                     callBackResult({ ressult: 'tgp', message: resp.MensajeError });
@@ -1385,7 +1386,7 @@ var btuContext =
         });
     },
 
-    ObtenerDatosVacante: function (callBackResult) {
+    ObtenerDatosVacante: function (Id_Candidato, Id_Vacante, callBackResult) {
         let self = this;
         self.listDatosVacante.length = 0;
         $.ajax({
@@ -1394,7 +1395,7 @@ var btuContext =
             },
             type: "POST",
             url: urlServer + "Btu/ObtenerDatosVacante",
-            data: {},
+            data: { Id_Candidato, Id_Vacante },
             success: function (resp) {
                 if (resp.Error === false) {
                     if (resp.Resultado !== null) {
@@ -1708,9 +1709,51 @@ var btuContext =
                 if (resp.Error === false) {
                     for (var i = 0; i < resp.Resultado.length; i++) {
                         self.listVacantesXstatus.push({
-                            Nombre: resp.Resultado[i].Nombre, Id: resp.Resultado[i].Id
+                            Nombre: resp.Resultado[i].Nombre, Id: resp.Resultado[i].Id, Empresa: resp.Resultado[i].Empresa, Status: resp.Resultado[i].objVacCand.Status, Id_Vac_Cand: resp.Resultado[i].objVacCand.Id
                         });
                     }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+    ObtenerGridVacantesCandidatos: function (Id, Desde, Hasta, callBackResult) {
+        let self = this;
+        self.listVacantesCandidato.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/ObtenerGridVacantesCandidatos",
+            data: { Id, Desde, Hasta, },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listVacantesCandidato.push({
+                            Nombre: resp.Resultado[i].Nombre, Total: resp.Resultado[i].Total, Salario: resp.Resultado[i].Salario, Id: resp.Resultado[i].Id, Logotipo: resp.Resultado[i].Logotipo,
+                            Status: resp.Resultado[i].objVacCand.Status, Empresa: resp.Resultado[i].Razon_social, Id_Vac_Cand: resp.Resultado[i].objVacCand.Id
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+    AplicarVacante: function (Id_Vacante, Id_Interesado, Status, CorreoEmpresa, CorreoCandidato, Candidato, Vacante, IdVacCand, callBackResult) {             
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/AplicarVacante",
+            data: { Id_Vacante, Id_Interesado, Status, CorreoEmpresa, CorreoCandidato, Candidato, Vacante, IdVacCand },
+            success: function (resp) {
+                if (resp.Error === false) {                   
                     callBackResult({ ressult: 'tgp', message: resp.MensajeError });
                 }
                 else
