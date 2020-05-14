@@ -20,7 +20,7 @@ namespace BolsaTrabajoUnv2_0.Models
     public class ResultadoVacantesCandidatos
     {
         public bool Error { get; set; }
-        public string Mensaje_Error { get; set; }
+        public string MensajeError { get; set; }
         public List<Btu_Vacantes_Candidatos> Resultado { get; set; }
     }
 }

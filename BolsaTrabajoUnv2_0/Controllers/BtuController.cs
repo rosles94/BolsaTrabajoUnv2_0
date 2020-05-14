@@ -1872,14 +1872,14 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 else
                 {
                     objResultado.Error = true;
-                    objResultado.Mensaje_Error = Verificador;
+                    objResultado.MensajeError = Verificador;
                 }
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
             catch(Exception ex)
             {
                 objResultado.Error = true;
-                objResultado.Mensaje_Error = ex.Message;
+                objResultado.MensajeError = ex.Message;
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
@@ -1917,14 +1917,14 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 objCv.Id = Id;
                 objResultado.Resultado = DataContext.ObtenerGridStatusAplicaciones(objCv);
                 objResultado.Error = false;
-                objResultado.Mensaje_Error = "";
+                objResultado.MensajeError = "";
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
             catch(Exception ex)
             {
                 objResultado.Resultado = null;
                 objResultado.Error = true;
-                objResultado.Mensaje_Error = ex.Message;
+                objResultado.MensajeError = ex.Message;
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
@@ -2238,6 +2238,80 @@ namespace BolsaTrabajoUnv2_0.Controllers
                     objResultado.MensajeError = Verificador;
                 }
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        //Metodos para la vista Panel Administrador
+        public JsonResult ObtenerTotalEmpresas ()
+        {
+            ResultadoEmpresa objResultado = new ResultadoEmpresa();
+            string Verificador = string.Empty;
+            try
+            {
+                objResultado.Resultado = DataContext.ObtenerTotalEmpresas();
+                objResultado.Error = false;
+                objResultado.MensajeError = "";                
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public JsonResult ObtenerTotalCandidatos()
+        {
+            ResultadoBtuCurriculum objResultado = new ResultadoBtuCurriculum();
+            string Verificador = string.Empty;
+            try
+            {
+                objResultado.Resultado = DataContext.ObtenerTotalCandidatos();
+                objResultado.Error = false;
+                objResultado.MensajeError = "";
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public JsonResult ObtenerGridEmpresasRegistradas()
+        {
+            ResultadoEmpresa objResultado = new ResultadoEmpresa();
+            try
+            {
+                objResultado.Resultado = DataContext.ObtenerGridEmpresasRegistradas();
+                objResultado.Error = false;
+                objResultado.MensajeError = "";
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Resultado = null;
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public JsonResult ObtenerGridCandidatos ()
+        {
+            ResultadoBtuCurriculum objResultado = new ResultadoBtuCurriculum();
+            try
+            {
+                objResultado.Resultado = DataContext.ObtenerGridCandidatos();
+                objResultado.Error = false;
+                objResultado.MensajeError = "";
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+
             }
             catch(Exception ex)
             {

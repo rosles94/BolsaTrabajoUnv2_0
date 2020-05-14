@@ -37,6 +37,7 @@ namespace BolsaTrabajoUnv2_0.Models
         public string Carrera { get; set; }
         public string IdCarrera { get; set; }
         public string Registrado { get; set; }
+        public string Total_Candidatos { get; set; }
 
         public Btu_Vacantes_Candidatos objVacantesCandidatos = new Btu_Vacantes_Candidatos();
     }

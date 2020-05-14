@@ -39,6 +39,7 @@ namespace BolsaTrabajoUnv2_0.Models
         public string Id_Empresa { get; set; }
         public string Motivo { get; set; }
         public string Vigente { get; set; }
+        public string Total_Empresas { get; set; }
 
 
     }

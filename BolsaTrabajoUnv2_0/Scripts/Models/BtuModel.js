@@ -39,7 +39,11 @@ var btuContext =
     listStatusCand: [],
     listStatusAgrupados: [],
     listVacantesXstatus: [],
-    listVacantesCandidato : [],
+    listVacantesCandidato: [],
+    listEmpresas_Status: [],
+    listCandidatos_Status: [],
+    listEmpresasRegistradas: [],
+    listaCandidatosRegistrados : [],
 
     BuscarEmpresa: function (Rfc, callBackResult) {
         let self = this;
@@ -1754,6 +1758,107 @@ var btuContext =
             data: { Id_Vacante, Id_Interesado, Status, CorreoEmpresa, CorreoCandidato, Candidato, Vacante, IdVacCand },
             success: function (resp) {
                 if (resp.Error === false) {                   
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+    ObtenerTotalEmpresas: function (callBackResult) {
+        let self = this;
+        self.listEmpresas_Status.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/ObtenerTotalEmpresas",
+            data: { },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listEmpresas_Status.push({
+                            Total: resp.Resultado[i].Total_Empresas, Status: resp.Resultado[i].Status
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+    ObtenerTotalCandidatos: function (callBackResult) {
+        let self = this;
+        self.listCandidatos_Status.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/ObtenerTotalCandidatos",
+            data: {},
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listCandidatos_Status.push({
+                            Total: resp.Resultado[i].Total_Candidatos, Status: resp.Resultado[i].Status
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+    ObtenerGridEmpresasRegistradas: function (callBackResult) {
+        let self = this;
+        self.listEmpresasRegistradas.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/ObtenerGridEmpresasRegistradas",
+            data: {},
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listEmpresasRegistradas.push({
+                            Razon_Social: resp.Resultado[i].Razon_Social, Nombre_Comercial: resp.Resultado[i].Nombre_Comercial, Actividad: resp.Resultado[i].Actividad,
+                            Codigo_Postal: resp.Resultado[i].Codigo_Postal, Status: resp.Resultado[i].Status, Contacto: resp.Resultado[i].Contacto, Contacto_Cargo: resp.Resultado[i].Contacto_Cargo,
+                            Telefono: resp.Resultado[i].Telefono, Celular: resp.Resultado[i].Celular, Email: resp.Resultado[i].Email, Contrasena: resp.Resultado[i].Contrasena,
+                            Medio_Contacto: resp.Resultado[i].Medio_Contacto, Rfc: resp.Resultado[i].Rfc, Id: resp.Resultado[i].Id, Total: resp.Resultado[i].Total, Motivo: resp.Resultado[i].Motivo
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+    ObtenerGridCandidatos: function (callBackResult) {
+        let self = this;
+        self.listaCandidatosRegistrados.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/ObtenerGridCandidatos",
+            data: {},
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listaCandidatosRegistrados.push({
+                            Matricula: resp.Resultado[i].Matricula, Nombre: resp.Resultado[i].Nombre, Domicilio: resp.Resultado[i].Domicilio, Fecha_Nacimiento: resp.Resultado[i].Fecha_Nacimiento,
+                            Telefono: resp.Resultado[i].Telefono, Celular: resp.Resultado[i].Celular, Correo: resp.Resultado[i].Correo, Contrasena: resp.Resultado[i].Contrasena,
+                            Status: resp.Resultado[i].Status, Fecha_Creacion: resp.Resultado[i].Fecha_Creacion, Id: resp.Resultado[i].Id, Ruta_Foto: resp.Resultado[i].Ruta_Foto
+                        });
+                    }
                     callBackResult({ ressult: 'tgp', message: resp.MensajeError });
                 }
                 else
