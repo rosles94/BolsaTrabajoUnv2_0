@@ -157,7 +157,10 @@ namespace BolsaTrabajoUnv2_0.Controllers
             ResultadoBtuCurriculum objResultado = new ResultadoBtuCurriculum();
             try
             {
-                listSesion = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
+                if (System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] != null)
+                    listSesion = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
+                else if (System.Web.HttpContext.Current.Session["SessionAdminCandidato"] != null)
+                    listSesion = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionAdminCandidato"];
 
                 if ((Btu_Curriculum)System.Web.HttpContext.Current.Session["SessionFotoCv"] != null)
                     objDatosCandidato = (Btu_Curriculum)System.Web.HttpContext.Current.Session["SessionFotoCv"];
@@ -552,8 +555,16 @@ namespace BolsaTrabajoUnv2_0.Controllers
             List<Btu_Sesion> list = new List<Btu_Sesion>();
             try
             {
-                list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
-                objCv.Id = list[0].Id;
+                if (System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] != null)
+                {
+                    list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
+                    objCv.Id = list[0].Id;
+                }
+                else if (System.Web.HttpContext.Current.Session["SessionAdminCandidato"] != null)
+                {
+                    list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionAdminCandidato"];
+                    objCv.Id = list[0].Id;
+                }
 
 
                 objResultado = EditarInformacionCandidato();
@@ -1028,8 +1039,16 @@ namespace BolsaTrabajoUnv2_0.Controllers
             string Verificador = string.Empty;
             try
             {
-                list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
-                objInfoCv.Id_Curriculum = list[0].Id;
+                if (System.Web.HttpContext.Current.Session["SessionAdminCandidato"] != null)
+                {
+                    list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionAdminCandidato"];
+                    objInfoCv.Id_Curriculum = list[0].Id;
+                }
+                else if (System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] != null)
+                {
+                    list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
+                    objInfoCv.Id_Curriculum = list[0].Id;
+                }                    
                 objInfoCv.Tipo = "ACADEMICO";                
                 GuardarDataContext.EliminarInformacionCurriculum(objInfoCv, ref Verificador);
                 if(Verificador == "0")
@@ -1059,8 +1078,16 @@ namespace BolsaTrabajoUnv2_0.Controllers
             string Verificador = string.Empty;
             try
             {
-                list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
-                objInfoCv.Id_Curriculum = list[0].Id;
+                if (System.Web.HttpContext.Current.Session["SessionAdminCandidato"] != null)
+                {
+                    list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionAdminCandidato"];
+                    objInfoCv.Id_Curriculum = list[0].Id;
+                }
+                else if (System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] != null)
+                {
+                    list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
+                    objInfoCv.Id_Curriculum = list[0].Id;
+                }
                 objInfoCv.Tipo = "SOFTWARE";                
                 GuardarDataContext.EliminarInformacionCurriculum(objInfoCv, ref Verificador);
                 if (Verificador == "0")
@@ -1090,8 +1117,16 @@ namespace BolsaTrabajoUnv2_0.Controllers
             string Verificador = string.Empty;
             try
             {
-                list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
-                objInfoCv.Id_Curriculum = list[0].Id;
+                if (System.Web.HttpContext.Current.Session["SessionAdminCandidato"] != null)
+                {
+                    list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionAdminCandidato"];
+                    objInfoCv.Id_Curriculum = list[0].Id;
+                }
+                else if (System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] != null)
+                {
+                    list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
+                    objInfoCv.Id_Curriculum = list[0].Id;
+                }
                 objInfoCv.Tipo = "IDIOMA";
                 GuardarDataContext.EliminarInformacionCurriculum(objInfoCv, ref Verificador);
                 if (Verificador == "0")
@@ -1121,8 +1156,16 @@ namespace BolsaTrabajoUnv2_0.Controllers
             string Verificador = string.Empty;
             try
             {
-                list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
-                objInfoCv.Id_Curriculum = list[0].Id;
+                if (System.Web.HttpContext.Current.Session["SessionAdminCandidato"] != null)
+                {
+                    list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionAdminCandidato"];
+                    objInfoCv.Id_Curriculum = list[0].Id;
+                }
+                else if (System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] != null)
+                {
+                    list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
+                    objInfoCv.Id_Curriculum = list[0].Id;
+                }
                 objInfoCv.Tipo = "EXPERIENCIA";
                 GuardarDataContext.EliminarInformacionCurriculum(objInfoCv, ref Verificador);
                 if (Verificador == "0")
@@ -1152,8 +1195,16 @@ namespace BolsaTrabajoUnv2_0.Controllers
             string Verificador = string.Empty;
             try
             {
-                list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
-                objInfoCv.Id_Curriculum = list[0].Id;
+                if (System.Web.HttpContext.Current.Session["SessionAdminCandidato"] != null)
+                {
+                    list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionAdminCandidato"];
+                    objInfoCv.Id_Curriculum = list[0].Id;
+                }
+                else if (System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] != null)
+                {
+                    list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
+                    objInfoCv.Id_Curriculum = list[0].Id;
+                }
                 objInfoCv.Tipo = "OTROS";
                 GuardarDataContext.EliminarInformacionCurriculum(objInfoCv, ref Verificador);
                 if (Verificador == "0")
@@ -1220,8 +1271,16 @@ namespace BolsaTrabajoUnv2_0.Controllers
             ResultadoCurriculmInformacion objResultado = new ResultadoCurriculmInformacion();
             try
             {
-                list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
-                objInfoCv.Id = list[0].Id;
+                if (System.Web.HttpContext.Current.Session["SessionAdminCandidato"] != null)
+                {
+                    list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionAdminCandidato"];
+                    objInfoCv.Id = list[0].Id;
+                }
+                else if (System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] != null)
+                {
+                    list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
+                    objInfoCv.Id = list[0].Id;
+                }
                 objInfoCv.Tipo = "ACADEMICO";                
                 objResultado.Resultado = DataContext.ObtenerInfoCurriculum(objInfoCv);
                 objResultado.Error = false;
@@ -1243,8 +1302,16 @@ namespace BolsaTrabajoUnv2_0.Controllers
             ResultadoCurriculmInformacion objResultado = new ResultadoCurriculmInformacion();
             try
             {
-                list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"]; 
-                objInfoCv.Id = list[0].Id;
+                if (System.Web.HttpContext.Current.Session["SessionAdminCandidato"] != null)
+                {
+                    list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionAdminCandidato"];
+                    objInfoCv.Id = list[0].Id;
+                }
+                else if (System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] != null)
+                {
+                    list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
+                    objInfoCv.Id = list[0].Id;
+                }
                 objInfoCv.Tipo = "SOFTWARE";
                 objResultado.Resultado = DataContext.ObtenerInfoCurriculum(objInfoCv);
                 objResultado.Error = false;
@@ -1266,8 +1333,16 @@ namespace BolsaTrabajoUnv2_0.Controllers
             ResultadoCurriculmInformacion objResultado = new ResultadoCurriculmInformacion();
             try
             {
-                list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
-                objInfoCv.Id = list[0].Id;
+                if (System.Web.HttpContext.Current.Session["SessionAdminCandidato"] != null)
+                {
+                    list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionAdminCandidato"];
+                    objInfoCv.Id = list[0].Id;
+                }
+                else if (System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] != null)
+                {
+                    list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
+                    objInfoCv.Id = list[0].Id;
+                }
                 objInfoCv.Tipo = "IDIOMA";
                 objResultado.Resultado = DataContext.ObtenerInfoCurriculum(objInfoCv);
                 objResultado.Error = false;
@@ -1289,8 +1364,16 @@ namespace BolsaTrabajoUnv2_0.Controllers
             ResultadoCurriculmInformacion objResultado = new ResultadoCurriculmInformacion();
             try
             {
-                list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
-                objInfoCv.Id = list[0].Id;
+                if (System.Web.HttpContext.Current.Session["SessionAdminCandidato"] != null)
+                {
+                    list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionAdminCandidato"];
+                    objInfoCv.Id = list[0].Id;
+                }
+                else if (System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] != null)
+                {
+                    list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
+                    objInfoCv.Id = list[0].Id;
+                }
                 objInfoCv.Tipo = "EXPERIENCIA";
                 objResultado.Resultado = DataContext.ObtenerInfoCurriculum(objInfoCv);
                 objResultado.Error = false;
@@ -1312,8 +1395,16 @@ namespace BolsaTrabajoUnv2_0.Controllers
             ResultadoCurriculmInformacion objResultado = new ResultadoCurriculmInformacion();
             try
             {
-                list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
-                objInfoCv.Id = list[0].Id;
+                if (System.Web.HttpContext.Current.Session["SessionAdminCandidato"] != null)
+                {
+                    list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionAdminCandidato"];
+                    objInfoCv.Id = list[0].Id;
+                }
+                else if (System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] != null)
+                {
+                    list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
+                    objInfoCv.Id = list[0].Id;
+                }
                 objInfoCv.Tipo = "OTROS";
                 objResultado.Resultado = DataContext.ObtenerInfoCurriculum(objInfoCv);
                 objResultado.Error = false;
@@ -1857,9 +1948,14 @@ namespace BolsaTrabajoUnv2_0.Controllers
             ResultadoSesion objResultado = new ResultadoSesion();
             try
             {
+                if(System.Web.HttpContext.Current.Session["SessionAdminCandidato"] != null)
+                    objResultado.Resultado = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionAdminCandidato"];                
+                else if  (System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] != null)
+                    objResultado.Resultado = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
+
                 objResultado.Error = false;
                 objResultado.MensajeError = "";
-                objResultado.Resultado = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
+                
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
             catch(Exception ex)
@@ -2446,6 +2542,33 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        public JsonResult AlmacenarDatosCandidato(string Id, string Matricula, string Email, string NombreCandidato)
+        {
+            Btu_Sesion objSesion = new Btu_Sesion();
+            List<Btu_Sesion> list = new List<Btu_Sesion>();
+            ResultadoComun objResultado = new ResultadoComun();
+            try
+            {
+                objSesion.Id = Id;
+                objSesion.Matricula = Matricula;
+                objSesion.Email = Email;
+                objSesion.Nombre = NombreCandidato;
+                objSesion.Registrado = "1";
+                objSesion.Tipo = "UNACH";
+                list.Add(objSesion);
+                System.Web.HttpContext.Current.Session["SessionAdminCandidato"] = list;
+                objResultado.Error = false;
+                objResultado.MensajeError = "";
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+
 
         //Metodos para la vista Vacantes
         public JsonResult GuardarVacante (string NombreVacante, string NumeroVacantes, string EdadMin, string EdadMax, string Genero, string EdoCivil, string GradoEstu, string Expe, string ActReal, string ConoReq,

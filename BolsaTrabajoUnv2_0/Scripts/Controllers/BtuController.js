@@ -2414,7 +2414,7 @@
                                     }
                                 },
                                 data: self.listaCandidatosRegistrados,
-                                pageLength: 5,
+                                pageLength: 4,
                                 columns: [
                                     {
                                         "className": 'details-control',
@@ -2442,7 +2442,7 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<i data-toggle="tooltip"  title="Ver Panel Candidato" class="fas fa-pencil-alt" ng-click="GuardarIdVacante(&quot;' + row.Id + '&quot;,&quot;' + row.RutaFoto + '&quot;)"></i>';
+                                            return '<i data-toggle="tooltip"  title="Ver Panel Candidato" class="fas fa-pencil-alt" ng-click="AlmacenarDatosCandidato(&quot;' + row.Id + '&quot;,&quot;' + row.Matricula + '&quot;,&quot;' + row.Correo + '&quot;,&quot;' + row.Nombre + '&quot;)"></i>';
                                         }
 
                                     },
@@ -2518,7 +2518,7 @@
                                     }
                                 },
                                 data: self.listaCandidatosRegistrados,
-                                pageLength: 5,
+                                pageLength: 4,
                                 columns: [
                                     {
                                         "className": 'details-control',
@@ -2538,7 +2538,7 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<i data-toggle="tooltip"  title="Cambiar status" class="fas fa-info-circle" ng-click="GuardarIdVacante(&quot;' + row.Id + '&quot;,&quot;' + row.RutaFoto + '&quot;)"></i>';
+                                            return '<p data-toggle="tooltip"  title="Cambiar Status" class"  ><i class="fas fa-info-circle" data-toggle="modal" data-target="#modalStatusCandidato" ng-click="EditStatusCand(&quot;' + row.Matricula + '&quot;,&quot;' + row.Correo + '&quot;)"></i></p>';                                                                                        
                                         }
 
                                     },
@@ -2546,7 +2546,7 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<i data-toggle="tooltip"  title="Ver Panel Candidato" class="fas fa-pencil-alt" ng-click="GuardarIdVacante(&quot;' + row.Id + '&quot;,&quot;' + row.RutaFoto + '&quot;)"></i>';
+                                            return '<i data-toggle="tooltip"  title="Ver Panel Candidato" class="fas fa-pencil-alt" ng-click="AlmacenarDatosCandidato(&quot;' + row.Id + '&quot;,&quot;' + row.Matricula + '&quot;,&quot;' + row.Correo + '&quot;,&quot;' + row.Nombre + '&quot;)"></i>';
                                         }
 
                                     },
@@ -2633,11 +2633,13 @@
         };
 
         this.EditarStatusCandidato = () => {
+            $('#modalStatusCandidato').modal('toggle');
+            $('#modalCargandoSolicitud').show();
             btuContext.EditarStatusCandidato(self.statusCandidato, matriculaCand, eMailCandidato, function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
-                        alert('Estatus modificado');
-                        $('#modalStatusCandidato').modal('toggle');
+                        $('#modalCargandoSolicitud').modal('toggle');
+                        alert('Estatus modificado');                        
                         ObtenerTotalCandidatos();
                         ObtenerGridCandidatosRegistrados();
                         break;
@@ -2651,20 +2653,20 @@
             });
         }; 
 
-        //$scope.AlmacenarDatosCandidato = (Id) => {
-        //    btuContext.(Id, function (resp) {
-        //        switch (resp.ressult) {
-        //            case "tgp":
-        //                window.location.assign(urlServer + "Btu/PanelCandidato");
-        //            case "notgp":
-        //                alert(resp.message);
-        //                break;
-        //            default:
-        //                break;
-        //        }
-        //        $scope.$apply();
-        //    });
-        //}
+        $scope.AlmacenarDatosCandidato = (Id, Matricula, Email, NombreCandidato) => {
+            btuContext.AlmacenarDatosCandidato(Id, Matricula, Email, NombreCandidato, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":                       
+                        window.location.assign(urlServer + "Btu/PanelCandidato");
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
 
 
         //Funciones para la vista Vacante

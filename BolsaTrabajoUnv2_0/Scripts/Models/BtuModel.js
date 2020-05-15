@@ -1919,6 +1919,23 @@ var btuContext =
                 callBackResult({ ressult: 'notgp', message: resp.MensajeError });
             }
         });
+    },
+    AlmacenarDatosCandidato: function (Id, Matricula, Email, NombreCandidato, callBackResult) {
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/AlmacenarDatosCandidato",
+            data: {Id, Matricula, Email, NombreCandidato },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
     }
 
 };
