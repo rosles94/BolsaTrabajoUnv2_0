@@ -1868,6 +1868,57 @@ var btuContext =
                 callBackResult({ ressult: 'notgp', message: resp.MensajeError });
             }
         });
+    },
+    EditarStatusEmpresa: function (Status, Rfc, Motivo, EmailEmpresa, callBackResult) {
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/EditarStatusEmpresa",
+            data: { Status, Rfc, Motivo, EmailEmpresa },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+    AlmacenarDatosEmpresa: function (Id, Rfc, NombreComercial, callBackResult) {
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/AlmacenarDatosEmpresa",
+            data: { Id, Rfc, NombreComercial},
+            success: function (resp) {
+                if (resp.Error === false) {
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+    EditarStatusCandidato: function (Status, Matricula, EmailCandidato, callBackResult) {
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/EditarStatusCandidato",
+            data: { Status, Matricula, EmailCandidato },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
     }
 
 };

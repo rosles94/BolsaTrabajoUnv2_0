@@ -285,5 +285,47 @@ namespace BolsaTrabajoUnv2_0.Data
                 exeProc.LimpiarOracleCommand(ref cmd);
             }
         }
+        public static void EditarStatusEmpresa(Btu_Empresa objEmpresa, ref string Verificador)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { "p_status", "p_rfc", "p_observaciones" };
+                object[] Valores = { objEmpresa.Status, objEmpresa.Rfc, objEmpresa.Motivo };
+                string[] ParametrosOut = { "p_bandera" };
+                cmd = exeProc.GenerarOracleCommand("UPD_STATUS_PROVEEDORES", ref Verificador, ref dr, Parametros, Valores, ParametrosOut);
+            }
+            catch (Exception ex)
+            {
+                Verificador = ex.Message;
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+        }
+        public static void EditarStatusCandidato(Btu_Curriculum objCandidato, ref string Verificador)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { "p_status", "p_matricula" };
+                object[] Valores = { objCandidato.Status, objCandidato.Matricula };
+                string[] ParametrosOut = { "p_bandera" };
+                cmd = exeProc.GenerarOracleCommand("UPD_STATUS_CANDIDATOS", ref Verificador, ref dr, Parametros, Valores, ParametrosOut);
+            }
+            catch (Exception ex)
+            {
+                Verificador = ex.Message;
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+        }
     }
 }

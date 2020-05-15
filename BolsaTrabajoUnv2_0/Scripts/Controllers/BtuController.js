@@ -59,6 +59,10 @@
         let listCandidatos_Status = "";
         let listEmpresasRegistradas = "";
         let listaCandidatosRegistrados = "";
+        let statusEmpresa = "";
+        let rfcEmpresa = "";
+        let motivoEmpresa = "";
+        let matriculaCand = "";        
 
         let datosPersonales = false;
         let datosAcademicos = false;
@@ -2204,10 +2208,10 @@
                                     { data: "Rfc" },
                                     { data: "Status" },
                                     {
-                                        data: "Id",
+                                        data: "Email",
                                         "className": "text-center",
-                                        render: function (data, type, row, meta) {
-                                            return '<i data-toggle="tooltip"  title="Cambiar status" class="fas fa-info-circle" ng-click="GuardarIdVacante(&quot;' + row.Id + '&quot;,&quot;' + row.RutaFoto + '&quot;)"></i>';
+                                        render: function (data, type, row, meta) {                                            
+                                            return '<p data-toggle="tooltip"  title="Cambiar Status" class"  ><i class="fas fa-info-circle" data-toggle="modal" data-target="#modalStatusEmpresa" ng-click="EditStatus(&quot;' + row.Rfc + '&quot;,&quot;' + row.Email + '&quot;)"></i></p>';                                            
                                         }
 
                                     },
@@ -2215,7 +2219,119 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<i data-toggle="tooltip"  title="Ver Panel Empresa" class="fas fa-pencil-alt" ng-click="GuardarIdVacante(&quot;' + row.Id + '&quot;,&quot;' + row.RutaFoto + '&quot;)"></i>';
+                                            return '<i data-toggle="tooltip"  title="Ver Panel Empresa" class="fas fa-pencil-alt" ng-click="AlmacenarDatosEmpresa(&quot;' + row.Id + '&quot;,&quot;' + row.Rfc + '&quot;,&quot;' + row.Nombre_Comercial + '&quot;)"></i>';
+                                        }
+
+                                    },
+                                    {
+                                        data: "Id",
+                                        "className": "text-center",
+                                        render: function (data, type, row, meta) {
+                                            return '<i data-toggle="tooltip"  title="Ver Vacantes de la Empresa" class="fas fa-eye" ng-click="GuardarIdVacante(&quot;' + row.Id + '&quot;,&quot;' + row.RutaFoto + '&quot;)"></i>';
+                                        }
+
+                                    },
+                                    {
+                                        data: "Id",
+                                        "className": "text-center",
+                                        render: function (data, type, row, meta) {
+                                            return '<i data-toggle="tooltip"  title="Eliminar Vacante" class="fas fa-trash" ng-click="EliminarVacante(&quot;' + row.Id + '&quot;,&quot;' + row.Correo + '&quot;,&quot;' + row.Nombre + '&quot;)"></i>';
+                                        }
+
+                                    },
+                                    {
+                                        data: "Id",
+                                        "className": "text-center",
+                                        render: function (data, type, row, meta) {
+                                            return '<i data-toggle="tooltip"  title="Ficha Empresa" class="far fa-file-pdf" ng-click="EliminarVacante(&quot;' + row.Id + '&quot;,&quot;' + row.Correo + '&quot;,&quot;' + row.Nombre + '&quot;)"></i>';
+                                        }
+
+                                    }
+                                ],
+                                rowCallback: function (row) {
+                                    if (!row.compiled) {
+                                        $compile(angular.element(row))($scope);
+                                        row.compiled = true;
+                                    }
+                                }
+                            });
+                        }
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+                $('#tablaEmpresas').show();
+            });
+        };
+
+        var ObtenerGridEmpresasRegistradas = () => {
+            btuContext.ObtenerGridEmpresasRegistradas(function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        if (self.listEmpresasRegistradas !== undefined)
+                            $('#tablaEmpresas').DataTable().clear().destroy();
+                        if (self.listaCandidatosRegistrados !== undefined) {
+                            $('#tablaCandidatos').DataTable().clear().destroy();
+                            $('#tablaCandidatos').hide();
+                        }
+                        self.listEmpresasRegistradas = btuContext.listEmpresasRegistradas;
+                        if (self.listEmpresasRegistradas !== undefined && self.listEmpresasRegistradas.length > 0) {
+                            table = $('#tablaEmpresas').DataTable({
+                                language: {
+                                    "decimal": "",
+                                    "emptyTable": "No hay información",
+                                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                                    "infoEmpty": "Mostrando 0 de 0 a 0 Entradas",
+                                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                                    "infoPostFix": "",
+                                    "thousands": ",",
+                                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                                    "loadingRecords": "Cargando...",
+                                    "processing": "Procesando...",
+                                    "search": "Buscar:",
+                                    "zeroRecords": "Sin resultados encontrados",
+                                    "paginate": {
+                                        "first": "Primero",
+                                        "last": "Último",
+                                        "next": "Siguiente",
+                                        "previous": "Anterior"
+                                    }
+                                },
+                                data: self.listEmpresasRegistradas,
+                                pageLength: 5,
+                                columns: [
+                                    {
+                                        "className": 'details-control',
+                                        "orderable": false,
+                                        "data": null,
+                                        "defaultContent": '',
+                                        "render": function () {
+                                            return '<i class="fa fa-plus-square" aria-hidden="true"></i>';
+                                        },
+                                        width: "15px"
+                                    },
+                                    { data: "Razon_Social" },
+                                    { data: "Nombre_Comercial" },
+                                    { data: "Actividad" },
+                                    { data: "Rfc" },
+                                    { data: "Status" },
+                                    {
+                                        data: "Email",
+                                        "className": "text-center",
+                                        render: function (data, type, row, meta) {
+                                            return '<p data-toggle="tooltip"  title="Cambiar Status" class"  ><i class="fas fa-info-circle" data-toggle="modal" data-target="#modalStatusEmpresa" ng-click="EditStatus(&quot;' + row.Rfc + '&quot;,&quot;' + row.Email + '&quot;)"></i></p>';
+                                        }
+
+                                    },
+                                    {
+                                        data: "Id",
+                                        "className": "text-center",
+                                        render: function (data, type, row, meta) {
+                                            return '<i data-toggle="tooltip"  title="Ver Panel Empresa" class="fas fa-pencil-alt" ng-click="AlmacenarDatosEmpresa(&quot;' + row.Id + '&quot;,&quot;' + row.Rfc + '&quot;,&quot;' + row.Nombre_Comercial + '&quot;)"></i>';
                                         }
 
                                     },
@@ -2318,7 +2434,7 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<i data-toggle="tooltip"  title="Cambiar status" class="fas fa-info-circle" ng-click="GuardarIdVacante(&quot;' + row.Id + '&quot;,&quot;' + row.RutaFoto + '&quot;)"></i>';
+                                            return '<p data-toggle="tooltip"  title="Cambiar Status" class"  ><i class="fas fa-info-circle" data-toggle="modal" data-target="#modalStatusCandidato" ng-click="EditStatusCand(&quot;' + row.Matricula + '&quot;,&quot;' + row.Correo + '&quot;)"></i></p>';                                                                                        
                                         }
 
                                     },
@@ -2367,6 +2483,188 @@
                 $('#tablaCandidatos').show();
             });
         };
+
+        var ObtenerGridCandidatosRegistrados = () => {
+            btuContext.ObtenerGridCandidatos(function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        if (self.listEmpresasRegistradas !== undefined) {
+                            $('#tablaEmpresas').DataTable().clear().destroy();
+                            $('#tablaEmpresas').hide();
+                        }
+                        $('#tablaCandidatos').DataTable().clear().destroy();
+                        self.listaCandidatosRegistrados = btuContext.listaCandidatosRegistrados;
+
+                        if (self.listaCandidatosRegistrados !== undefined && self.listaCandidatosRegistrados.length > 0) {
+                            table = $('#tablaCandidatos').DataTable({
+                                language: {
+                                    "decimal": "",
+                                    "emptyTable": "No hay información",
+                                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                                    "infoEmpty": "Mostrando 0 de 0 a 0 Entradas",
+                                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                                    "infoPostFix": "",
+                                    "thousands": ",",
+                                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                                    "loadingRecords": "Cargando...",
+                                    "processing": "Procesando...",
+                                    "search": "Buscar:",
+                                    "zeroRecords": "Sin resultados encontrados",
+                                    "paginate": {
+                                        "first": "Primero",
+                                        "last": "Último",
+                                        "next": "Siguiente",
+                                        "previous": "Anterior"
+                                    }
+                                },
+                                data: self.listaCandidatosRegistrados,
+                                pageLength: 5,
+                                columns: [
+                                    {
+                                        "className": 'details-control',
+                                        "orderable": false,
+                                        "data": null,
+                                        "defaultContent": '',
+                                        "render": function () {
+                                            return '<i class="fa fa-plus-square" aria-hidden="true"></i>';
+                                        },
+                                        width: "15px"
+                                    },
+                                    { data: "Matricula" },
+                                    { data: "Nombre" },
+                                    { data: "Celular" },
+                                    { data: "Status" },
+                                    {
+                                        data: "Id",
+                                        "className": "text-center",
+                                        render: function (data, type, row, meta) {
+                                            return '<i data-toggle="tooltip"  title="Cambiar status" class="fas fa-info-circle" ng-click="GuardarIdVacante(&quot;' + row.Id + '&quot;,&quot;' + row.RutaFoto + '&quot;)"></i>';
+                                        }
+
+                                    },
+                                    {
+                                        data: "Id",
+                                        "className": "text-center",
+                                        render: function (data, type, row, meta) {
+                                            return '<i data-toggle="tooltip"  title="Ver Panel Candidato" class="fas fa-pencil-alt" ng-click="GuardarIdVacante(&quot;' + row.Id + '&quot;,&quot;' + row.RutaFoto + '&quot;)"></i>';
+                                        }
+
+                                    },
+                                    {
+                                        data: "Id",
+                                        "className": "text-center",
+                                        render: function (data, type, row, meta) {
+                                            return '<i data-toggle="tooltip"  title="Ver Cv" class="far fa-file-pdf" ng-click="GuardarIdVacante(&quot;' + row.Id + '&quot;,&quot;' + row.RutaFoto + '&quot;)"></i>';
+                                        }
+
+                                    },
+                                    {
+                                        data: "Id",
+                                        "className": "text-center",
+                                        render: function (data, type, row, meta) {
+                                            return '<i data-toggle="tooltip"  title="Ver Estatus de las Vacantes" class="fas fa-user" ng-click="EliminarVacante(&quot;' + row.Id + '&quot;,&quot;' + row.Correo + '&quot;,&quot;' + row.Nombre + '&quot;)"></i>';
+                                        }
+
+                                    }
+                                ],
+                                rowCallback: function (row) {
+                                    if (!row.compiled) {
+                                        $compile(angular.element(row))($scope);
+                                        row.compiled = true;
+                                    }
+                                }
+                            });
+                        }
+
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+                $('#tablaCandidatos').show();
+            });
+        };
+
+        $scope.EditStatus = (rfc, email) => {
+            rfcEmpresa = rfc;
+            eMailEmpresa = email;
+        };
+
+        $scope.AlmacenarDatosEmpresa = (Id, Rfc, NombreComercial) => {
+            btuContext.AlmacenarDatosEmpresa(Id, Rfc, NombreComercial, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        window.location.assign(urlServer + "Btu/PanelEmpresa");
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });            
+        };
+
+        this.EditarStatusEmpresa = () => {
+            btuContext.EditarStatusEmpresa(self.statusEmpresa, rfcEmpresa, self.observacionesStatus, eMailEmpresa, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        alert('Estatus modificado');
+                        $('#modalStatusEmpresa').modal('toggle');
+                        ObtenerTotalEmpresas();
+                        ObtenerGridEmpresasRegistradas();
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };       
+
+        $scope.EditStatusCand = (matricula, email) => {
+            matriculaCand = matricula;
+            eMailCandidato = email;
+        };
+
+        this.EditarStatusCandidato = () => {
+            btuContext.EditarStatusCandidato(self.statusCandidato, matriculaCand, eMailCandidato, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        alert('Estatus modificado');
+                        $('#modalStatusCandidato').modal('toggle');
+                        ObtenerTotalCandidatos();
+                        ObtenerGridCandidatosRegistrados();
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        }; 
+
+        //$scope.AlmacenarDatosCandidato = (Id) => {
+        //    btuContext.(Id, function (resp) {
+        //        switch (resp.ressult) {
+        //            case "tgp":
+        //                window.location.assign(urlServer + "Btu/PanelCandidato");
+        //            case "notgp":
+        //                alert(resp.message);
+        //                break;
+        //            default:
+        //                break;
+        //        }
+        //        $scope.$apply();
+        //    });
+        //}
 
 
         //Funciones para la vista Vacante
