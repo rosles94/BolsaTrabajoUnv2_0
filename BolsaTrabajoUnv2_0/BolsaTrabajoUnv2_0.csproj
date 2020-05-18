@@ -155,6 +155,8 @@
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\diseñoInicio.css" />
+    <Content Include="Content\diseñoInicioMovil.css" />
     <Content Include="Content\imagenPerfil.css" />
     <Content Include="Content\loaderCircle.css" />
     <Content Include="DataTables\DataTables-1.10.20\css\dataTables.bootstrap.css" />
@@ -1819,8 +1821,19 @@
     <Content Include="Icons\fontawesome-free-5.13.0-web\webfonts\fa-solid-900.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Imagenes\ImagenesSitio\administrador.png" />
+    <Content Include="Imagenes\ImagenesSitio\BTU.png" />
     <Content Include="Imagenes\ImagenesSitio\BTU_Encabezado.jpg" />
+    <Content Include="Imagenes\ImagenesSitio\BTU_Img1.jpg" />
+    <Content Include="Imagenes\ImagenesSitio\BTU_Img2.jpg" />
+    <Content Include="Imagenes\ImagenesSitio\BTU_Img3.jpg" />
+    <Content Include="Imagenes\ImagenesSitio\BTU_Img4.jpg" />
+    <Content Include="Imagenes\ImagenesSitio\empresas.png" />
+    <Content Include="Imagenes\ImagenesSitio\externos.png" />
+    <Content Include="Imagenes\ImagenesSitio\fondo.jpg" />
+    <Content Include="Imagenes\ImagenesSitio\headfoot.png" />
     <Content Include="Imagenes\ImagenesSitio\sysweb.png" />
+    <Content Include="Imagenes\ImagenesSitio\unach.png" />
     <Content Include="Imagenes\ImgProfileCv\E161113.jpg" />
     <Content Include="Scripts\angular-animate.js" />
     <Content Include="Scripts\angular-animate.min.js" />
@@ -2788,6 +2801,7 @@
     <Content Include="Views\Btu\PanelAdministrador.cshtml" />
     <Content Include="Views\Btu\PanelEmpresa.cshtml" />
     <Content Include="Views\Btu\Vacante.cshtml" />
+    <Content Include="Views\Shared\_LayoutSesion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

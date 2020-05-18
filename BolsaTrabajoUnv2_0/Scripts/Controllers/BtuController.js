@@ -62,7 +62,8 @@
         let statusEmpresa = "";
         let rfcEmpresa = "";
         let motivoEmpresa = "";
-        let matriculaCand = "";        
+        let matriculaCand = "";
+        let listStatusVacanCand = "";
 
         let datosPersonales = false;
         let datosAcademicos = false;
@@ -1307,6 +1308,22 @@
             });
         }
 
+        this.CerrarSesion = () => {
+            btuContext.CerrarSesion(function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        window.location.assign(urlServer + "Btu/Btu");
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        }
+
         //Funciones para la vista Panel Candidato
 
         this.DatosPanelCandidato = () => {
@@ -1446,7 +1463,10 @@
                 switch (resp.ressult) {
                     case "tgp":
                         self.listVacantesXstatus = btuContext.listVacantesCandidato;
-                        $('#VacantesXStatus').show();
+                        if (self.listVacantesXstatus.length === 0)
+                            alert('No hay vacantes registradas');
+                        else
+                            $('#VacantesXStatus').show();
                         break;
                     case "notgp":
                         alert(resp.message);
@@ -2227,7 +2247,7 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<i data-toggle="tooltip"  title="Ver Vacantes de la Empresa" class="fas fa-eye" ng-click="GuardarIdVacante(&quot;' + row.Id + '&quot;,&quot;' + row.RutaFoto + '&quot;)"></i>';
+                                            return '<p data-toggle="tooltip"  title="Ver Vacantes de la Empresas" class"  ><i class="fas fa-eye" data-toggle="modal" data-target="#modalVacantesEmpresa" ng-click="ObtenerGridVacantesPanelAdmin(&quot;' + row.Id + '&quot;)"></i></p>';
                                         }
 
                                     },
@@ -2235,7 +2255,7 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<i data-toggle="tooltip"  title="Eliminar Vacante" class="fas fa-trash" ng-click="EliminarVacante(&quot;' + row.Id + '&quot;,&quot;' + row.Correo + '&quot;,&quot;' + row.Nombre + '&quot;)"></i>';
+                                            return '<i data-toggle="tooltip"  title="Eliminar Vacante" class="fas fa-trash" ng-click="EliminarEmpresa(&quot;' + row.Id + '&quot;)"></i>';
                                         }
 
                                     },
@@ -2339,7 +2359,7 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<i data-toggle="tooltip"  title="Ver Vacantes de la Empresa" class="fas fa-eye" ng-click="GuardarIdVacante(&quot;' + row.Id + '&quot;,&quot;' + row.RutaFoto + '&quot;)"></i>';
+                                            return '<p data-toggle="tooltip"  title="Ver Vacantes de la Empresas" class"  ><i class="fas fa-eye" data-toggle="modal" data-target="#modalVacantesEmpresa" ng-click="ObtenerGridVacantesPanelAdmin(&quot;' + row.Id + '&quot;)"></i></p>';
                                         }
 
                                     },
@@ -2347,7 +2367,7 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<i data-toggle="tooltip"  title="Eliminar Vacante" class="fas fa-trash" ng-click="EliminarVacante(&quot;' + row.Id + '&quot;,&quot;' + row.Correo + '&quot;,&quot;' + row.Nombre + '&quot;)"></i>';
+                                            return '<i data-toggle="tooltip"  title="Eliminar Vacante" class="fas fa-trash" ng-click="EliminarEmpresa(&quot;' + row.Id + '&quot;)"></i>';
                                         }
 
                                     },
@@ -2458,7 +2478,7 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<i data-toggle="tooltip"  title="Ver Estatus de las Vacantes" class="fas fa-user" ng-click="EliminarVacante(&quot;' + row.Id + '&quot;,&quot;' + row.Correo + '&quot;,&quot;' + row.Nombre + '&quot;)"></i>';
+                                            return '<p data-toggle="tooltip"  title="Ver Estatus de las Vacantes"  ><i class="fas fa-user" data-toggle="modal" data-target="#modalStausVacantesCand" ng-click="ObtenerEstatusVacanCandidato(&quot;' + row.Id + '&quot;)"></i></p>';
                                         }
 
                                     }
@@ -2562,7 +2582,7 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<i data-toggle="tooltip"  title="Ver Estatus de las Vacantes" class="fas fa-user" ng-click="EliminarVacante(&quot;' + row.Id + '&quot;,&quot;' + row.Correo + '&quot;,&quot;' + row.Nombre + '&quot;)"></i>';
+                                            return '<p data-toggle="tooltip"  title="Ver Estatus de las Vacantes"  ><i class="fas fa-user" data-toggle="modal" data-target="#modalStausVacantesCand" ng-click="ObtenerEstatusVacanCandidato(&quot;' + row.Id + '&quot;)"></i></p>';
                                         }
 
                                     }
@@ -2598,6 +2618,7 @@
                 switch (resp.ressult) {
                     case "tgp":
                         window.location.assign(urlServer + "Btu/PanelEmpresa");
+                        break;
                     case "notgp":
                         alert(resp.message);
                         break;
@@ -2656,8 +2677,9 @@
         $scope.AlmacenarDatosCandidato = (Id, Matricula, Email, NombreCandidato) => {
             btuContext.AlmacenarDatosCandidato(Id, Matricula, Email, NombreCandidato, function (resp) {
                 switch (resp.ressult) {
-                    case "tgp":                       
+                    case "tgp":
                         window.location.assign(urlServer + "Btu/PanelCandidato");
+                        break;
                     case "notgp":
                         alert(resp.message);
                         break;
@@ -2668,6 +2690,68 @@
             });
         };
 
+        $scope.ObtenerGridVacantesPanelAdmin = (Id) => {
+            btuContext.ObtenerGridVacantesPanelAdmin(Id, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listVacantesEmpresa = btuContext.listVacantesEmpresa;
+                        if (self.listVacantesEmpresa.length === 0) {
+                            self.listVacantesEmpresa.push({
+                                Nombre : 'Sin Vacantes'
+                            });
+                        }
+
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
+        $scope.EliminarEmpresa = (Id) => {
+            let eliminar = confirm('¿Desea eliminar a la empresa?');
+            if (eliminar) {
+                btuContext.EliminarEmpresa(Id, function (resp) {
+                    switch (resp.ressult) {
+                        case "tgp":
+                            alert('Empresa eliminada');
+                            ObtenerGridEmpresasRegistradas();
+                            break;
+                        case "notgp":
+                            alert(resp.message);
+                            break;
+                        default:
+                            break;
+                    }
+                    $scope.$apply();
+                });
+            }
+        };
+
+        $scope.ObtenerEstatusVacanCandidato = (Id) => {
+            btuContext.ObtenerEstatusVacanCandidato(Id, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listStatusVacanCand = btuContext.listStatusVacanCand;
+                        if (self.listStatusVacanCand.length === 0) {
+                            self.listStatusVacanCand.push({
+                                Nombre: 'Sin Vacantes'
+                            });
+                        }
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
 
         //Funciones para la vista Vacante
 

@@ -1,282 +1,285 @@
 ﻿
 @{
     ViewBag.Title = "Panel Empresa";
+    Layout = "~/Views/Shared/_LayoutSesion.cshtml";
 }
 
-    <div class="row row-cols-1 row-cols-md-2" ng-init="ctrl.CargarDatosPanelEmpresa()">
-        <div class="col-md-2 py-5">
-            <ul class="list-group">
-                <li id="globalStatusEmpresa" class="list-group-item d-flex justify-content-between align-items-center" style="display:none">
-                    <span id="statusDesc" style="display:none">Estatus: {{ctrl.StatusEmpresa}}</span>
-                    <span class="badge badge-primary badge-pill">
-                        <i id="infemp1" class="fas fa-check" style="display:none"></i>
-                        <i id="infemp2" class="fas fa-exclamation" style="display:none" data-toggle="tooltip" title="No podrá agregar vacantes debido a que su usuario está en el status {{ctrl.StatusEmpresa}}"></i>
-                    </span>
-                </li>
-            </ul>
-        </div>
-        <div class=" col-md-4 py-5">
-            <div class="card card border-success">
-                <div class="card-body">
-                    <i class="fas fa-address-card fa-3x"></i>
-                    <h5 class="card-title">Datos Generales.</h5>
-                    <p class="card-text">En está sección podrá ver los datos de su empresa.</p>
-                    <input ng-model="ctrl.IdEmpresa" type="button" class="btn btn-info" value="Ver Datos Generales" ng-click="ctrl.VerDatosEmpresa(ctrl.IdEmpresa)" />
-                </div>
+    <div class="container-fluid">
+        <div class="row row-cols-1 row-cols-md-2" ng-init="ctrl.CargarDatosPanelEmpresa()">
+            <div class="col-md-2 py-5">
+                <ul class="list-group">
+                    <li id="globalStatusEmpresa" class="list-group-item d-flex justify-content-between align-items-center" style="display:none">
+                        <span id="statusDesc" style="display:none">Estatus: {{ctrl.StatusEmpresa}}</span>
+                        <span class="badge badge-primary badge-pill">
+                            <i id="infemp1" class="fas fa-check" style="display:none"></i>
+                            <i id="infemp2" class="fas fa-exclamation" style="display:none" data-toggle="tooltip" title="No podrá agregar vacantes debido a que su usuario está en el status {{ctrl.StatusEmpresa}}"></i>
+                        </span>
+                    </li>
+                </ul>
             </div>
-        </div>
-        <div class="col-md-4 py-5">
-            <div class="card card border-info">
-                <div class="card-body">
-                    <i class="fas fa-file-contract fa-3x"></i>
-                    <h5 class="card-title">Vacantes.</h5>
-                    <p class="card-text">En está sección podrá publicar vacantes y ver las vacantes publicadas.</p>
-                    <input data-toggle="tooltip" title="No podrá agregar vacantes debido a que su usuario está en el status {{ctrl.StatusEmpresa}}" id="nuevaVacante" type="button" class="btn btn-success" value="Nueva Vacante" ng-click="ctrl.NuevaVacante()" />
-                    <input type="button" class="btn btn-info" value="Ver Vacantes" ng-click="ctrl.VerVacantesEmpresa()" />
-                </div>
-            </div>
-        </div>
-        <div class="col-md-1">
-        </div>
-        <div class="col-md-2">
-        </div>
-        <div class="col-md-4 ">
-            <div class="card card border-info">
-                <div class="card-body">
-                    <i class="fas fa-id-badge fa-3x"></i>
-                    <h5 class="card-title">Candidatos Interesados.</h5>
-                    <p class="card-text">En esta sección podrá ver los candidatos que han aplicado a las vacantes que ha publicado.</p>
-                    <input type="button" class="btn btn-info" value="Ver Candidatos Interesados" ng-click="ctrl.ObtenerGridVacantesAplicadasEmpresas()" />
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 ">
-            <div class="card card border-success">
-                <div class="card-body">
-                    <i class="fas fa-user-check fa-3x"></i>
-                    <h5 class="card-title">Ver Candidatos Disponibles.</h5>
-                    <p class="card-text">En esta sección podrá ver los candidatos que no han aplicado a sus vacantes y que le podría interesar.</p>
-                    <input type="button" class="btn btn-info" value="Candidatos Disponibles" ng-click="ctrl.VerCandidatosDisponibles()" />
-                </div>
-            </div>
-        </div>        
-    </div>
-<hr />
-<div class="row py-5">
-    <div class="col-md-2">
-    </div>
-    <div class="col-md-3" id="cargarTabla">
-    </div>
-    <div id="buscandoEmpresa" class="col-md-6" style="display:none">
-        <div class="spinner-grow text-primary" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-        <div class="spinner-grow text-success" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-        <div class="spinner-grow text-warning" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-        <div class="spinner-grow text-danger" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-    </div>
-    <div class="col-md-8">
-        <table class="dataTable table table-striped" id="tablaVacantesEmpresa" style="display:none">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Vacantes</th>
-                    <th scope="col">Edad Min.</th>
-                    <th scope="col">Edad Max.</th>
-                    <th scope="col">Salario</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody @*ng-repeat="x in ctrl.ListaCandidatosDisponibles"*@>
-                @*<tr>
-                        <td>{{x.Nombre}}</td>
-                        <td>{{x.Celular}}</td>
-                        <td>{{x.Correo}}</td>
-                        <td>{{x.Genero}}</td>
-                        <td>{{x.Edad}}</td>
-                        <td></td>
-                        <td><i ng-click="ctrl.GenerarCurriculum(x.Id)" class="fas fa-file-alt"></i></td>
-                        <td><span data-toggle="modal" data-target="#modalStatusVacante"><i data-toggle="tooltip" data-placement="top" title="Cambiar estatus candidato" class="fas fa-pencil-alt" ng-click="ctrl.GuardarIdCandidato(x.Id, x.Vacante, x.IdCv)"></i></span></td>
-                    </tr>*@
-            </tbody>
-        </table>
-        <table class="dataTable table table-striped" id="tablaVacApliEmpresa" style="display:none">
-            <thead>
-                <tr>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Vacantes</th>
-                    <th scope="col">Edad Min.</th>
-                    <th scope="col">Edad Max.</th>
-                    <th scope="col">Salario</th>
-                    <th scope="col">Vigencia Inicio</th>
-                    <th scope="col">Vigencia Fin</th>
-                    <th scope="col">Total Interesados</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody @*ng-repeat="x in ctrl.ListaCandidatosDisponibles"*@>
-                @*<tr>
-                        <td>{{x.Nombre}}</td>
-                        <td>{{x.Celular}}</td>
-                        <td>{{x.Correo}}</td>
-                        <td>{{x.Genero}}</td>
-                        <td>{{x.Edad}}</td>
-                        <td></td>
-                        <td><i ng-click="ctrl.GenerarCurriculum(x.Id)" class="fas fa-file-alt"></i></td>
-                        <td><span data-toggle="modal" data-target="#modalStatusVacante"><i data-toggle="tooltip" data-placement="top" title="Cambiar estatus candidato" class="fas fa-pencil-alt" ng-click="ctrl.GuardarIdCandidato(x.Id, x.Vacante, x.IdCv)"></i></span></td>
-                    </tr>*@
-            </tbody>
-        </table>
-        <div id="verCandDisp" style="display:none">
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">Vacantes</span>
-                </div>
-                <select ng-model="ctrl.Vacante" name="Vacante" id="Vacante" class="custom-select" ng-change="ctrl.ObtenerGridCandidatosDisponibles()" ng-options="list.Id as list.Descripcion for list in ctrl.listVacRegEmp" style="max-width:36.8%" required></select>
-            </div>
-            @*<div class="input-group mb-3" style="display:none">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1">Área de Conocimientos</span>
+            <div class=" col-md-4 py-5">
+                <div class="card card border-success">
+                    <div class="card-body">
+                        <i class="fas fa-address-card fa-3x"></i>
+                        <h5 class="card-title">Datos Generales.</h5>
+                        <p class="card-text">En está sección podrá ver los datos de su empresa.</p>
+                        <input ng-model="ctrl.IdEmpresa" type="button" class="btn btn-info" value="Ver Datos Generales" ng-click="ctrl.VerDatosEmpresa(ctrl.IdEmpresa)" />
                     </div>
-                    <select ng-model="ctrl.AreaConoc" name="AreaConoc" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listAreaConocimiento" style="max-width:36.8%" required></select>
-                </div>*@
-        </div>
-        <table class="dataTable table table-striped" id="tablaCandDisp" style="display:none">
-            <thead>
-                <tr>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Genero</th>
-                    <th scope="col">Edad</th>
-                    <th scope="col">Carrera</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody @*ng-repeat="x in ctrl.ListaCandidatosDisponibles"*@>
-                @*<tr>
-                        <td>{{x.Nombre}}</td>
-                        <td>{{x.Celular}}</td>
-                        <td>{{x.Correo}}</td>
-                        <td>{{x.Genero}}</td>
-                        <td>{{x.Edad}}</td>
-                        <td></td>
-                        <td><i ng-click="ctrl.GenerarCurriculum(x.Id)" class="fas fa-file-alt"></i></td>
-                        <td><span data-toggle="modal" data-target="#modalStatusVacante"><i data-toggle="tooltip" data-placement="top" title="Cambiar estatus candidato" class="fas fa-pencil-alt" ng-click="ctrl.GuardarIdCandidato(x.Id, x.Vacante, x.IdCv)"></i></span></td>
-                    </tr>*@
-            </tbody>
-        </table>
-
-    </div>
-
-
-
-    <div id="modalIntVac" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Candidatos Interesados</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 </div>
-                <div class="modal-body">
-                    <table class="table table-striped" id="tablaVacApliEmpresa">
-                        <thead>
-                            <tr>
-                                <th scope="col">Nombre</th>
-                                <th scope="col">Estatus</th>
-                                <th scope="col">Edad</th>
-                            </tr>
-                        </thead>
-                        <tbody ng-repeat="x in ctrl.listInteresadosVac">
-                            <tr>
-                                <td>{{x.Nombre}}</td>
-                                <td>{{x.Status}}</td>
-                                <td>{{x.Fecha_Nacimiento}}</td>
-                                <td><i data-toggle="tooltip" data-placement="top" title="Ver Cv" ng-click="ctrl.GenerarCurriculum(x.Id)" class="fas fa-file-alt"></i></td>
-                                <td><span data-toggle="modal" data-target="#modalStatusCandidato"><i data-toggle="tooltip" data-placement="top" title="Cambiar estatus candidato" class="fas fa-pencil-alt" ng-click="ctrl.GuardarIdCandidatoInteresado(x.Id_Vac_Cand, x.Id, x.Correo)"></i></span></td>
-                            </tr>
-                        </tbody>
-                    </table>
+            </div>
+            <div class="col-md-4 py-5">
+                <div class="card card border-info">
+                    <div class="card-body">
+                        <i class="fas fa-file-contract fa-3x"></i>
+                        <h5 class="card-title">Vacantes.</h5>
+                        <p class="card-text">En está sección podrá publicar vacantes y ver las vacantes publicadas.</p>
+                        <input data-toggle="tooltip" title="No podrá agregar vacantes debido a que su usuario está en el status {{ctrl.StatusEmpresa}}" id="nuevaVacante" type="button" class="btn btn-success" value="Nueva Vacante" ng-click="ctrl.NuevaVacante()" />
+                        <input type="button" class="btn btn-info" value="Ver Vacantes" ng-click="ctrl.VerVacantesEmpresa()" />
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-4 ">
+                <div class="card card border-info">
+                    <div class="card-body">
+                        <i class="fas fa-id-badge fa-3x"></i>
+                        <h5 class="card-title">Candidatos Interesados.</h5>
+                        <p class="card-text">En esta sección podrá ver los candidatos que han aplicado a las vacantes que ha publicado.</p>
+                        <input type="button" class="btn btn-info" value="Ver Candidatos Interesados" ng-click="ctrl.ObtenerGridVacantesAplicadasEmpresas()" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 ">
+                <div class="card card border-success">
+                    <div class="card-body">
+                        <i class="fas fa-user-check fa-3x"></i>
+                        <h5 class="card-title">Ver Candidatos Disponibles.</h5>
+                        <p class="card-text">En esta sección podrá ver los candidatos que no han aplicado a sus vacantes y que le podría interesar.</p>
+                        <input type="button" class="btn btn-info" value="Candidatos Disponibles" ng-click="ctrl.VerCandidatosDisponibles()" />
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
-
-
-    <div class="modal fade" id="modalStatusCandidato" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Cambiar Estatus al Candidato</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+        <hr />
+        <div class="row py-5">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-3" id="cargarTabla">
+            </div>
+            <div id="buscandoEmpresa" class="col-md-6" style="display:none">
+                <div class="spinner-grow text-primary" role="status">
+                    <span class="sr-only">Loading...</span>
                 </div>
-                <div class="modal-body">
+                <div class="spinner-grow text-success" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <div class="spinner-grow text-warning" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <div class="spinner-grow text-danger" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+            <div class="col-md-8" style="overflow-x:scroll">
+                <table class="dataTable table table-striped" id="tablaVacantesEmpresa" style="display:none">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Vacantes</th>
+                            <th scope="col">Edad Min.</th>
+                            <th scope="col">Edad Max.</th>
+                            <th scope="col">Salario</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody @*ng-repeat="x in ctrl.ListaCandidatosDisponibles"*@>
+                        @*<tr>
+                            <td>{{x.Nombre}}</td>
+                            <td>{{x.Celular}}</td>
+                            <td>{{x.Correo}}</td>
+                            <td>{{x.Genero}}</td>
+                            <td>{{x.Edad}}</td>
+                            <td></td>
+                            <td><i ng-click="ctrl.GenerarCurriculum(x.Id)" class="fas fa-file-alt"></i></td>
+                            <td><span data-toggle="modal" data-target="#modalStatusVacante"><i data-toggle="tooltip" data-placement="top" title="Cambiar estatus candidato" class="fas fa-pencil-alt" ng-click="ctrl.GuardarIdCandidato(x.Id, x.Vacante, x.IdCv)"></i></span></td>
+                        </tr>*@
+                    </tbody>
+                </table>
+                <table class="dataTable table table-striped" id="tablaVacApliEmpresa" style="display:none">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Vacantes</th>
+                            <th scope="col">Edad Min.</th>
+                            <th scope="col">Edad Max.</th>
+                            <th scope="col">Salario</th>
+                            <th scope="col">Vigencia Inicio</th>
+                            <th scope="col">Vigencia Fin</th>
+                            <th scope="col">Total Interesados</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody @*ng-repeat="x in ctrl.ListaCandidatosDisponibles"*@>
+                        @*<tr>
+                            <td>{{x.Nombre}}</td>
+                            <td>{{x.Celular}}</td>
+                            <td>{{x.Correo}}</td>
+                            <td>{{x.Genero}}</td>
+                            <td>{{x.Edad}}</td>
+                            <td></td>
+                            <td><i ng-click="ctrl.GenerarCurriculum(x.Id)" class="fas fa-file-alt"></i></td>
+                            <td><span data-toggle="modal" data-target="#modalStatusVacante"><i data-toggle="tooltip" data-placement="top" title="Cambiar estatus candidato" class="fas fa-pencil-alt" ng-click="ctrl.GuardarIdCandidato(x.Id, x.Vacante, x.IdCv)"></i></span></td>
+                        </tr>*@
+                    </tbody>
+                </table>
+                <div id="verCandDisp" style="display:none">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <label class="input-group-text" for="inputGroupSelect01">Estatus</label>
+                            <span class="input-group-text" id="basic-addon1">Vacantes</span>
                         </div>
-                        <select ng-model="ctrl.statusCandidato" class="custom-select" id="statusVacante">
-                            <option value="E">Entrevista</option>
-                            <option value="C">Contratado</option>
-                            <option value="R">Rechazado</option>
-                        </select>
+                        <select ng-model="ctrl.Vacante" name="Vacante" id="Vacante" class="custom-select" ng-change="ctrl.ObtenerGridCandidatosDisponibles()" ng-options="list.Id as list.Descripcion for list in ctrl.listVacRegEmp" style="max-width:36.8%" required></select>
                     </div>
-                    <div class="form-group">
-                        <label for="exampleFormControlTextarea1">Observaciones</label>
-                        <textarea ng-model="ctrl.observacionesStatus" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                    </div>
+                    @*<div class="input-group mb-3" style="display:none">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Área de Conocimientos</span>
+                        </div>
+                        <select ng-model="ctrl.AreaConoc" name="AreaConoc" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listAreaConocimiento" style="max-width:36.8%" required></select>
+                    </div>*@
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button ng-click="ctrl.EditarStatusInteresado()" type="button" class="btn btn-primary">Cambiar estatus</button>
+                <table class="dataTable table table-striped" id="tablaCandDisp" style="display:none">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Genero</th>
+                            <th scope="col">Edad</th>
+                            <th scope="col">Carrera</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody @*ng-repeat="x in ctrl.ListaCandidatosDisponibles"*@>
+                        @*<tr>
+                            <td>{{x.Nombre}}</td>
+                            <td>{{x.Celular}}</td>
+                            <td>{{x.Correo}}</td>
+                            <td>{{x.Genero}}</td>
+                            <td>{{x.Edad}}</td>
+                            <td></td>
+                            <td><i ng-click="ctrl.GenerarCurriculum(x.Id)" class="fas fa-file-alt"></i></td>
+                            <td><span data-toggle="modal" data-target="#modalStatusVacante"><i data-toggle="tooltip" data-placement="top" title="Cambiar estatus candidato" class="fas fa-pencil-alt" ng-click="ctrl.GuardarIdCandidato(x.Id, x.Vacante, x.IdCv)"></i></span></td>
+                        </tr>*@
+                    </tbody>
+                </table>
+
+            </div>
+
+
+
+            <div id="modalIntVac" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Candidatos Interesados</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table table-striped" id="tablaVacApliEmpresa">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col">Estatus</th>
+                                        <th scope="col">Edad</th>
+                                    </tr>
+                                </thead>
+                                <tbody ng-repeat="x in ctrl.listInteresadosVac">
+                                    <tr>
+                                        <td>{{x.Nombre}}</td>
+                                        <td>{{x.Status}}</td>
+                                        <td>{{x.Fecha_Nacimiento}}</td>
+                                        <td><i data-toggle="tooltip" data-placement="top" title="Ver Cv" ng-click="ctrl.GenerarCurriculum(x.Id)" class="fas fa-file-alt"></i></td>
+                                        <td><span data-toggle="modal" data-target="#modalStatusCandidato"><i data-toggle="tooltip" data-placement="top" title="Cambiar estatus candidato" class="fas fa-pencil-alt" ng-click="ctrl.GuardarIdCandidatoInteresado(x.Id_Vac_Cand, x.Id, x.Correo)"></i></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div class="modal fade" id="modalCargandoSolicitud" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Realizando Solicitud</h5>                    
-                </div>
-                <div class="modal-body">
-                    <div id="cargandoPanelEmpresa" class="col-md-12">
-                        <div class="spinner-grow text-primary" role="status">
-                            <span class="sr-only">Loading...</span>
+
+
+            <div class="modal fade" id="modalStatusCandidato" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Cambiar Estatus al Candidato</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
-                        <div class="spinner-grow text-success" role="status">
-                            <span class="sr-only">Loading...</span>
+                        <div class="modal-body">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="inputGroupSelect01">Estatus</label>
+                                </div>
+                                <select ng-model="ctrl.statusCandidato" class="custom-select" id="statusVacante">
+                                    <option value="E">Entrevista</option>
+                                    <option value="C">Contratado</option>
+                                    <option value="R">Rechazado</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlTextarea1">Observaciones</label>
+                                <textarea ng-model="ctrl.observacionesStatus" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            </div>
                         </div>
-                        <div class="spinner-grow text-warning" role="status">
-                            <span class="sr-only">Loading...</span>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <button ng-click="ctrl.EditarStatusInteresado()" type="button" class="btn btn-primary">Cambiar estatus</button>
                         </div>
-                        <div class="spinner-grow text-danger" role="status">
-                            <span class="sr-only">Loading...</span>
-                        </div>                        
                     </div>
-                </div>                
+                </div>
             </div>
+
+            <div class="modal fade" id="modalCargandoSolicitud" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Realizando Solicitud</h5>
+                        </div>
+                        <div class="modal-body">
+                            <div id="cargandoPanelEmpresa" class="col-md-12">
+                                <div class="spinner-grow text-primary" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                                <div class="spinner-grow text-success" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                                <div class="spinner-grow text-warning" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                                <div class="spinner-grow text-danger" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
         </div>
     </div>
-
-
-
-
-
-</div>

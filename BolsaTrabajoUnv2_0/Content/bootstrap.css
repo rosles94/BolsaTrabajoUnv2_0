@@ -6763,7 +6763,7 @@ button.bg-light:focus {
 }
 
 .bg-dark {
-  background-color: #343a40 !important;
+    background-color: #343a40 !important; /* da el color azul a el nabvar*/
 }
 
 a.bg-dark:hover, a.bg-dark:focus,

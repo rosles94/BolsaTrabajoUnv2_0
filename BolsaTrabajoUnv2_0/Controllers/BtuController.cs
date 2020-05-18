@@ -1604,7 +1604,27 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
-       
+        public JsonResult CerrarSesion ()
+        {
+            ResultadoComun objResultado = new ResultadoComun();
+            try
+            {
+                if (System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"] != null)
+                    System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"] = null;
+                else if (System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] != null)
+                    System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] = null;
+                objResultado.Error = false;
+                objResultado.MensajeError = "";
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         //Combos
         public JsonResult ComboEstados() //Se utiliza en la vista Registrar Empresa,
         {
@@ -2388,7 +2408,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 objResultado.MensajeError = ex.Message;
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
-        }
+        }        
 
         //Metodos para la vista Panel Administrador
         public JsonResult ObtenerTotalEmpresas ()
@@ -2559,6 +2579,74 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 System.Web.HttpContext.Current.Session["SessionAdminCandidato"] = list;
                 objResultado.Error = false;
                 objResultado.MensajeError = "";
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public JsonResult ObtenerGridVacantesPanelAdmin(string Id)
+        {
+            ResultadoVacante objResultado = new ResultadoVacante();
+            string IdEmpresa = "";
+            try
+            {
+                IdEmpresa = Id;
+                objResultado.Resultado = DataContext.ObtenerGridVacantes(IdEmpresa);
+                objResultado.Error = false;
+                objResultado.MensajeError = "";
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public JsonResult EliminarEmpresa (string Id)
+        {
+            Btu_Empresa objEmpresa = new Btu_Empresa();
+            ResultadoComun objResultado = new ResultadoComun();
+            string Verificador = string.Empty;
+            try
+            {
+                objEmpresa.Id = Id;
+                GuardarDataContext.EliminarEmpresa(objEmpresa, ref Verificador);
+                if(Verificador == "0")
+                {
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";
+                }
+                else
+                {
+                    objResultado.Error = true;
+                    objResultado.MensajeError = Verificador;
+                }
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = Verificador;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        public JsonResult ObtenerEstatusVacanCandidato(string Id)
+        {
+            Btu_Vacante objVacante = new Btu_Vacante();
+            ResultadoVacante objResultado = new ResultadoVacante();
+            try
+            {
+                objVacante.Id = Id;
+                objResultado.Resultado = DataContext.ObtenerEstatusVacanCandidato(objVacante);
+                objResultado.Error = false;
+                objResultado.MensajeError = "";                
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
             catch(Exception ex)

@@ -43,7 +43,8 @@ var btuContext =
     listEmpresas_Status: [],
     listCandidatos_Status: [],
     listEmpresasRegistradas: [],
-    listaCandidatosRegistrados : [],
+    listaCandidatosRegistrados: [],
+    listStatusVacanCand: [],
 
     BuscarEmpresa: function (Rfc, callBackResult) {
         let self = this;
@@ -1936,6 +1937,94 @@ var btuContext =
                 callBackResult({ ressult: 'notgp', message: resp.MensajeError });
             }
         });
-    }
+    },
 
+    ObtenerGridVacantesPanelAdmin: function (Id, callBackResult) {
+        let self = this;
+        self.listVacantesEmpresa.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/ObtenerGridVacantesPanelAdmin",
+            data: {Id },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listVacantesEmpresa.push({
+                            Nombre: resp.Resultado[i].Nombre, Total: resp.Resultado[i].Total,
+                            Edad_Minima: resp.Resultado[i].Edad_Minima, Edad_Maxima: resp.Resultado[i].Edad_Maxima,
+                            Salario: resp.Resultado[i].Salario, Vigencia_Inicio: resp.Resultado[i].Vigencia_Inicio,
+                            Vigencia_Fin: resp.Resultado[i].Vigencia_Fin, Direccion_Entrevista: resp.Resultado[i].Direccion_Entrevista,
+                            Telefono: resp.Resultado[i].Telefono, Correo: resp.Resultado[i].Correo,
+                            Area_Conocimientos: resp.Resultado[i].Area_Conocimientos, Id: resp.Resultado[i].Id,
+                            Actividades: resp.Resultado[i].Actividades
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+    EliminarEmpresa: function (Id, callBackResult) {
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/EliminarEmpresa",
+            data: { Id },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+    ObtenerEstatusVacanCandidato: function (Id, callBackResult) {
+        let self = this;
+        self.listStatusVacanCand.length = 0;
+        $.ajax({            
+            type: "POST",
+            url: urlServer + "Btu/ObtenerEstatusVacanCandidato",
+            data: { Id },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listStatusVacanCand.push({
+                            Status: resp.Resultado[i].objVacCand.Status, Nombre: resp.Resultado[i].Nombre, Razon_social: resp.Resultado[i].Razon_social
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+    CerrarSesion: function (callBackResult) {        
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/CerrarSesion",
+            data: {  },
+            success: function (resp) {
+                if (resp.Error === false) {                    
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    }
 };

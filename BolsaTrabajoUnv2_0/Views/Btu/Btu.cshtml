@@ -2,140 +2,211 @@
 @{
     ViewBag.Title = "Btu";
 }
+<link href="~/Content/diseñoInicio.css" rel="stylesheet" />
+<link href="~/Content/diseñoInicioMovil.css" rel="stylesheet" />
 
-    <div id="cargandoDatos" class="row py-5" style="display:none">
-        <div class="col-md-5">
+<div id="cargandoDatos" class="row py-5" style="display:none">
+    <div class="col-md-5">
 
+    </div>
+    <div class="col-md-7">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
         </div>
-        <div class="col-md-7">
-            <div class="spinner-border text-primary" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-            <div class="spinner-border text-warning" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-            <div class="spinner-border text-primary" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-            <div class="spinner-border text-warning" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
+        <div class="spinner-border text-warning" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <div class="spinner-border text-warning" role="status">
+            <span class="sr-only">Loading...</span>
         </div>
     </div>
-
-    <ul>
-        <li data-toggle="modal" data-target="#modalAdministrador">ADMINISTRADOR </li>
-        <li data-toggle="modal" data-target="#modalEmpresa">EMPRESA </li>
-        <li data-toggle="modal" data-target="#modalAlumno">ALUMNO UNACH </li>
-        <li>Objetivo Profesional: </li>
-    </ul>
+</div>
+<img class="col-md-5" src="~/Imagenes/ImagenesSitio/headfoot.png" />
+<a id="vacantes" class="col-md-4" style="font-family:Georgia, 'Times New Roman', Times, serif">Ofertas de empleo: {{ctrlSesion.Total}}</a>
 
 
-    <div class="modal fade" id="modalAdministrador" tabindex="-1" role="dialog" aria-labelledby="modalAdministrador" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Administrador</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="inputGroup-sizing-default">Usuario</span>
-                                </div>
-                                <input ng-model="ctrl.UsuarioAdmin" type="text" class="form-control" aria-label="Usuario" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
+<div id="carouselExampleControls" class="carousel slide py-2" data-ride="carousel">
+    <div class="carousel-inner row">
+        <div class="carousel-item active">
+            <img src="~/Imagenes/ImagenesSitio/BTU_Img1.jpg" class="d-block w-100" alt="...">
+            <div class="bot1 ">
+                <button class="btn  btn-circle btn-xl1 bouton-image1 monBouton1" data-toggle="modal" data-target="#modalAdministrador">Administrador</button>
+            </div>
+            <div class="bot2">
+                <button class="btn  btn-circle btn-xl2 bouton-image2 monBouton2 " data-toggle="modal" data-target="#modalEmpresa">Empresas</button>
+            </div>
+            <div class="bot3">
+                <button class="btn btn-circle btn-xl4 bouton-image4 monBouton4" data-toggle="modal" data-target="#modalAlumno">Unach</button>
+            </div>
+            <div class="bot4">
+                <button class="btn  btn-circle btn-xl3 bouton-image3 monBouton3" data-toggle="modal" data-target="#sesionExterno">Externos</button>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="bot1 ">
+                <button class="btn  btn-circle btn-xl1 bouton-image1 monBouton1" data-toggle="modal" data-target="#modalAdministrador">Administrador</button>
+            </div>
+            <div class="bot2">
+                <button class="btn  btn-circle btn-xl2 bouton-image2 monBouton2 " data-toggle="modal" data-target="#modalEmpresa">Empresas</button>
+            </div>
+            <div class="bot3">
+                <button class="btn btn-circle btn-xl4 bouton-image4 monBouton4" data-toggle="modal" data-target="#modalAlumno">Unach</button>
+            </div>
+            <div class="bot4">
+                <button class="btn  btn-circle btn-xl3 bouton-image3 monBouton3" data-toggle="modal" data-target="#sesionExterno">Externos</button>
+            </div>
+            <img src="~/Imagenes/ImagenesSitio/BTU_Img2.jpg" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+            <div class="bot1 ">
+                <button class="btn  btn-circle btn-xl1 bouton-image1 monBouton1" data-toggle="modal" data-target="#modalAdministrador">Administrador</button>
+            </div>
+            <div class="bot2">
+                <button class="btn  btn-circle btn-xl2 bouton-image2 monBouton2 " data-toggle="modal" data-target="#modalEmpresa">Empresas</button>
+            </div>
+            <div class="bot3">
+                <button class="btn btn-circle btn-xl4 bouton-image4 monBouton4" data-toggle="modal" data-target="#modalAlumno">Unach</button>
+            </div>
+            <div class="bot4">
+                <button class="btn  btn-circle btn-xl3 bouton-image3 monBouton3" data-toggle="modal" data-target="#sesionExterno">Externos</button>
+            </div>
+            <img src="~/Imagenes/ImagenesSitio/BTU_Img3.jpg" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+            <div class="bot1 ">
+                <button class="btn  btn-circle btn-xl1 bouton-image1 monBouton1" data-toggle="modal" data-target="#modalAdministrador">Administrador</button>
+            </div>
+            <div class="bot2">
+                <button class="btn  btn-circle btn-xl2 bouton-image2 monBouton2 " data-toggle="modal" data-target="#modalEmpresa">Empresas</button>
+            </div>
+            <div class="bot3">
+                <button class="btn btn-circle btn-xl4 bouton-image4 monBouton4" data-toggle="modal" data-target="#modalAlumno">Unach</button>
+            </div>
+            <div class="bot4">
+                <button class="btn  btn-circle btn-xl3 bouton-image3 monBouton3" data-toggle="modal" data-target="#sesionExterno">Externos</button>
+            </div>
+            <img src="~/Imagenes/ImagenesSitio/BTU_Img4.jpg" class="d-block w-100" alt="...">
+        </div>
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+
+
+<div class="modal fade" id="modalAdministrador" tabindex="-1" role="dialog" aria-labelledby="modalAdministrador" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Administrador</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroup-sizing-default">Usuario</span>
                             </div>
+                            <input ng-model="ctrl.UsuarioAdmin" type="text" class="form-control" aria-label="Usuario" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
                         </div>
-                        <div class="col-md-12">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="inputGroup-sizing-default">Contraseña</span>
-                                </div>
-                                <input ng-model="ctrl.ContrasenaAdmin" type="password" class="form-control" aria-label="Contrasenaa" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
+                    </div>
+                    <div class="col-md-12">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroup-sizing-default">Contraseña</span>
                             </div>
+                            <input ng-model="ctrl.ContrasenaAdmin" type="password" class="form-control" aria-label="Contrasenaa" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" ng-click="ctrl.IniciarSesionAdmin()">Iniciar Sesión</button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" ng-click="ctrl.IniciarSesionAdmin()">Iniciar Sesión</button>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="modalEmpresa" tabindex="-1" role="dialog" aria-labelledby="modalEmpresa" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Empresa</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="inputGroup-sizing-default">Usuario</span>
-                                </div>
-                                <input ng-model="ctrl.UsuarioEmpresa" type="text" class="form-control" aria-label="Usuario" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
+</div>
+<div class="modal fade" id="modalEmpresa" tabindex="-1" role="dialog" aria-labelledby="modalEmpresa" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Empresa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroup-sizing-default">Usuario</span>
                             </div>
+                            <input ng-model="ctrl.UsuarioEmpresa" type="text" class="form-control" aria-label="Usuario" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
                         </div>
-                        <div class="col-md-12">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span  class="input-group-text" id="inputGroup-sizing-default">Contraseña</span>
-                                </div>
-                                <input ng-model="ctrl.ContrasenaEmpresa" type="password" class="form-control" aria-label="Contrasenaa" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
+                    </div>
+                    <div class="col-md-12">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroup-sizing-default">Contraseña</span>
                             </div>
+                            <input ng-model="ctrl.ContrasenaEmpresa" type="password" class="form-control" aria-label="Contrasenaa" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" ng-click="ctrl.IniciarSesionEmpresa('EMPRESA')">Iniciar Sesión</button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" ng-click="ctrl.IniciarSesionEmpresa('EMPRESA')">Iniciar Sesión</button>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="modalAlumno" tabindex="-1" role="dialog" aria-labelledby="modalAlumno" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Alumno UNACH</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="inputGroup-sizing-default">Usuario</span>
-                                </div>
-                                <input  ng-model="ctrl.UsuarioUnach" type="text" class="form-control" aria-label="Usuario" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
+</div>
+<div class="modal fade" id="modalAlumno" tabindex="-1" role="dialog" aria-labelledby="modalAlumno" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Alumno UNACH</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroup-sizing-default">Usuario</span>
                             </div>
+                            <input ng-model="ctrl.UsuarioUnach" type="text" class="form-control" aria-label="Usuario" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
                         </div>
-                        <div class="col-md-12">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="inputGroup-sizing-default">Contraseña</span>
-                                </div>
-                                <input  ng-model="ctrl.ContrasenaUnach" type="password" class="form-control" aria-label="Contrasena" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
+                    </div>
+                    <div class="col-md-12">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroup-sizing-default">Contraseña</span>
                             </div>
+                            <input ng-model="ctrl.ContrasenaUnach" type="password" class="form-control" aria-label="Contrasena" aria-describedby="inputGroup-sizing-default" style="max-width:100%">
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" ng-click="ctrl.IniciarSesion('UNACH')">Iniciar Sesión</button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" ng-click="ctrl.IniciarSesion('UNACH')">Iniciar Sesión</button>
             </div>
         </div>
     </div>
+</div>
