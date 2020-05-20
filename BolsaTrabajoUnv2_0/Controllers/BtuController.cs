@@ -103,13 +103,19 @@ namespace BolsaTrabajoUnv2_0.Controllers
             string Contacto, string ContactoCargo, string Telefono, string Celular, string Email, string MedioContacto, string Contrasena, string TipoPersona)
         {
             List<Btu_Sesion> list = new List<Btu_Sesion>();
-            list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"];
+            
             Btu_Empresa objEmpresa = new Btu_Empresa();
             ResultadoComun objResultado = new ResultadoComun();
             string Verificador = string.Empty;
+            if (System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"] != null)
+            {
+                list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"];
+                objEmpresa.Id_Empresa = list[0].Id;
+            }
+            else if (System.Web.HttpContext.Current.Session["SessionAdminEmpresa"] != null)
+                objEmpresa = (Btu_Empresa)System.Web.HttpContext.Current.Session["SessionAdminEmpresa"];
             try
             {
-                objEmpresa.Id_Empresa = list[0].Id;
                 objEmpresa.Razon_Social = RazonSocial;
                 objEmpresa.Nombre_Comercial = NombreComercial;
                 objEmpresa.Actividad = Actividad;
@@ -140,7 +146,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                     objResultado.MensajeError = Verificador;
                 }
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
-            }
+            }            
             catch (Exception ex)
             {
                 objResultado.Error = true;
@@ -2170,27 +2176,32 @@ namespace BolsaTrabajoUnv2_0.Controllers
             string Verificador = string.Empty;
             try
             {
-                if (System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"] != null) 
-                { 
+                if (System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"] != null)
+                {
                     list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"];
                     objEmpresa.Rfc = list[0].Email;
-                    objResultado.Resultado = DataContext.ObtenerDatosEmpresaRegistrada(objEmpresa, ref Verificador);
-                    if (Verificador == "0")
-                    {
-                        objResultado.Error = false;
-                        objResultado.MensajeError = "";
-                    }
-                    else
-                    {
-                        objResultado.Error = true;
-                        objResultado.MensajeError = Verificador;
-                    }
+                }
+                else if(System.Web.HttpContext.Current.Session["SessionAdminEmpresa"] != null)
+                {
+                    objEmpresa = (Btu_Empresa)System.Web.HttpContext.Current.Session["SessionAdminEmpresa"];
                 }
                 else
                 {
-                    objResultado.Error = false;
+                    objResultado.Error = true;
                     objResultado.MensajeError = "";
                     objResultado.Resultado = null;
+                }
+
+                objResultado.Resultado = DataContext.ObtenerDatosEmpresaRegistrada(objEmpresa, ref Verificador);
+                if (Verificador == "0")
+                {
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";
+                }
+                else
+                {
+                    objResultado.Error = true;
+                    objResultado.MensajeError = Verificador;
                 }
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }

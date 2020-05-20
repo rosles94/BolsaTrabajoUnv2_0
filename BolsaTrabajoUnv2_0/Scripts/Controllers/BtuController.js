@@ -1610,6 +1610,7 @@
                         if (self.listVacantesEmpresa !== undefined && self.listVacantesEmpresa.length > 0) {
                             $('#cargarTabla').hide();
                             $('#tablaVacantesEmpresa').show();
+                            $('#containerEmpresa').show();
                             table = $('#tablaVacantesEmpresa').DataTable({
                                 language: {
                                     "decimal": "",
@@ -1830,6 +1831,7 @@
                         if (self.listVacantesApliEmpresa !== undefined && self.listVacantesApliEmpresa.length > 0) {
                             $('#cargarTabla').hide();
                             $('#tablaVacApliEmpresa').show();
+                            $('#containerEmpresa').show();
                             table = $('#tablaVacApliEmpresa').DataTable({
                                 language: {
                                     "decimal": "",
@@ -2188,6 +2190,7 @@
                         self.listEmpresasRegistradas = btuContext.listEmpresasRegistradas;
                         if (self.listEmpresasRegistradas !== undefined && self.listEmpresasRegistradas.length > 0)
                         {
+                            $('#containerTable').show();
                             table = $('#tablaEmpresas').DataTable({
                                 language: {
                                     "decimal": "",
@@ -2411,7 +2414,8 @@
                         $('#tablaCandidatos').DataTable().clear().destroy();
                         self.listaCandidatosRegistrados = btuContext.listaCandidatosRegistrados;
 
-                        if (self.listaCandidatosRegistrados !== undefined && self.listaCandidatosRegistrados.length > 0) {                            
+                        if (self.listaCandidatosRegistrados !== undefined && self.listaCandidatosRegistrados.length > 0) {    
+                            $('#containerTable').show();
                             table = $('#tablaCandidatos').DataTable({
                                 language: {
                                     "decimal": "",
@@ -2630,22 +2634,29 @@
         };
 
         this.EditarStatusEmpresa = () => {
-            btuContext.EditarStatusEmpresa(self.statusEmpresa, rfcEmpresa, self.observacionesStatus, eMailEmpresa, function (resp) {
-                switch (resp.ressult) {
-                    case "tgp":
-                        alert('Estatus modificado');
-                        $('#modalStatusEmpresa').modal('toggle');
-                        ObtenerTotalEmpresas();
-                        ObtenerGridEmpresasRegistradas();
-                        break;
-                    case "notgp":
-                        alert(resp.message);
-                        break;
-                    default:
-                        break;
-                }
-                $scope.$apply();
-            });
+            let confirmar = confirm('¿Desea cambiar el estatus de la empresa?');
+            if (confirmar) {
+                $('#modalStatusEmpresa').modal('toggle');
+                $('#modalCargandoSolicitud').modal('show');
+                btuContext.EditarStatusEmpresa(self.statusEmpresa, rfcEmpresa, self.observacionesStatus, eMailEmpresa, function (resp) {
+                    switch (resp.ressult) {
+                        case "tgp":
+                            alert('Estatus modificado');
+                            $('#modalCargandoSolicitud').modal('toggle');
+                            ObtenerTotalEmpresas();
+                            ObtenerGridEmpresasRegistradas();
+                            break;
+                        case "notgp":
+                            $('#modalCargandoSolicitud').modal('toggle');
+                            alert(resp.message);
+                            break;
+                        default:
+                            $('#modalCargandoSolicitud').modal('toggle');
+                            break;
+                    }
+                    $scope.$apply();
+                });
+            }
         };       
 
         $scope.EditStatusCand = (matricula, email) => {
@@ -2655,7 +2666,7 @@
 
         this.EditarStatusCandidato = () => {
             $('#modalStatusCandidato').modal('toggle');
-            $('#modalCargandoSolicitud').show();
+            $('#modalCargandoSolicitud').modal('show');
             btuContext.EditarStatusCandidato(self.statusCandidato, matriculaCand, eMailCandidato, function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
@@ -2980,6 +2991,7 @@
             ComboVacantesEmpresa();
             ComboAreaConocimiento();
             $('#verCandDisp').show();
+            $('#containerEmpresa').show();
         };        
 
         //Funciones para el detalle de las tablas
