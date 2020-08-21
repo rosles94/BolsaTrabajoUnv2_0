@@ -135,6 +135,7 @@ namespace BolsaTrabajoUnv2_0.Data
                     objDatosUnach.Carrera = Convert.ToString(cmd.Parameters["p_carrera"].Value);
                     objDatosUnach.IdCarrera = Convert.ToString(cmd.Parameters["p_id_carrera"].Value);
                     objDatosUnach.Id = Convert.ToString(cmd.Parameters["p_id_registrado"].Value);
+                    objDatosUnach.Ruta_Foto = null;
                     objDatosUnach.Registrado = "0";
                 }
                 list.Add(objDatosUnach);
@@ -160,7 +161,7 @@ namespace BolsaTrabajoUnv2_0.Data
             {
                 OracleDataReader dr = null;
                 string[] Parametros = { "p_matricula" };
-                object[] Valores = { objUsuarioAlta.Matricula };
+                object[] Valores = { objUsuarioAlta.Matricula };    
                 string[] ParametrosOut = {"p_id", "p_paterno", "p_materno", "p_nombre", "p_domicilio", "p_municipio", "p_estado","p_nacimiento",
                 "p_telefono","p_celular","p_correo", "p_objetivo", "p_interes", "p_tipo", "p_genero", "p_ruta_fotografia", "p_codigo_postal",
                     "p_colonia", "p_carrera", "p_bandera" };
@@ -753,7 +754,7 @@ namespace BolsaTrabajoUnv2_0.Data
                     objVac.Id = Convert.ToString(dr[1]);
                     objVac.Empresa = Convert.ToString(dr[2]);
                     objVac.objVacCand.Id = Convert.ToString(dr[3]);
-                    objVac.objVacCand.Status = objVacante.Status;
+                    objVac.objVacCand.Status = Convert.ToString(dr[4]);
                     //objVacCand.btuBasicos.TIPO = Convert.ToString(dr[2]);
                     list.Add(objVac);
                 }
@@ -825,7 +826,7 @@ namespace BolsaTrabajoUnv2_0.Data
                 {
                     Btu_Empresa objEmpresa = new Btu_Empresa();
                     objEmpresa.Total_Empresas = Convert.ToString(dr[0]);
-                    objEmpresa.Status = Convert.ToString(dr[1]);
+                    objEmpresa.Status = Convert.ToString(dr[1]);                    
                     list.Add(objEmpresa);
                 }
                 return list;

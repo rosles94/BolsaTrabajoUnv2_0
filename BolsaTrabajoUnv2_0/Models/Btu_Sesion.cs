@@ -15,7 +15,11 @@ namespace BolsaTrabajoUnv2_0.Models
         public string Nombre { get; set; }
         public string Registrado { get; set; }
         public string Id { get; set; }
-        public string Email2 { get; set; }        
+        public string Email2 { get; set; }
+        public string Usuario { get; set; }
+        public string Sesion { get; set; }
+        public string Status { get; set; }
+        public bool Administrador { get; set; }
     }
 
     public class ResultadoSesion

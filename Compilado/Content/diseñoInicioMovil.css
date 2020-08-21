@@ -1,0 +1,78 @@
+﻿@media (max-width: 1000px) {
+    .container {
+        background: url('../Imagenes/ImagenesSitio/fondo.jpg');
+        background-size: 300px 800px;
+        /* Para dejar la imagen de fondo centrada, vertical yhorizontalmente */
+        background-position: center center;
+        /* Para que la imagen de fondo no se repita */
+        background-repeat: no-repeat;
+    }
+}
+
+.mbot2 {
+    width: 220px;
+    height: 70px;
+    background-color: #6698b1;
+    opacity: 0.7;
+    font-weight: bold;
+}
+
+.mbot3 {
+    width: 220px;
+    height: 70px;
+    background-color: #afabd5;
+    opacity: 0.7;
+    font-weight: bold;
+}
+
+.mbot4 {
+    width: 220px;
+    height: 70px;
+    background-color: #cdc377;
+    opacity: 0.7;
+    font-weight: bold;
+}
+
+.mbot5 {
+    width: 220px;
+    height: 70px;
+    background-color: #fbb698;
+    opacity: 0.7;
+    font-weight: bold;
+}
+
+.btn-circle {
+    padding: 16px 20px;
+    border-radius: 70px;
+    background-color: #D2E28B;
+}
+
+/*.fa-facebook { 
+  font-size: 25px;
+  position:absolute; 
+  top: 670px; 
+  left : 15px; 
+  z-index: 3; 
+  color: white;
+  font-weight: bold;
+}
+.fa-twitter{
+   padding: 16px 18px;
+  font-size: 25px;
+  position:absolute; 
+  top: 670px; 
+  left : 80px; 
+  z-index: 3; 
+  color: white;
+  font-weight: bold;
+}
+.fa-instagram{
+   padding: 16px 18px;
+  font-size: 25px;
+  position:absolute; 
+  top: 670px; 
+  left : 150px; 
+  z-index: 3; 
+  color: white;
+  font-weight: bold;
+}*/

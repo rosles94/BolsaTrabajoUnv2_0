@@ -2,6 +2,8 @@
 using BolsaTrabajoUnv2_0.Data;
 using BolsaTrabajoUnv2_0.Models;
 using Microsoft.Ajax.Utilities;
+using Newtonsoft.Json.Linq;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.DirectoryServices;
@@ -103,7 +105,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
             string Contacto, string ContactoCargo, string Telefono, string Celular, string Email, string MedioContacto, string Contrasena, string TipoPersona)
         {
             List<Btu_Sesion> list = new List<Btu_Sesion>();
-            
+
             Btu_Empresa objEmpresa = new Btu_Empresa();
             ResultadoComun objResultado = new ResultadoComun();
             string Verificador = string.Empty;
@@ -146,7 +148,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                     objResultado.MensajeError = Verificador;
                 }
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
-            }            
+            }
             catch (Exception ex)
             {
                 objResultado.Error = true;
@@ -551,7 +553,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
-        public JsonResult EditarInfoGeneralCandidato ()
+        public JsonResult EditarInfoGeneralCandidato()
         {
             Btu_Curriculum objCv = new Btu_Curriculum();
             ResultadoComun objResultado = new ResultadoComun();
@@ -597,10 +599,10 @@ namespace BolsaTrabajoUnv2_0.Controllers
                                             objResultadoCm = EliminarExpProfesionalBD();
                                             if (objResultadoCm.Error == false)
                                             {
-                                                objResultadoInfoCv =  GuardarExpProfesionalBD(objCv);
-                                                if(objResultadoInfoCv.Error == false)
+                                                objResultadoInfoCv = GuardarExpProfesionalBD(objCv);
+                                                if (objResultadoInfoCv.Error == false)
                                                 {
-                                                    objResultadoCm =  EliminarCursoTallerBD();
+                                                    objResultadoCm = EliminarCursoTallerBD();
                                                     if (objResultadoCm.Error == false)
                                                     {
                                                         objResultadoInfoCv = GuardarCursoTallerBD(objCv);
@@ -641,14 +643,14 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 else
                     return Json(objResultadoCv, JsonRequestBehavior.AllowGet);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 objResultado.Error = true;
                 objResultado.MensajeError = ex.Message;
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
-        public ResultadoBtuCurriculum GuardarInformacionCandidatoBD ()
+        public ResultadoBtuCurriculum GuardarInformacionCandidatoBD()
         {
             Btu_Curriculum objInfoCandidato = new Btu_Curriculum();
             Btu_Curriculum objFotoCv = new Btu_Curriculum();
@@ -664,7 +666,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                         objInfoCandidato.Ruta_Foto = objFotoCv.Ruta_Foto;
 
                 objRespCandidato = GuardarDataContext.GuardarInformacionCandidatoBD(objInfoCandidato, ref Verificador);
-                if(Verificador == "0")
+                if (Verificador == "0")
                 {
                     objResultado.Error = false;
                     objResultado.MensajeError = Verificador;
@@ -677,13 +679,13 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 }
                 return objResultado;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 objResultado.Error = true;
                 objResultado.MensajeError = ex.Message;
                 return objResultado;
             }
-            
+
         }
         public ResultadoCurriculmInformacion GuardarInfoAcademicaBD(Btu_Curriculum objRespId)
         {
@@ -694,25 +696,25 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 List<Btu_Curriculum_Informacion> listInfoAcademica = new List<Btu_Curriculum_Informacion>();
                 listInfoAcademica = (List<Btu_Curriculum_Informacion>)System.Web.HttpContext.Current.Session["SessionInformacionAcademicaCandidato"];
                 GuardarDataContext.GuardarCurriculumInformacionBD(objRespId, listInfoAcademica, ref Verificador);
-                if(Verificador == "0")
+                if (Verificador == "0")
                 {
                     objResultado.Error = false;
                     objResultado.MensajeError = "";
-                    System.Web.HttpContext.Current.Session["SessionInformacionAcademicaCandidato"] = null;                    
+                    System.Web.HttpContext.Current.Session["SessionInformacionAcademicaCandidato"] = null;
                 }
                 else
                 {
                     objResultado.Error = true;
-                    objResultado.MensajeError = Verificador;                    
+                    objResultado.MensajeError = Verificador;
                 }
                 return objResultado;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 objResultado.Error = true;
                 objResultado.MensajeError = ex.Message;
                 return objResultado;
-            }            
+            }
         }
         public ResultadoCurriculmInformacion GuardarSoftwareBD(Btu_Curriculum objRespId)
         {
@@ -729,7 +731,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                         Verificador = "0";
                 else
                     Verificador = "0";
-                if(Verificador == "0")
+                if (Verificador == "0")
                 {
                     objResultado.Error = false;
                     objResultado.MensajeError = "";
@@ -742,12 +744,12 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 }
                 return objResultado;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 objResultado.Error = true;
                 objResultado.MensajeError = ex.Message;
                 return objResultado;
-            }            
+            }
         }
         public ResultadoCurriculmInformacion GuardarIdiomaBD(Btu_Curriculum objRespId)
         {
@@ -764,7 +766,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                         Verificador = "0";
                 else
                     Verificador = "0";
-                if(Verificador == "0")
+                if (Verificador == "0")
                 {
                     objResultado.Error = false;
                     objResultado.MensajeError = "";
@@ -777,12 +779,12 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 }
                 return objResultado;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 objResultado.Error = true;
                 objResultado.MensajeError = ex.Message;
                 return objResultado;
-            }            
+            }
         }
         public ResultadoCurriculmInformacion GuardarExpProfesionalBD(Btu_Curriculum objRespId)
         {
@@ -799,21 +801,21 @@ namespace BolsaTrabajoUnv2_0.Controllers
                     objResultado.MensajeError = "";
                     System.Web.HttpContext.Current.Session["SessionExperienciaProfCandidato"] = null;
                 }
-                else 
+                else
                 {
                     objResultado.Error = true;
                     objResultado.MensajeError = Verificador;
                 }
                 return objResultado;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 objResultado.Error = true;
                 objResultado.MensajeError = ex.Message;
                 return objResultado;
-            }           
-        }        
-        public ResultadoCurriculmInformacion GuardarCursoTallerBD (Btu_Curriculum objRespId)
+            }
+        }
+        public ResultadoCurriculmInformacion GuardarCursoTallerBD(Btu_Curriculum objRespId)
         {
             List<Btu_Curriculum_Informacion> listCursoTaller = new List<Btu_Curriculum_Informacion>();
             ResultadoCurriculmInformacion objResultado = new ResultadoCurriculmInformacion();
@@ -841,32 +843,41 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 }
                 return objResultado;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 objResultado.Error = true;
                 objResultado.MensajeError = ex.Message;
                 return objResultado;
-            }            
+            }
         }
         public JsonResult DatosRegistroUnach()
         {
             Btu_Curriculum objDatosUnach = new Btu_Curriculum();
-            Btu_Curriculum objFotoCv = new Btu_Curriculum();            
+            Btu_Curriculum objFotoCv = new Btu_Curriculum();
             ResultadoBtuCurriculum objResultado = new ResultadoBtuCurriculum();            
-            objDatosUnach = (Btu_Curriculum)System.Web.HttpContext.Current.Session["SessionIdCvEditar"];
             string Verificador = string.Empty;
             try
-            {                
-                if (objDatosUnach.Registrado == "1")
-                    objResultado.Resultado = DataContext.ObtenerDatosCurriculumAlta(objDatosUnach, ref Verificador);
-                else
+            {
+                if (System.Web.HttpContext.Current.Session["SessionIdCvEditar"] != null)
+                {
+                    objDatosUnach = (Btu_Curriculum)System.Web.HttpContext.Current.Session["SessionIdCvEditar"];
+                    if (objDatosUnach.Registrado == "1")
+                        objResultado.Resultado = DataContext.ObtenerDatosCurriculumAlta(objDatosUnach, ref Verificador);
+                }
+                else if (System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] != null)
+                {
+                    List<Btu_Sesion> listSesionCandidato = new List<Btu_Sesion>();
+                    listSesionCandidato = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
+                    objDatosUnach.Matricula = listSesionCandidato[0].Matricula;
                     objResultado.Resultado = DataContext.DatosRegistroUnach(objDatosUnach, ref Verificador);
-                if(Verificador == "0")
+                }
+
+                if (Verificador == "0")
                 {
                     objFotoCv.Ruta_Foto = objResultado.Resultado[0].Ruta_Foto;
                     System.Web.HttpContext.Current.Session["SessionFotoCv"] = objFotoCv;
                     objResultado.Error = false;
-                    objResultado.MensajeError = "";                    
+                    objResultado.MensajeError = "";
                 }
                 else
                 {
@@ -875,7 +886,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 }
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 objResultado.Error = true;
                 objResultado.MensajeError = ex.Message;
@@ -888,14 +899,14 @@ namespace BolsaTrabajoUnv2_0.Controllers
             ResultadoCurriculmInformacion objResultado = new ResultadoCurriculmInformacion();
             try
             {
-                if(System.Web.HttpContext.Current.Session["SessionInformacionAcademicaCandidato"] != null)
+                if (System.Web.HttpContext.Current.Session["SessionInformacionAcademicaCandidato"] != null)
                 {
                     list = (List<Btu_Curriculum_Informacion>)System.Web.HttpContext.Current.Session["SessionInformacionAcademicaCandidato"];
                     list.RemoveAt(Posicion);
                     System.Web.HttpContext.Current.Session["SessionInformacionAcademicaCandidato"] = list;
                     objResultado.Resultado = list;
                     objResultado.Error = false;
-                    objResultado.MensajeError = "";                    
+                    objResultado.MensajeError = "";
                 }
                 else
                 {
@@ -905,7 +916,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 }
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 objResultado.Resultado = null;
                 objResultado.Error = true;
@@ -1054,10 +1065,10 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 {
                     list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
                     objInfoCv.Id_Curriculum = list[0].Id;
-                }                    
-                objInfoCv.Tipo = "ACADEMICO";                
+                }
+                objInfoCv.Tipo = "ACADEMICO";
                 GuardarDataContext.EliminarInformacionCurriculum(objInfoCv, ref Verificador);
-                if(Verificador == "0")
+                if (Verificador == "0")
                 {
                     objResultado.Error = false;
                     objResultado.MensajeError = "";
@@ -1069,7 +1080,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 }
                 return objResultado;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 objResultado.Error = true;
                 objResultado.MensajeError = ex.Message;
@@ -1094,7 +1105,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                     list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
                     objInfoCv.Id_Curriculum = list[0].Id;
                 }
-                objInfoCv.Tipo = "SOFTWARE";                
+                objInfoCv.Tipo = "SOFTWARE";
                 GuardarDataContext.EliminarInformacionCurriculum(objInfoCv, ref Verificador);
                 if (Verificador == "0")
                 {
@@ -1232,7 +1243,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return objResultado;
             }
         }
-        public JsonResult EditarPrincipalEstAcad (string Posicion)
+        public JsonResult EditarPrincipalEstAcad(string Posicion)
         {
             List<Btu_Curriculum_Informacion> list = new List<Btu_Curriculum_Informacion>();
             Btu_Curriculum_Informacion objEstudios = new Btu_Curriculum_Informacion();
@@ -1242,8 +1253,8 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 list = (List<Btu_Curriculum_Informacion>)System.Web.HttpContext.Current.Session["SessionInformacionAcademicaCandidato"];
 
                 var consulta = from c in list
-                              where (c.Principal == "S")
-                              select c;
+                               where (c.Principal == "S")
+                               select c;
 
                 foreach (Btu_Curriculum_Informacion info in consulta)
                     info.Principal = "N";
@@ -1287,21 +1298,21 @@ namespace BolsaTrabajoUnv2_0.Controllers
                     list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
                     objInfoCv.Id = list[0].Id;
                 }
-                objInfoCv.Tipo = "ACADEMICO";                
+                objInfoCv.Tipo = "ACADEMICO";
                 objResultado.Resultado = DataContext.ObtenerInfoCurriculum(objInfoCv);
                 objResultado.Error = false;
                 objResultado.MensajeError = "";
                 System.Web.HttpContext.Current.Session["SessionInformacionAcademicaCandidato"] = objResultado.Resultado;
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 objResultado.Error = true;
                 objResultado.MensajeError = ex.Message;
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
-        public JsonResult ObtenerSoftware ()
+        public JsonResult ObtenerSoftware()
         {
             Btu_Curriculum objInfoCv = new Btu_Curriculum();
             List<Btu_Sesion> list = new List<Btu_Sesion>();
@@ -1387,14 +1398,14 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 System.Web.HttpContext.Current.Session["SessionExperienciaProfCandidato"] = objResultado.Resultado;
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 objResultado.Error = true;
                 objResultado.MensajeError = ex.Message;
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
-        public JsonResult ObtenerCursoTaller ()
+        public JsonResult ObtenerCursoTaller()
         {
             Btu_Curriculum objInfoCv = new Btu_Curriculum();
             List<Btu_Sesion> list = new List<Btu_Sesion>();
@@ -1454,7 +1465,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 objResultado.MensajeError = ex.Message;
                 return objResultado;
             }
-        }        
+        }
 
         [HttpPost]
         public ActionResult UploadFiles()
@@ -1494,8 +1505,8 @@ namespace BolsaTrabajoUnv2_0.Controllers
                         {
                             // Get the complete folder path and store the file inside it.
                             //string fnameDoc = "../ImgProfileCv/" + fname;
-                            string fnameDoc = "~/Imagenes/ImgProfileCv/" + lisInfoPersonal[0].Matricula + extencion;
-                            objFotoCv.Ruta_Foto = "https://btu.unach.mx/Dsia/ImgProfileCv/" + lisInfoPersonal[0].Matricula + extencion;
+                            string fnameDoc = "../ImgProfileCv/" + lisInfoPersonal[0].Matricula + extencion;
+                            objFotoCv.Ruta_Foto = "https://btu.unach.mx/Dsia/ImgProfileCv/" + lisInfoPersonal[0].Matricula + extencion; // esta ruta se manjea así porque este es el directorio del servidor
                             System.Web.HttpContext.Current.Session["SessionFotoCv"] = objFotoCv;
                             fname = Server.MapPath(fnameDoc);
                             file.SaveAs(fname);
@@ -1521,7 +1532,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
         }
 
         //Metodos para la vista Btu
-        public JsonResult IniciarSesion(string Usuario, string Contrasena ,string Tipo)
+        public JsonResult IniciarSesion(string Usuario, string Contrasena, string Tipo)
         {
             ResultadoSesion objResultado = new ResultadoSesion();
             Btu_Sesion objSesion = new Btu_Sesion();
@@ -1545,7 +1556,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 }
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 objResultado.Error = true;
                 objResultado.MensajeError = ex.Message;
@@ -1583,24 +1594,50 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
-        public JsonResult IniciarSesionAdmin (string Usuario, string Contrasena)
+        public JsonResult IniciarSesionAdmin(string Usuario, string Contrasena)
         {
-            ResultadoComun objResultado = new ResultadoComun();
+            List<Btu_Sesion> list = new List<Btu_Sesion>();
+            ResultadoSesion objResultado = new ResultadoSesion();
+            string Verificador = string.Empty;
+            Btu_Sesion objSesion = new Btu_Sesion();
             try
             {
-                String uid = "cn=" + Usuario + ",dc=unach,dc=mx";
+                var client = new RestClient("http://ldapm.unach.mx/authldap.php");
+                client.Timeout = -1;
+                var request = new RestRequest(Method.POST);
+                request.AddHeader("Username", "ldapru");
+                request.AddHeader("Password", "01#lDhyr983wry");
+                request.AddHeader("Authorization", "Basic bGRhcHJ1OjAxI2xEaHlyOTgzd3J5");
+                request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+                request.AddParameter("ldapuser", Usuario);
+                request.AddParameter("ldappasswd", Contrasena);
+                IRestResponse response = client.Execute(request);
+                //lblError.Text = response.Content;
+                var jObject = JObject.Parse(response.Content);
 
-                // assign password
-                String password = Contrasena;
-                // define LDAP connection
-                DirectoryEntry root = new DirectoryEntry("LDAP://ldaps.unach.mx", uid, password, AuthenticationTypes.None);
+                //Extracting Node element using Getvalue method
+                string Autorizado = jObject.GetValue("valido").ToString();
 
-                // attempt to use LDAP connection
-                object connected = root.NativeObject;
-                objResultado.Error = false;
-                objResultado.MensajeError = "";
+                objSesion.Status = jObject.GetValue("valido").ToString();
+                objSesion.Usuario = jObject.GetValue("gecos").ToString();
+                objSesion.Email = Usuario;
+                objSesion.Tipo = "";
+                objSesion.Password = "";
+                list.Add(objSesion);
+                objResultado.Resultado = DataContext.InciarSesion(objSesion, ref Verificador);
+                if (Verificador == "0")
+                {
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";
+                    System.Web.HttpContext.Current.Session["SessionInicioAdministrador"] = objResultado.Resultado;
+                }
+                else
+                {
+                    objResultado.Error = true;
+                    objResultado.MensajeError = Verificador;
+                }
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
-                
+
             }
             catch (Exception ex)
             {
@@ -1610,7 +1647,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
-        public JsonResult CerrarSesion ()
+        public JsonResult CerrarSesion()
         {
             ResultadoComun objResultado = new ResultadoComun();
             try
@@ -1619,11 +1656,36 @@ namespace BolsaTrabajoUnv2_0.Controllers
                     System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"] = null;
                 else if (System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] != null)
                     System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] = null;
+                else if (System.Web.HttpContext.Current.Session["SessionInicioAdministrador"] != null)
+                    System.Web.HttpContext.Current.Session["SessionInicioAdministrador"] = null;
                 objResultado.Error = false;
                 objResultado.MensajeError = "";
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
-            catch(Exception ex)
+            catch (Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public JsonResult ObtenerDatosSesion()
+        {
+            ResultadoSesion objResultado = new ResultadoSesion();
+            try
+            {                
+                if (System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] != null)                
+                    objResultado.Resultado = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];                
+                else if (System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"] != null)                
+                    objResultado.Resultado = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"];                
+                else if (System.Web.HttpContext.Current.Session["SessionInicioAdministrador"] != null)
+                    objResultado.Resultado = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioAdministrador"];
+
+                objResultado.Error = false;
+                objResultado.MensajeError = "";
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
             {
                 objResultado.Error = true;
                 objResultado.MensajeError = ex.Message;
@@ -1689,7 +1751,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
-        public JsonResult ComboMedioContacto()//Se utiliza en la vista Registrar Empresa,
+        public JsonResult ComboMedioContacto    ()//Se utiliza en la vista Registrar Empresa,
         {
             Comun objComun = new Comun();
             ResultadoComun objResultado = new ResultadoComun();
@@ -2180,29 +2242,39 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 {
                     list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"];
                     objEmpresa.Rfc = list[0].Email;
+                    objResultado.Resultado = DataContext.ObtenerDatosEmpresaRegistrada(objEmpresa, ref Verificador);
+                    if (Verificador == "0")
+                    {
+                        objResultado.Error = false;
+                        objResultado.MensajeError = "";
+                    }
+                    else
+                    {
+                        objResultado.Error = true;
+                        objResultado.MensajeError = Verificador;
+                    }
                 }
                 else if(System.Web.HttpContext.Current.Session["SessionAdminEmpresa"] != null)
                 {
                     objEmpresa = (Btu_Empresa)System.Web.HttpContext.Current.Session["SessionAdminEmpresa"];
+                    objResultado.Resultado = DataContext.ObtenerDatosEmpresaRegistrada(objEmpresa, ref Verificador);
+                    if (Verificador == "0")
+                    {
+                        objResultado.Error = false;
+                        objResultado.MensajeError = "";
+                    }
+                    else
+                    {
+                        objResultado.Error = true;
+                        objResultado.MensajeError = Verificador;
+                    }
                 }
                 else
-                {
-                    objResultado.Error = true;
-                    objResultado.MensajeError = "";
-                    objResultado.Resultado = null;
-                }
-
-                objResultado.Resultado = DataContext.ObtenerDatosEmpresaRegistrada(objEmpresa, ref Verificador);
-                if (Verificador == "0")
                 {
                     objResultado.Error = false;
                     objResultado.MensajeError = "";
-                }
-                else
-                {
-                    objResultado.Error = true;
-                    objResultado.MensajeError = Verificador;
-                }
+                    objResultado.Resultado = null;
+                }                                
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
             catch(Exception ex)
@@ -2426,71 +2498,107 @@ namespace BolsaTrabajoUnv2_0.Controllers
         {
             ResultadoEmpresa objResultado = new ResultadoEmpresa();
             string Verificador = string.Empty;
-            try
-            {
-                objResultado.Resultado = DataContext.ObtenerTotalEmpresas();
-                objResultado.Error = false;
-                objResultado.MensajeError = "";                
-                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            if (System.Web.HttpContext.Current.Session["SessionInicioAdministrador"] != null)
+            {                
+                try
+                {
+                    objResultado.Resultado = DataContext.ObtenerTotalEmpresas();
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
+                catch (Exception ex)
+                {
+                    objResultado.Error = true;
+                    objResultado.MensajeError = ex.Message;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
             }
-            catch(Exception ex)
+            else
             {
                 objResultado.Error = true;
-                objResultado.MensajeError = ex.Message;
+                objResultado.MensajeError = "No es administrador";
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
-            }
+            }    
         }
         public JsonResult ObtenerTotalCandidatos()
         {
             ResultadoBtuCurriculum objResultado = new ResultadoBtuCurriculum();
             string Verificador = string.Empty;
-            try
+            if (System.Web.HttpContext.Current.Session["SessionInicioAdministrador"] != null)
             {
-                objResultado.Resultado = DataContext.ObtenerTotalCandidatos();
-                objResultado.Error = false;
-                objResultado.MensajeError = "";
-                return Json(objResultado, JsonRequestBehavior.AllowGet);
+                try
+                {
+                    objResultado.Resultado = DataContext.ObtenerTotalCandidatos();
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
+                catch (Exception ex)
+                {
+                    objResultado.Error = true;
+                    objResultado.MensajeError = ex.Message;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
             }
-            catch (Exception ex)
+            else
             {
                 objResultado.Error = true;
-                objResultado.MensajeError = ex.Message;
+                objResultado.MensajeError = "No es administrador";
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
         public JsonResult ObtenerGridEmpresasRegistradas()
         {
             ResultadoEmpresa objResultado = new ResultadoEmpresa();
-            try
+            if (System.Web.HttpContext.Current.Session["SessionInicioAdministrador"] != null)
             {
-                objResultado.Resultado = DataContext.ObtenerGridEmpresasRegistradas();
-                objResultado.Error = false;
-                objResultado.MensajeError = "";
-                return Json(objResultado, JsonRequestBehavior.AllowGet);
+                try
+                {
+                    objResultado.Resultado = DataContext.ObtenerGridEmpresasRegistradas();
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
+                catch (Exception ex)
+                {
+                    objResultado.Resultado = null;
+                    objResultado.Error = true;
+                    objResultado.MensajeError = ex.Message;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
             }
-            catch(Exception ex)
+            else
             {
-                objResultado.Resultado = null;
                 objResultado.Error = true;
-                objResultado.MensajeError = ex.Message;
+                objResultado.MensajeError = "No es administrador";
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
         public JsonResult ObtenerGridCandidatos ()
         {
             ResultadoBtuCurriculum objResultado = new ResultadoBtuCurriculum();
-            try
+            if (System.Web.HttpContext.Current.Session["SessionInicioAdministrador"] != null)
             {
-                objResultado.Resultado = DataContext.ObtenerGridCandidatos();
-                objResultado.Error = false;
-                objResultado.MensajeError = "";
-                return Json(objResultado, JsonRequestBehavior.AllowGet);
+                try
+                {
+                    objResultado.Resultado = DataContext.ObtenerGridCandidatos();
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
 
+                }
+                catch (Exception ex)
+                {
+                    objResultado.Error = true;
+                    objResultado.MensajeError = ex.Message;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
             }
-            catch(Exception ex)
+            else
             {
                 objResultado.Error = true;
-                objResultado.MensajeError = ex.Message;
+                objResultado.MensajeError = "No es administrador";
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
@@ -2532,6 +2640,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 objEmpresa.Id_Empresa = Id;
                 objEmpresa.Rfc = Rfc;
                 objEmpresa.Email = NombreComercial;
+                objEmpresa.Administrador = true;
                 System.Web.HttpContext.Current.Session["SessionAdminEmpresa"] = objEmpresa;
                 objResultado.Error = false;
                 objResultado.MensajeError = "";
@@ -2586,6 +2695,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 objSesion.Nombre = NombreCandidato;
                 objSesion.Registrado = "1";
                 objSesion.Tipo = "UNACH";
+                objSesion.Administrador = true;
                 list.Add(objSesion);
                 System.Web.HttpContext.Current.Session["SessionAdminCandidato"] = list;
                 objResultado.Error = false;
@@ -3092,8 +3202,6 @@ namespace BolsaTrabajoUnv2_0.Controllers
             }
             return objResultado;
         }
-
-
         public static void EnvioCorreo_Adjunto(ref System.Net.Mail.MailMessage mmsg, string Asunto, string Contenido, string DirCorreo, ref string Error)
         {
 
@@ -3161,6 +3269,13 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 Error = (ex.Message);
             }
         }
+
+        public JsonResult PruebaRutaServer ()
+        {
+            string ruta = Server.MapPath("../ ImgProfileCv/");
+            return Json(ruta, JsonRequestBehavior.AllowGet);
+        }
+
         // GET: Btu
         public ActionResult Index()
         {

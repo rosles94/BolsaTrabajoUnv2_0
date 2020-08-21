@@ -1,4 +1,4 @@
-﻿
+﻿-
 @{
     ViewBag.Title = "PanelAdministrador";
     Layout = "~/Views/Shared/_LayoutSesion.cshtml";
@@ -28,8 +28,8 @@
                     <div class="card-body">
                         <i class="fas fa-city fa-3x"></i>
                         <h5 class="card-title">Empresas.</h5>
-                        <p class="card-text">En esta sección podrás ver las vacantes publicadas por las empresas registradas, para poder verlas da click en el botón de "Ver vacantes".</p>
-                        <p class="card-text"><small class="text-muted">Número de vacantes registradas: 35.</small></p>
+                        <p class="card-text">En esta sección podrás las empresas registradas, para poder verlas da click en el botón "Ver Empresas Registradas".</p>
+                        <p class="card-text"><small class="text-muted">Número de empresas registradas: {{ctrl.TotalEmpresas}}.</small></p>
                         <input type="button" class="btn btn-success" value="Ver Empresas Registradas" ng-click="ctrl.ObtenerGridEmpresasRegistradas()" />
                     </div>
                 </div>
@@ -39,8 +39,8 @@
                     <div class="card-body">
                         <i class="fas fa-user-graduate fa-3x"></i>
                         <h5 class="card-title">Candidatos.</h5>
-                        <p class="card-text">La información de tu curriculum puede ser modificada si lo deseas presionando el  botón que está abajo.</p>
-                        <p class="card-text"><small class="text-muted">El usuario está en estatus activo.</small></p>
+                        <p class="card-text">En esta sección podrás los candidatos registrados, para poder verlos da click en el botón "Ver Candidatos Registrados".</p>
+                        <p class="card-text"><small class="text-muted">Total de candidatos registrados {{ctrl.TotalCandReg}}.</small></p>
                         <input type="button" class="btn btn-success" value="Ver Candidatos Registrados" ng-click="ctrl.ObtenerGridCandidatosRegistrados()" />
                     </div>
                 </div>
@@ -230,6 +230,9 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Vacantes Empresa</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
                         <div class="modal-body">
                             <table class="table table-striped" id="">
@@ -239,7 +242,7 @@
                                         <th scope="col"># Vacantes</th>
                                         <th scope="col">Inicio</th>
                                         <th scope="col">Fin</th>
-                                        <th scope="col"></th>
+                                        <th scope="col">Reporte Vacante</th>
                                     </tr>
                                 </thead>
                                 <tbody ng-repeat="x in ctrl.listVacantesEmpresa">
@@ -248,7 +251,7 @@
                                         <td>{{x.Total}}</td>
                                         <td>{{x.Vigencia_Inicio}}</td>
                                         <td>{{x.Vigencia_Fin}}</td>
-                                        <td>{{x.Id}}</td>
+                                        <td><i class="fas fa-eye" id="{{x.Id}}"></i></td>
                                     </tr>
                                 </tbody>
                             </table>

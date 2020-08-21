@@ -1,0 +1,207 @@
+﻿.bot1 {
+    position: absolute;
+    /*height:15%;
+  width:15%;*/
+    top: 42%;
+    left: 17%;
+    z-index: 3;
+}
+
+.btn-circle.btn-xl1 {
+    width: 140px;
+    height: 140px;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 1.33;
+    border-radius: 70px;
+    background-color: #FCD3C2;
+}
+
+.bouton-image1:before {
+    content: "";
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: text-top;
+    background-color: transparent;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+.monBouton1:before {
+    background-image: url('../Imagenes/ImagenesSitio/administrador.png');
+    border-radius: 150px;
+}
+
+
+
+.bot2 {
+    position: absolute;
+    /*height:150px;
+  width:150px;*/
+    top: 42%;
+    left: 30%;
+    z-index: 3;
+}
+
+.btn-circle.btn-xl2 {
+    width: 140px;
+    height: 140px;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.33;
+    border-radius: 70px;
+    background-color: #efe6a0;
+}
+
+
+.bouton-image2:before {
+    content: "";
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: text-top;
+    background-color: transparent;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+.monBouton2:before {
+    background-image: url('../Imagenes/ImagenesSitio/empresas.png');
+    border-radius: 150px;
+}
+
+
+
+.bot3 {
+    position: absolute;
+    /*height:150px;
+  width:150px;*/
+    top: 42%;
+    left: 60%;
+    z-index: 3;
+}
+
+
+
+.btn-circle.btn-xl3 {
+    width: 140px;
+    height: 140px;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.33;
+    border-radius: 70px;
+    background-color: #C8C5E2;
+}
+
+.bouton-image3:before {
+    content: "";
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: text-top;
+    background-color: transparent;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+.monBouton3:before {
+    background-image: url('../Imagenes/ImagenesSitio/externos.png');
+    border-radius: 150px;
+}
+
+.bot4 {
+    position: absolute;
+    /*height:150px;
+  width:150px;*/
+    top: 42%;
+    left: 73%;
+    z-index: 3;
+}
+
+.btn-circle.btn-xl4 {
+    width: 140px;
+    height: 140px;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.33;
+    border-radius: 70px;
+    background-color: #adc9d8;
+}
+
+.bouton-image4:before {
+    content: "";
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: text-top;
+    background-color: transparent;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+.monBouton4:before {
+    background-image: url('../Imagenes/ImagenesSitio/unach.png');
+    border-radius: 150px;
+}
+
+
+@media (max-width: 1000px) {
+    .bodyMovil {
+        display: block;
+    }
+
+    .encabezadoMobile {
+        display: block;
+    }
+
+    .Mobilefooter {
+        display: block;
+    }
+
+    .bodyDesktop {
+        display: none;
+    }
+
+    .encabezadoDesktop {
+        display: none;
+    }
+
+    .Desktopfooter {
+        display: none;
+    }
+}
+
+@media (min-width: 1000px) {
+    .bodyMovil {
+        display: none;
+    }
+
+    .encabezadoMobile {
+        display: none;
+    }
+
+    .Mobilefooter {
+        display: none;
+    }
+
+    .bodyDesktop {
+        display: block;
+    }
+
+    .encabezadoDesktop {
+        display: block;
+    }
+
+    .Desktopfooter {
+        display: block;
+    }
+}

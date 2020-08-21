@@ -40,7 +40,7 @@
         let listVacantesApliEmpresa = "";
         let listVacRegEmp = "";
         let listCandDispo = "";
-        let idVacanteCandidato = "";        
+        let idVacanteCandidato = "";
         let idCandInteresado = "";
         let correoCandidato = "";
         let nombreVacanteInteresado = "";
@@ -64,11 +64,17 @@
         let motivoEmpresa = "";
         let matriculaCand = "";
         let listStatusVacanCand = "";
+        let listDatosSesion = "";
+        let statusCandidato = "";
 
+        let administrador = false;
         let datosPersonales = false;
         let datosAcademicos = false;
         let datosExpProfesional = false;
         let existeImagenPerfilCv = false;
+        let datosPerfilVacante = false;
+        let datosInfoEntrevista = false;
+
 
         //Funciones Vista Registrar Empresas
 
@@ -125,9 +131,11 @@
                             $("#editarEmpresa").show();
                             $("#regresarPanelEmpresa").show();
                         }
-                        else {
+                        else {                            
                             $("#buscarRfc").show();
                             $("#cargandoEmpresa").hide();
+                            $("#regresarPanelEmpresa").hide();
+                            $('#avisoPrivacidad').modal('show');                            
                         }                            
                         break;
                     case "notgp":
@@ -155,7 +163,7 @@
                 $("#infemp1").hide();
                 $("#infemp2").show();
                 $("#globalInfoemp").css('background-color', 'yellow');
-            }
+            }            
         };
 
         this.GlobalDatosContacto = () => {
@@ -187,6 +195,7 @@
         };
 
         this.BuscarEmpresa = () => {
+            $('#buscandoEmpresa').modal('show');
             btuContext.BuscarEmpresa(self.RfcBuscarEmpresa, function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
@@ -228,19 +237,24 @@
                     default:
                         break;
                 }
+                $('#buscandoEmpresa').modal('toggle');
                 $scope.$apply();
             });
         };
 
-        this.RegistrarDatosEmpresa = () => {
+        this.RegistrarDatosEmpresa = () => {            
             if (self.Contrasena2 === self.Contrasena) {
+                $('#buscandoEmpresa').modal('show');
                 btuContext.RegistrarDatosEmpresa(self.RazonSocial, self.NombreComercial, self.Actividad, self.CodigoPost, self.Estado, self.Municipio, self.Colonia, self.Domicilio, self.Usuario,
                     self.PersonaContacto, self.Cargo, self.TelOficina, self.Celular, self.Email, self.MedioContacto, self.Contrasena, self.TipoPersona, function (resp) {
                         switch (resp.ressult) {
                             case "tgp":
-                                alert("Los datos se han guardado correctamente.");
+                                $('#buscandoEmpresa').modal('toggle');
+                                alert("Empresa registrada. \n Su empresa ha sido registrada satisfactoriamente, se le notificará a través del correo electrónico una vez que el personal de Bolsa de Trabajo le haya dado de alta en el sistema, o bien inicie sesión con su usuario y contraseña para saber su estatus. \n Teléfono: 61 13859 Ext 22 y 61 13478. Correo: btu@unach.mx");
+                                setTimeout(window.location.assign(urlServer + "Btu/Btu"), 4500);
                                 break;
                             case "notgp":
+                                $('#buscandoEmpresa').modal('toggle');
                                 alert(resp.message);
                                 break;
                             default:
@@ -319,6 +333,14 @@
             });            
         };
 
+        this.RechazarAviso = () => {
+            window.location.href = "https://btu.unach.mx/Dsia";
+            //window.location.assign(urlServer + "Btu");
+        };
+
+        this.AceptarAviso = () => {
+            alert('Ingrese su RFC para verficar que su empresa aún no haya sido registrada.');
+        };
         //Funciones Vista DatosCandidatos
 
         this.GlobalInfoPersonal = () => {
@@ -421,6 +443,7 @@
             btuContext.DatosRegistroUnach(function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
+                        alert("Si tienes problemas para registrar tus datos intenta cerrar la sesión e ingresar de nuevo.");
                         self.listDatosRegistroUnach = btuContext.listDatosRegistroUnach;
                         self.DescCarrera = self.listDatosRegistroUnach[0].Carrera;
                         self.Matricula = self.listDatosRegistroUnach[0].Matricula;
@@ -485,15 +508,7 @@
                 sexo = isSexM === true ? "M" : "F"; // sentencia que devuelve un valor
             }
             if (genero === true) {
-
-                let d1 = new Date(self.FecNac);
-                let month = (d1.getMonth() + 1);
-                let nuevomes = month >= 10 ? month : '0' + month;
-                let day = d1.getDate();
-                let year = d1.getFullYear();
-                let date1 = day + '/' + nuevomes + '/' + year;
-
-                btuContext.GuardarInformacionCandidato(self.Matricula, self.NombreCandidato, self.ApePatCandidato, self.ApeMatCandidato, date1, self.Estado,
+                btuContext.GuardarInformacionCandidato(self.Matricula, self.NombreCandidato, self.ApePatCandidato, self.ApeMatCandidato, self.FecNac, self.Estado,
                     self.Municipio, self.Domicilio, self.TelCel, self.TelAd, self.Email, self.AreaInt, self.ObjPersonal, sexo, function (resp) {
                         switch (resp.ressult) {
                             case "tgp":
@@ -683,7 +698,7 @@
                         switch (resp.ressult) {
                             case "tgp":
                                 alert("Datos guardarados correctamente, revisa tu correo para más información.");
-                                window.location.assign(urlServer + "Btu/PanelCandidato");
+                                window.location.assign(urlServer + "Btu/Btu");
                                 break;
                             case "notgp":
                                 alert(resp.message);
@@ -845,7 +860,7 @@
                 })
                 .fail(function (jqXHR, textStatus, errorThrown) {
                     if (console && console.log) {
-                        alert("Algo ha fallado: " + textStatus);
+                        alert("Algo ha fallado al cargar la imagen de perfil: " + textStatus);
                     }
                 });
         };
@@ -874,7 +889,8 @@
                             let nombreFoto = $("#Matricula").val();
                             let formatoFoto = nombreArchivo.slice((nombreArchivo.lastIndexOf(".") - 1 >>> 0) + 2);
                             alert("Archivos subidos correctamente.");
-                            var rutaImg = "../Imagenes/ImgProfileCv/" + nombreFoto + "." + formatoFoto;
+                            //var rutaImg = "../Imagenes/ImgProfileCv/" + nombreFoto + "." + formatoFoto; ruta local para cargar imagenes
+                            var rutaImg = "../ImgProfileCv/" + nombreFoto + "." + formatoFoto; // ruta del servidor para cargar imagenes
                             $("#imgCadidato").attr("src", rutaImg);
                             //$("#btnVerDoc").show();
                             //$("#btnUploadDoc").hide();                            
@@ -1188,6 +1204,7 @@
                 $scope.$apply();
             });
         };
+
         var ComboEdoCivil = () => {
             btuContext.ComboEdoCivil(function (resp) {
                 switch (resp.ressult) {
@@ -1203,6 +1220,7 @@
                 $scope.$apply();
             });
         };
+
         var ComboTipoSalario = () => {
             btuContext.ComboTipoSalario(function (resp) {
                 switch (resp.ressult) {
@@ -1218,6 +1236,7 @@
                 $scope.$apply();
             });
         };
+
         var ComboIdiomaExtra = () => {
             btuContext.ComboIdiomaExtra(function (resp) {
                 switch (resp.ressult) {
@@ -1233,6 +1252,7 @@
                 $scope.$apply();
             });
         };
+
         var ComboTipoVacante = () => {
             btuContext.ComboTipoVacante(function (resp) {
                 switch (resp.ressult) {
@@ -1312,7 +1332,7 @@
             btuContext.CerrarSesion(function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
-                        window.location.assign(urlServer + "Btu/Btu");
+                        window.location.assign(urlServer);
                         break;
                     case "notgp":
                         alert(resp.message);
@@ -1324,11 +1344,29 @@
             });
         }
 
+        this.DatosGeneralesSistema = () => {
+            btuContext.ObtenerTotalVacantes(function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listTotalVac = btuContext.listTotalVac;
+                        self.Total = self.listTotalVac[0].Total_Vacantes;
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
         //Funciones para la vista Panel Candidato
 
         this.DatosPanelCandidato = () => {
             CargarDatosPanelCV();
-            ObtenerTotalVacantes();            
+            ObtenerTotalVacantes();
+            ObtenerDatosSesion();
             $('#totalVac').show();
             $('#statusCand').show();
         };
@@ -1344,6 +1382,9 @@
                         idCandidato = self.listDatosPanel[0].Id;
                         eMailCandidato = self.listDatosPanel[0].Email;
                         nombreCandidato = self.listDatosPanel[0].NombreCandidato;
+                        administrador = self.listDatosPanel[0].Administrador;
+                        if (self.listDatosPanel[0].Administrador === true)
+                            $('#btnPanelAdmin').show();
                         break;
                     case "notgp":
                         alert(resp.message);
@@ -1377,7 +1418,8 @@
                 switch (resp.ressult) {
                     case "tgp":
                         self.listTotalVac = btuContext.listTotalVac;
-                        self.TotalVac = self.listTotalVac[0].Total_Vacantes;                        
+                        self.TotalVac = self.listTotalVac[0].Total_Vacantes;
+                        
                         break;
                     case "notgp":
                         alert(resp.message);
@@ -1385,7 +1427,7 @@
                     default:
                         break;
                 }
-                $scope.$apply();
+                $scope.$apply();                
             });
         };
 
@@ -1394,7 +1436,10 @@
                 switch (resp.ressult) {
                     case "tgp":
                         self.listStatusCand = btuContext.listStatusCand;
-                        self.StatusCand = self.listStatusCand[0].Status;                        
+                        self.StatusCand = self.listStatusCand[0].Status;     
+                        statusCandidato = self.StatusCand;
+                        if (statusCandidato !== 'Activo')
+                            $('#totalVac').hide();
                         break;
                     case "notgp":
                         alert(resp.message);
@@ -1531,7 +1576,7 @@
         };
 
         this.AplicarVacante = (Id_Candidato, nombreVacante) => {
-            let esInvitado = statusVacanteCand === 'S' ? "1" : "0";
+            let esInvitado = statusVacanteCand === 'INVITADO' ? "1" : "0";
             btuContext.AplicarVacante(idVacanteSeleccionada, Id_Candidato, esInvitado, eMailEmpresa, eMailCandidato, nombreCandidato, nombreVacante, idVacCand, function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
@@ -1559,6 +1604,7 @@
                 switch (resp.ressult) {
                     case "tgp":
                         self.listDatosPanelEmpresa = btuContext.listDatosPanelEmpresa;
+                        administrador = self.listDatosPanelEmpresa[0].Administrador;
                         if (self.listDatosPanelEmpresa[0].Status === 'A') {
                             $('#infemp1').show();
                             $("#globalStatusEmpresa").css('background-color', 'green');
@@ -1577,6 +1623,8 @@
                             $('#nuevaVacante').prop('disabled', true);
                         }
                         $('#statusDesc').show();
+                        if (self.listDatosPanelEmpresa[0].Administrador === true)
+                            $('#btnPanelAdmin').show();
                         self.IdEmpresa = self.listDatosPanelEmpresa[0].Id_Empresa;
                         break;
                     case "notgp":
@@ -1585,7 +1633,8 @@
                     default:
                         break;
                 }
-                $scope.$apply();                
+                $scope.$apply();
+                ObtenerDatosSesion();
             });
         };        
 
@@ -2141,14 +2190,24 @@
         // Funciones para la vista Panel Administrador
 
         this.CargarDatosPrincipalesPanelAdmin = () => {            
-            ObtenerTotalEmpresas();            
+            ObtenerTotalEmpresas();
+        };
+
+        this.RegresarPanelAdministrador = () => {
+            if (administrador === true)
+                window.location.assign(urlServer + "Btu/PanelAdministrador");
         };
 
         var ObtenerTotalEmpresas = () => {
             btuContext.ObtenerTotalEmpresas(function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
-                        self.listEmpresas_Status = btuContext.listEmpresas_Status;                        
+                        let TotalEmpresas = 0;
+                        self.listEmpresas_Status = btuContext.listEmpresas_Status;
+                        for (let i = 0; i < self.listEmpresas_Status.length; i++){
+                            TotalEmpresas = TotalEmpresas + parseInt(self.listEmpresas_Status[i].Total);                           
+                        }
+                        self.TotalEmpresas = TotalEmpresas;
                         break;
                     case "notgp":
                         alert(resp.message);
@@ -2165,7 +2224,12 @@
             btuContext.ObtenerTotalCandidatos(function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
-                        self.listCandidatos_Status = btuContext.listCandidatos_Status;                        
+                        let TotalCandidatos = 0;
+                        self.listCandidatos_Status = btuContext.listCandidatos_Status;
+                        for (let i = 0; i < self.listCandidatos_Status.length; i++) {
+                            TotalCandidatos = TotalCandidatos + parseInt(self.listCandidatos_Status[i].Total);
+                        }
+                        self.TotalCandReg = TotalCandidatos;
                         break;
                     case "notgp":
                         alert(resp.message);                        
@@ -2173,7 +2237,25 @@
                     default:
                         break;
                 }
-                $scope.$apply();                
+                $scope.$apply();      
+                ObtenerDatosSesion();
+            });
+        };
+
+        var ObtenerDatosSesion = () => {
+            btuContext.ObtenerDatosSesion(function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listDatosSesion = btuContext.listDatosSesion;
+                        self.lycorreo = self.listDatosSesion[0].Email;
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
             });
         };
 
@@ -2250,7 +2332,7 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<p data-toggle="tooltip"  title="Ver Vacantes de la Empresas" class"  ><i class="fas fa-eye" data-toggle="modal" data-target="#modalVacantesEmpresa" ng-click="ObtenerGridVacantesPanelAdmin(&quot;' + row.Id + '&quot;)"></i></p>';
+                                            return '<p data-toggle="tooltip"  title="Ver Vacantes de la Empresas" class"  ><i class="fas fa-eye" style=color:'+row.TieneVacantes+' data-toggle="modal" data-target="#modalVacantesEmpresa" ng-click="ObtenerGridVacantesPanelAdmin(&quot;' + row.Id + '&quot;)"></i></p>';
                                         }
 
                                     },
@@ -2258,7 +2340,7 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<i data-toggle="tooltip"  title="Eliminar Vacante" class="fas fa-trash" ng-click="EliminarEmpresa(&quot;' + row.Id + '&quot;)"></i>';
+                                            return '<i data-toggle="tooltip"  title="Eliminar Empresa" class="fas fa-trash" ng-click="EliminarEmpresa(&quot;' + row.Id + '&quot;)"></i>';
                                         }
 
                                     },
@@ -2362,7 +2444,7 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<p data-toggle="tooltip"  title="Ver Vacantes de la Empresas" class"  ><i class="fas fa-eye" data-toggle="modal" data-target="#modalVacantesEmpresa" ng-click="ObtenerGridVacantesPanelAdmin(&quot;' + row.Id + '&quot;)"></i></p>';
+                                            return '<p data-toggle="tooltip"  title="Ver Vacantes de la Empresas" class"  ><i class="fas fa-eye" style=color:' + row.TieneVacantes +' data-toggle="modal" data-target="#modalVacantesEmpresa" ng-click="ObtenerGridVacantesPanelAdmin(&quot;' + row.Id + '&quot;)"></i></p>';
                                         }
 
                                     },
@@ -2702,6 +2784,7 @@
         };
 
         $scope.ObtenerGridVacantesPanelAdmin = (Id) => {
+            $("#tablaVacantesEmpresa").focus();
             btuContext.ObtenerGridVacantesPanelAdmin(Id, function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
@@ -2794,11 +2877,13 @@
                 $("#infPerfVac1").show();
                 $("#infPerfVac2").hide();
                 $("#globalPerfilVac").css('background-color', 'green');
+                datosPerfilVacante = true;
             }
             else {
                 $("#infPerfVac1").hide();
                 $("#infPerfVac2").show();
                 $("#globalPerfilVac").css('background-color', 'yellow');
+                datosPerfilVacante = false;
             }
         };
 
@@ -2807,12 +2892,14 @@
                 self.PersonaEntrevista !== undefined && self.DiaHorarioEntre !== undefined && self.DircEntre !== undefined && self.TelOfc !== undefined && self.Email !== undefined) {
                 $("#infoEntre1").show();
                 $("#infoEntre2").hide();
-                $("#globalInfoEntre").css('background-color', 'green');
+                $("#globalInfoEntre").css('background-color', 'green');                
+                datosInfoEntrevista = true;
             }
             else {
                 $("#infoEntre1").hide();
                 $("#infoEntre2").show();
                 $("#globalInfoEntre").css('background-color', 'yellow');
+                datosInfoEntrevista = false;
             }
         };
 
@@ -2897,48 +2984,53 @@
         };
 
         this.GuardarVacante = () => {
-            let sViaja = $("#rSiViaja").is(':checked');
-            let nViaja = $("#rNoViaja").is(':checked');
-            let sRadica = $("#rSiRadica").is(':checked');
-            let nRadica = $("#rNoRadica").is(':checked');
-            let sLicencia = $("#rSiLicencia").is(':checked');
-            let nLicencia = $("#rNoLicencia").is(':checked');
+            if (datosPerfilVacante === true && datosInfoEntrevista === true) {
+                let sViaja = $("#rSiViaja").is(':checked');
+                let nViaja = $("#rNoViaja").is(':checked');
+                let sRadica = $("#rSiRadica").is(':checked');
+                let nRadica = $("#rNoRadica").is(':checked');
+                let sLicencia = $("#rSiLicencia").is(':checked');
+                let nLicencia = $("#rNoLicencia").is(':checked');
 
-            let viaja = false;
-            let tipoViaja = "";
-            let radica = false;
-            let tipoRadica = "";
-            let licencia = false;
-            let tipoLicencia = "";
+                let viaja = false;
+                let tipoViaja = "";
+                let radica = false;
+                let tipoRadica = "";
+                let licencia = false;
+                let tipoLicencia = "";
 
-            if (sViaja === true || nViaja === true) {
-                viaja == true;
-                tipoViaja = sViaja === true ? "S" : "N"; // sentencia que devuelve un valor
-            }
-            if (sRadica === true || nRadica === true) {
-                viaja == true;
-                tipoRadica = sRadica === true ? "S" : "N"; // sentencia que devuelve un valor
-            }
-            if (sLicencia === true || nLicencia === true) {
-                viaja == true;
-                tipoLicencia = sLicencia === true ? "S" : "N"; // sentencia que devuelve un valor
-            }                       
-            btuContext.GuardarVacante(self.NombreVacante, self.NumeroVacantes, self.EdadMin, self.EdadMax, self.Genero, self.EdoCivil, self.GradoEstu, self.Expe, self.ActReal, self.ConoReq, self.HorioDiaLab,
-                self.TipoSuedo, self.Salario, self.PrestacionesLab, self.UbicVacante, self.IdiomaExtra, self.VigIniVac, self.VigFinVac, self.TipoVacante, self.PersonaEntrevista, self.DiaHorarioEntre,
-                self.DircEntre, self.TelOfc, self.Email, self.Comentarios, tipoViaja, tipoRadica, tipoLicencia, function (resp) {
-                switch (resp.ressult) {
-                    case "tgp":
-                        alert("Vacante agregada correctamente.");
-                        window.location.assign(urlServer + "Btu/PanelEmpresa");
-                        break;
-                    case "notgp":
-                        alert(resp.message);
-                        break;
-                    default:
-                        break;
+                if (sViaja === true || nViaja === true) {
+                    viaja == true;
+                    tipoViaja = sViaja === true ? "S" : "N"; // sentencia que devuelve un valor
                 }
-                $scope.$apply();
-            });
+                if (sRadica === true || nRadica === true) {
+                    viaja == true;
+                    tipoRadica = sRadica === true ? "S" : "N"; // sentencia que devuelve un valor
+                }
+                if (sLicencia === true || nLicencia === true) {
+                    viaja == true;
+                    tipoLicencia = sLicencia === true ? "S" : "N"; // sentencia que devuelve un valor
+                }
+                btuContext.GuardarVacante(self.NombreVacante, self.NumeroVacantes, self.EdadMin, self.EdadMax, self.Genero, self.EdoCivil, self.GradoEstu, self.Expe, self.ActReal, self.ConoReq, self.HorioDiaLab,
+                    self.TipoSuedo, self.Salario, self.PrestacionesLab, self.UbicVacante, self.IdiomaExtra, self.VigIniVac, self.VigFinVac, self.TipoVacante, self.PersonaEntrevista, self.DiaHorarioEntre,
+                    self.DircEntre, self.TelOfc, self.Email, self.Comentarios, tipoViaja, tipoRadica, tipoLicencia, function (resp) {
+                        switch (resp.ressult) {
+                            case "tgp":
+                                alert("Vacante agregada correctamente.");
+                                window.location.assign(urlServer + "Btu/PanelEmpresa");
+                                break;
+                            case "notgp":
+                                alert(resp.message);
+                                break;
+                            default:
+                                break;
+                        }
+                        $scope.$apply();
+                    });
+            }
+            else {
+                alert('No se han completado todos los campos requeridos');
+            }
         }
 
         this.EditarVacante = () => {
