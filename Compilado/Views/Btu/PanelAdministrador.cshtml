@@ -30,7 +30,8 @@
                         <h5 class="card-title">Empresas.</h5>
                         <p class="card-text">En esta sección podrás las empresas registradas, para poder verlas da click en el botón "Ver Empresas Registradas".</p>
                         <p class="card-text"><small class="text-muted">Número de empresas registradas: {{ctrl.TotalEmpresas}}.</small></p>
-                        <input type="button" class="btn btn-success" value="Ver Empresas Registradas" ng-click="ctrl.ObtenerGridEmpresasRegistradas()" />
+                        <input type="button" class="btn btn-success" value="Ver empresas..." data-toggle="tooltip" title="Ver empresas registradas" ng-click="ctrl.ObtenerGridEmpresasRegistradas()" />
+                        <input type="button" class="btn btn-success col-md-3" value="Ver vacantes..." data-toggle="tooltip" title="Ver vacantes vencidas" ng-click="ctrl.ObtenerGridVacantesVencidas()" />
                     </div>
                 </div>
             </div>
@@ -41,7 +42,9 @@
                         <h5 class="card-title">Candidatos.</h5>
                         <p class="card-text">En esta sección podrás los candidatos registrados, para poder verlos da click en el botón "Ver Candidatos Registrados".</p>
                         <p class="card-text"><small class="text-muted">Total de candidatos registrados {{ctrl.TotalCandReg}}.</small></p>
-                        <input type="button" class="btn btn-success" value="Ver Candidatos Registrados" ng-click="ctrl.ObtenerGridCandidatosRegistrados()" />
+                        <input type="button" class="btn btn-success" value="Ver candidatos ..." data-toggle="tooltip" title="Ver candidatos registrados" ng-click="ctrl.ObtenerGridCandidatosRegistrados()" />
+                        <input type="button" class="btn btn-success col-md-3" value="Candidatos..." data-toggle="tooltip" title="Candidatos que han aplicado" ng-click="ctrl.ObtenerGridCandidatosAplicado()" />                        
+                        <input type="button" class="btn btn-success col-md-3" value="Correos..." data-toggle="tooltip" title="Informar a los candidatos sobre las vacantes" ng-click="ctrl.GridCorreosCandidatos()" />
                     </div>
                 </div>
             </div>
@@ -84,15 +87,15 @@
                     </thead>
                     <tbody @*ng-repeat="x in ctrl.ListaCandidatosDisponibles"*@>
                         @*<tr>
-                            <td>{{x.Nombre}}</td>
-                            <td>{{x.Celular}}</td>
-                            <td>{{x.Correo}}</td>
-                            <td>{{x.Genero}}</td>
-                            <td>{{x.Edad}}</td>
-                            <td></td>
-                            <td><i ng-click="ctrl.GenerarCurriculum(x.Id)" class="fas fa-file-alt"></i></td>
-                            <td><span data-toggle="modal" data-target="#modalStatusVacante"><i data-toggle="tooltip" data-placement="top" title="Cambiar estatus candidato" class="fas fa-pencil-alt" ng-click="ctrl.GuardarIdCandidato(x.Id, x.Vacante, x.IdCv)"></i></span></td>
-                        </tr>*@
+                        <td>{{x.Nombre}}</td>
+                        <td>{{x.Celular}}</td>
+                        <td>{{x.Correo}}</td>
+                        <td>{{x.Genero}}</td>
+                        <td>{{x.Edad}}</td>
+                        <td></td>
+                        <td><i ng-click="ctrl.GenerarCurriculum(x.Id)" class="fas fa-file-alt"></i></td>
+                        <td><span data-toggle="modal" data-target="#modalStatusVacante"><i data-toggle="tooltip" data-placement="top" title="Cambiar estatus candidato" class="fas fa-pencil-alt" ng-click="ctrl.GuardarIdCandidato(x.Id, x.Vacante, x.IdCv)"></i></span></td>
+                    </tr>*@
                     </tbody>
                 </table>
                 <table class="dataTable table table-striped" id="tablaCandidatos" style="display:none;width:100%">
@@ -100,6 +103,7 @@
                         <tr>
                             <th></th>
                             <th scope="col">Matricula</th>
+                            <th scope="col">Carrera</th>
                             <th scope="col">Nombre</th>
                             <th scope="col">Celular</th>
                             <th scope="col">Estatus</th>
@@ -111,21 +115,19 @@
                     </thead>
                     <tbody @*ng-repeat="x in ctrl.ListaCandidatosDisponibles"*@>
                         @*<tr>
-                            <td>{{x.Nombre}}</td>
-                            <td>{{x.Celular}}</td>
-                            <td>{{x.Correo}}</td>
-                            <td>{{x.Genero}}</td>
-                            <td>{{x.Edad}}</td>
-                            <td></td>
-                            <td><i ng-click="ctrl.GenerarCurriculum(x.Id)" class="fas fa-file-alt"></i></td>
-                            <td><span data-toggle="modal" data-target="#modalStatusVacante"><i data-toggle="tooltip" data-placement="top" title="Cambiar estatus candidato" class="fas fa-pencil-alt" ng-click="ctrl.GuardarIdCandidato(x.Id, x.Vacante, x.IdCv)"></i></span></td>
-                        </tr>*@
+                        <td>{{x.Nombre}}</td>
+                        <td>{{x.Celular}}</td>
+                        <td>{{x.Correo}}</td>
+                        <td>{{x.Genero}}</td>
+                        <td>{{x.Edad}}</td>
+                        <td></td>
+                        <td><i ng-click="ctrl.GenerarCurriculum(x.Id)" class="fas fa-file-alt"></i></td>
+                        <td><span data-toggle="modal" data-target="#modalStatusVacante"><i data-toggle="tooltip" data-placement="top" title="Cambiar estatus candidato" class="fas fa-pencil-alt" ng-click="ctrl.GuardarIdCandidato(x.Id, x.Vacante, x.IdCv)"></i></span></td>
+                    </tr>*@
                     </tbody>
                 </table>
 
             </div>
-
-
 
             <div id="modalIntVac" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
@@ -242,7 +244,8 @@
                                         <th scope="col"># Vacantes</th>
                                         <th scope="col">Inicio</th>
                                         <th scope="col">Fin</th>
-                                        <th scope="col"></th>
+                                        <th scope="col">Carrera</th>
+                                        <th scope="col">Reporte Vacante</th>
                                     </tr>
                                 </thead>
                                 <tbody ng-repeat="x in ctrl.listVacantesEmpresa">
@@ -251,7 +254,8 @@
                                         <td>{{x.Total}}</td>
                                         <td>{{x.Vigencia_Inicio}}</td>
                                         <td>{{x.Vigencia_Fin}}</td>
-                                        <td>{{x.Id}}</td>
+                                        <td>{{x.Grado}}</td>
+                                        <td><i class="fas fa-eye" id="{{x.Id}}"></i></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -314,13 +318,127 @@
                 </div>
             </div>
 
+            <div class="modal fade" id="tablaCandidatosApl" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Vacantes Empresa</h5>
+                        </div>
+                        <div class="modal-body">
+                            <div id="" class="col-md-9" style="overflow-x:scroll;">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">Vacantes</span>
+                                    </div>
+                                    <select ng-model="ctrl.Vacante" name="Vacante" id="Vacante" class="custom-select" ng-change="ctrl.ObtenerGridInteresadosAdmin()" ng-options="list.Id as list.Descripcion for list in ctrl.listVacantesAdministrador" style="max-width:75%" required></select>
+                                </div>
+                                <table class="table table-striped" id="">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Nombre</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">E-mail</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody ng-repeat="x in ctrl.listVacantesEmpresa">
+                                        <tr>
+                                            <td>{{x.Nombre}}</td>
+                                            <td>{{x.Status}}</td>
+                                            <td>{{x.Correo}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
 
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <div class="modal fade" id="tablaVacantesVencidas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Vacantes vencidas</h5>
+                        </div>
+                        <div class="modal-body">
+                            <div id="" class="col-md-12">
+                                <table class="table table-striped" id="">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Nombre</th>
+                                            <th scope="col">Empresa</th>
+                                            <th scope="col">Fecha fin</th>
+                                            <th scope="col">Informar sobre la vacante</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody ng-repeat="x in ctrl.listVacantesVencidas">
+                                        <tr>
+                                            <td>{{x.Nombre}}</td>
+                                            <td>{{x.Empresa}}</td>
+                                            <td>{{x.Vigencia_Fin}}</td>
+                                            <td><i class="fas fa-envelope" ng-click="ctrl.EnviarCorreoVacanteVencida(x.Correo, x.Nombre)"></i></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="tablaCorreosCandidatos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Correos candidatos</h5>
+                        </div>
+                        <div class="modal-body">
+                            <div id="" class="col-md-12">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">Vacantes</span>
+                                    </div>
+                                    <select ng-model="ctrl.Vacante" name="Vacante" id="Vacante" class="custom-select" ng-change="ctrl.ObtenerGridCorreosCandidatos()" ng-options="list.Id as list.Descripcion for list in ctrl.listVacantesAdministrador" style="max-width:75%" required></select>
+                                </div>
+                                <table class="table table-striped" id="">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Nombre</th>
+                                            <th scope="col">Carrera</th>
+                                            <th scope="col">Correo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody >
+                                        <tr ng-pagination="x in ctrl.listCorreosCandidatos | filter:ctrl.buscar | itemsPerPage: 10">
+                                            <td>{{x.Nombre}}</td>
+                                            <td>{{x.Carrera}}</td>
+                                            <td><i class="fas fa-envelope" ng-click="ctrl.EnviarCorreoNotificacion(x.Correo)"></i></td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="4"><ng-pagination-control boundary-links="true"></ng-pagination-control></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
         </div>
     </div>
-
-    
-
-

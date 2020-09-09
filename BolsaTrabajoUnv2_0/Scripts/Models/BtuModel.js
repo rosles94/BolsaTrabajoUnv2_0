@@ -45,7 +45,10 @@ var btuContext =
     listEmpresasRegistradas: [],
     listaCandidatosRegistrados: [],
     listStatusVacanCand: [],
-    listDatosSesion : [],
+    listDatosSesion: [],
+    listVacantesAdministrador: [],
+    listVacantesVencidas: [],
+    listCorreosCandidatos: [],
 
     BuscarEmpresa: function (Rfc, callBackResult) {
         let self = this;
@@ -1862,7 +1865,8 @@ var btuContext =
                         self.listaCandidatosRegistrados.push({
                             Matricula: resp.Resultado[i].Matricula, Nombre: resp.Resultado[i].Nombre, Domicilio: resp.Resultado[i].Domicilio, Fecha_Nacimiento: resp.Resultado[i].Fecha_Nacimiento,
                             Telefono: resp.Resultado[i].Telefono, Celular: resp.Resultado[i].Celular, Correo: resp.Resultado[i].Correo, Contrasena: resp.Resultado[i].Contrasena,
-                            Status: resp.Resultado[i].Status, Fecha_Creacion: resp.Resultado[i].Fecha_Creacion, Id: resp.Resultado[i].Id, Ruta_Foto: resp.Resultado[i].Ruta_Foto
+                            Status: resp.Resultado[i].Status, Fecha_Creacion: resp.Resultado[i].Fecha_Creacion, Id: resp.Resultado[i].Id, Ruta_Foto: resp.Resultado[i].Ruta_Foto,
+                            Carrera: resp.Resultado[i].Carrera
                         });
                     }
                     callBackResult({ ressult: 'tgp', message: resp.MensajeError });
@@ -1960,7 +1964,7 @@ var btuContext =
                             Salario: resp.Resultado[i].Salario, Vigencia_Inicio: resp.Resultado[i].Vigencia_Inicio,
                             Vigencia_Fin: resp.Resultado[i].Vigencia_Fin, Direccion_Entrevista: resp.Resultado[i].Direccion_Entrevista,
                             Telefono: resp.Resultado[i].Telefono, Correo: resp.Resultado[i].Correo,
-                            Area_Conocimientos: resp.Resultado[i].Area_Conocimientos, Id: resp.Resultado[i].Id,
+                            Grado: resp.Resultado[i].Grado, Id: resp.Resultado[i].Id,
                             Actividades: resp.Resultado[i].Actividades
                         });
                     }
@@ -2055,5 +2059,97 @@ var btuContext =
                 callBackResult({ ressult: 'notgp', message: resp.MensajeError });
             }
         });
+    },
+    ComboVacantesAdministrador: function (callBackResult) {
+        let self = this;
+        self.listVacantesAdministrador.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/ComboVacantesAdministrador",
+            data: {  },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listVacantesAdministrador.push({
+                            Id: resp.Resultado[i].Id, Descripcion: resp.Resultado[i].Descripcion
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+    ObtenerGridVacantesVencidas: function (callBackResult) {
+        let self = this;
+        self.listVacantesVencidas.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/ObtenerGridVacantesVencidas",
+            data: {},
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listVacantesVencidas.push({
+                            Id: resp.Resultado[i].Id, Nombre: resp.Resultado[i].Nombre, Empresa: resp.Resultado[i].Empresa, Vigencia_Fin: resp.Resultado[i].Vigencia_Fin,
+                            Correo: resp.Resultado[i].Correo
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+    EnviarCorreoVacanteVencida: function (Correo, Vacante, callBackResult) {        
+        $.ajax({            
+            type: "POST",
+            url: urlServer + "Btu/EnviarCorreoVacanteVencida",
+            data: { Correo, Vacante },
+            success: function (resp) {
+                if (resp.Error === false) {                    
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
+    },
+    ObtenerGridCorreosCandidatos: function (callBackResult) {
+        let self = this;
+        self.listCorreosCandidatos.length = 0;
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/ObtenerGridCorreosCandidatos",
+            data: { },
+            success: function (resp) {
+                if (resp.Error === false) {
+                    for (var i = 0; i < resp.Resultado.length; i++) {
+                        self.listCorreosCandidatos.push({
+                            Nombre: resp.Resultado[i].Nombre, Correo: resp.Resultado[i].Correo,
+                            Carrera: resp.Resultado[i].Carrera
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                }
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            }
+        });
     }
+
 };

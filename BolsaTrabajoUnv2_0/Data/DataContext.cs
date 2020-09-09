@@ -374,7 +374,7 @@ namespace BolsaTrabajoUnv2_0.Data
                     objVacante.Direccion_Entrevista = Convert.ToString(dr[7]);
                     objVacante.Telefono = Convert.ToString(dr[8]);
                     objVacante.Correo = Convert.ToString(dr[9]);
-                    objVacante.Area_Conocimientos = Convert.ToString(dr[10]);
+                    objVacante.Grado = Convert.ToString(dr[10]);
                     objVacante.Id = Convert.ToString(dr[11]);
                     objVacante.Actividades = Convert.ToString(dr[12]);
                     objVacante.Flayer_Empresa = Convert.ToString(dr[13]);
@@ -940,6 +940,7 @@ namespace BolsaTrabajoUnv2_0.Data
                     objCandidato.Fecha_Creacion = Convert.ToString(dr[9]);
                     objCandidato.Id = Convert.ToString(dr[10]);
                     objCandidato.Ruta_Foto = Convert.ToString(dr[11]);
+                    objCandidato.Carrera = Convert.ToString(dr[12]);
                     list.Add(objCandidato);
                 }
                 return list;
@@ -975,6 +976,68 @@ namespace BolsaTrabajoUnv2_0.Data
                     listVacante.Add(objVacantes);
                 }
                 return listVacante;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+        }
+        public static List<Btu_Vacante> ObtenerGridVacantesVencidas()
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { };
+                object[] Valores = { };
+                cmd = exeProc.GenerarOracleCommandCursor_Grid("PKG_VINCULAR.Obt_Grid_Vacantes_Vencidas", ref dr, Parametros, Valores);
+                List<Btu_Vacante> list = new List<Btu_Vacante>();
+                while (dr.Read())
+                {
+                    Btu_Vacante objVacante = new Btu_Vacante();
+                    objVacante.Id = Convert.ToString(dr[0]);
+                    objVacante.Nombre = Convert.ToString(dr[1]);
+                    objVacante.Empresa = Convert.ToString(dr[2]);
+                    objVacante.Vigencia_Fin = Convert.ToString(dr[3]);
+                    objVacante.Correo = Convert.ToString(dr[4]);
+                    list.Add(objVacante);
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+        }
+        public static List<Btu_Curriculum> ObtenerGridCorreosCandidatos()
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { };
+                object[] Valores = { };
+                cmd = exeProc.GenerarOracleCommandCursor_Grid("PKG_VINCULAR.Obt_Grid_Inf_Candidatos", ref dr, Parametros, Valores);
+                List<Btu_Curriculum> list = new List<Btu_Curriculum>();
+                while (dr.Read())
+                {
+                    Btu_Curriculum objCandidato = new Btu_Curriculum();
+                    objCandidato.Correo = Convert.ToString(dr[0]);
+                    objCandidato.Nombre = Convert.ToString(dr[1]);
+                    objCandidato.Carrera = Convert.ToString(dr[2]);                    
+                    list.Add(objCandidato);
+                }
+                return list;
             }
             catch (Exception ex)
             {

@@ -547,7 +547,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Puesto / Actividades que Desempeñaba</span>
                                     </div>
-                                    <textarea id="DescAct" name="DescAct" ng-model="ctrl.DescAct" type="text" ng-change="ctrl.GlobalExpProf()" class="form-control" placeholder="Descripcion de Activades Realizadas" aria-label="DescripcionActividades" aria-describedby="basic-addon1" style="max-width:100%; min-height:30%;  max-height:30%" rows="7" required></textarea>                                    
+                                    <textarea id="DescAct" name="DescAct" ng-model="ctrl.DescAct" type="text" ng-change="ctrl.GlobalExpProf()" class="form-control" placeholder="Descripcion de Activades Realizadas" aria-label="DescripcionActividades" aria-describedby="basic-addon1" style="max-width:100%; min-height:30%;  max-height:30%" rows="7" required maxlength="200"></textarea>                                    
                                 </div>
                                 <span style="color:red" ng-show="myForm3.DescAct.$invalid" />
                                 <span ng-show="myForm3.DescAct.$error.required">*Puesto / Actividades requerido</span>

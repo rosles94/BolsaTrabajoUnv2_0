@@ -130,6 +130,13 @@ namespace BolsaTrabajoUnv2_0.Data
             object[] Valores = { };
             var Lista = ExeProcedimiento.GenerarOracleCommandCursor_Combo("PKG_VINCULAR.Obt_Combo_Tipo_Vac", Parametros, Valores);
             return Lista;
+        } 
+        public static List<Comun> ComboVacantesAdministrador()
+        {
+            string[] Parametros = { };
+            object[] Valores = { };
+            var Lista = ExeProcedimiento.GenerarOracleCommandCursor_Combo("PKG_VINCULAR.Obt_Combo_Vacantes", Parametros, Valores);
+            return Lista;
         }
     }
 }

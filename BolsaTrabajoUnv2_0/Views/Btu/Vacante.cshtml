@@ -83,7 +83,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Número de Vacantes</span>
                                     </div>
-                                    <input ng-model="ctrl.NumeroVacantes" id="NumeroVacantes" ng-change="ctrl.GlobalInfovacante()" name="NumeroVacantes" type="text" class="form-control" placeholder="Número de Vacantes" aria-label="NombrComercial" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.NumeroVacantes" id="NumeroVacantes" ng-change="ctrl.GlobalInfovacante()" name="NumeroVacantes" type="number" class="form-control" placeholder="Número de Vacantes" aria-label="NombrComercial" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.NumeroVacantes.$invalid" />
                                 <span ng-show="myForm.NumeroVacantes.$error.required">*Número de Vacantes requerido</span>
@@ -273,7 +273,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Vigencia Inicio Vacante</span>
                                     </div>
-                                    <input ng-model="ctrl.VigIniVac" ng-change="ctrl.GlobalInfovacante()" id="VigIniVac" name="VigIniVac" type="text" class="form-control" aria-label="VigIniVac" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.VigIniVac" placeholder="DD/MM/YYYY" ng-change="ctrl.GlobalInfovacante()" id="VigIniVac" name="VigIniVac" type="text" class="form-control" aria-label="VigIniVac" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.VigIniVac.$invalid" />
                                 <span ng-show="myForm.VigIniVac.$error.required">*Vigencia de la Vacante requerida</span>
@@ -283,7 +283,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Vigencia Fin Vacante</span>
                                     </div>
-                                    <input ng-model="ctrl.VigFinVac" ng-change="ctrl.GlobalInfovacante()" id="VigFinVac" name="VigFinVac" type="text" class="form-control" aria-label="VigFinVac" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.VigFinVac" placeholder="DD/MM/YYYY" ng-change="ctrl.GlobalInfovacante()" id="VigFinVac" name="VigFinVac" type="text" class="form-control" aria-label="VigFinVac" aria-describedby="basic-addon1" style="max-width:100%" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.VigFinVac.$invalid" />
                                 <span ng-show="myForm.VigFinVac.$error.required">*Vigencia de la Vacante requerida</span>

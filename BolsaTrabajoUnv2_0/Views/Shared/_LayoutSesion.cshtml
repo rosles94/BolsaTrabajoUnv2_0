@@ -15,7 +15,7 @@
 </head>
 <body class="py-0" ng-app="BtuWeb" ng-controller="BtuController as ctrl">
 
-    
+
 
     <nav class="navbar navbar-expand-lg navbar-light " style="background-color:#1f84cc">
         <a class="navbar-brand" href="#"><img src="~/Imagenes/ImagenesSitio/BTU.png" height="70" width="300" alt="" loading="lazy"></a>
@@ -40,7 +40,7 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="background-color:#1f84cc">
                         @*<a class="dropdown-item" href="#">Usuario: {{ctrl.lyusuario}}</a>*@
                         <a class="dropdown-item" href="#">Usuario {{ctrl.lycorreo}} </a>
-                        <a class="dropdown-item alert-danger"  ng-click="ctrl.CerrarSesion()">Cerrar Sesion</a>
+                        <a class="dropdown-item alert-danger" ng-click="ctrl.CerrarSesion()">Cerrar Sesion</a>
                     </div>
                 </li>
             </ul>
@@ -56,6 +56,8 @@
 
     <script src="~/DataTables/datatables.min.js"></script>
     <script src="~/Scripts/angular.min.js"></script>
+    <script src="~/Scripts/angular-pagination.js"></script>
+    <script src="~/Scripts/angular-animate.js"></script>
     <script src="~/Scripts/global.js"></script>
     <script src="~/Scripts/angular.js"></script>
     <script src="~/Scripts/Models/BtuModel.js"></script>

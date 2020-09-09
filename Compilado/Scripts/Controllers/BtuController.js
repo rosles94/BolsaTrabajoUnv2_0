@@ -66,6 +66,10 @@
         let listStatusVacanCand = "";
         let listDatosSesion = "";
         let statusCandidato = "";
+        let listVacantesAdministrador = "";
+        let listInteresadosVacAdmin = "";
+        let listVacantesVencidas = "";
+        let listCorreosCandidatos = "";
 
         let administrador = false;
         let datosPersonales = false;
@@ -224,6 +228,7 @@
                             $("#globalSesion").css('background-color', 'yellow');
                             $("#formularioRegistro").show();
                             $("#usuarioEmpresa").prop("disabled", true);
+                            $("#RfcEmpresa").prop("disabled", true);
                             $("#guardarEmpresa").show();
                             $("#editarEmpresa").hide();
                             alert("La empresa no existe, complete el siguiente formulario para registrarla.");
@@ -727,6 +732,7 @@
                                 break;
                             case "notgp":
                                 alert(resp.message);
+                                window.location.assign(urlServer + "Btu/PanelCandidato");
                                 break;
                             default:
                                 break;
@@ -889,7 +895,8 @@
                             let nombreFoto = $("#Matricula").val();
                             let formatoFoto = nombreArchivo.slice((nombreArchivo.lastIndexOf(".") - 1 >>> 0) + 2);
                             alert("Archivos subidos correctamente.");
-                            var rutaImg = "../Imagenes/ImgProfileCv/" + nombreFoto + "." + formatoFoto;
+                            //var rutaImg = "../Imagenes/ImgProfileCv/" + nombreFoto + "." + formatoFoto; ruta local para cargar imagenes
+                            var rutaImg = "../ImgProfileCv/" + nombreFoto + "." + formatoFoto; // ruta del servidor para cargar imagenes
                             $("#imgCadidato").attr("src", rutaImg);
                             //$("#btnVerDoc").show();
                             //$("#btnUploadDoc").hide();                            
@@ -2267,6 +2274,7 @@
                         if (self.listaCandidatosRegistrados !== undefined) {
                             $('#tablaCandidatos').DataTable().clear().destroy();
                             $('#tablaCandidatos').hide();
+                            $('#tablaCandidatosApl').hide();
                         }
                         self.listEmpresasRegistradas = btuContext.listEmpresasRegistradas;
                         if (self.listEmpresasRegistradas !== undefined && self.listEmpresasRegistradas.length > 0)
@@ -2381,6 +2389,7 @@
                         if (self.listaCandidatosRegistrados !== undefined) {
                             $('#tablaCandidatos').DataTable().clear().destroy();
                             $('#tablaCandidatos').hide();
+                            $('#tablaCandidatosApl').hide();
                         }
                         self.listEmpresasRegistradas = btuContext.listEmpresasRegistradas;
                         if (self.listEmpresasRegistradas !== undefined && self.listEmpresasRegistradas.length > 0) {
@@ -2435,7 +2444,7 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<i data-toggle="tooltip"  title="Ver Panel Empresa" class="fas fa-pencil-alt" ng-click="AlmacenarDatosEmpresa(&quot;' + row.Id + '&quot;,&quot;' + row.Rfc + '&quot;,&quot;' + row.Nombre_Comercial + '&quot;)"></i>';
+                                            return '<i data-toggle="tooltip"  title="Ver Panel Empresa" class="fas fa-pencil-alt" ng-click="AlmacenarDatosEmpresa(&quot;' + row.Id + '&quot;,&quot;' + row.Rfc + '&quot;,&quot;' + row.Razon_Social + '&quot;)"></i>';
                                         }
 
                                     },
@@ -2490,7 +2499,8 @@
                     case "tgp":
                         if (self.listEmpresasRegistradas !== undefined) {
                             $('#tablaEmpresas').DataTable().clear().destroy();
-                            $('#tablaEmpresas').hide();                            
+                            $('#tablaEmpresas').hide();                     
+                            $('#tablaCandidatosApl').hide();
                         }
                         $('#tablaCandidatos').DataTable().clear().destroy();
                         self.listaCandidatosRegistrados = btuContext.listaCandidatosRegistrados;
@@ -2532,6 +2542,7 @@
                                         width: "15px"
                                     },
                                     { data: "Matricula" },
+                                    { data: "Carrera" },
                                     { data: "Nombre" },
                                     { data: "Celular" },
                                     { data: "Status" },
@@ -2596,6 +2607,7 @@
                         if (self.listEmpresasRegistradas !== undefined) {
                             $('#tablaEmpresas').DataTable().clear().destroy();
                             $('#tablaEmpresas').hide();
+                            $('#tablaCandidatosApl').hide();
                         }
                         $('#tablaCandidatos').DataTable().clear().destroy();
                         self.listaCandidatosRegistrados = btuContext.listaCandidatosRegistrados;
@@ -2846,6 +2858,142 @@
             });
         };
 
+        this.ObtenerGridCandidatosAplicado = () => {
+            $('#tablaCandidatosApl').modal('toggle');
+            ComboVacantesAdministrador();
+        }
+
+        var ComboVacantesAdministrador = () => {
+            btuContext.ComboVacantesAdministrador(function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listVacantesAdministrador = btuContext.listVacantesAdministrador;
+                        self.Vacante = self.listVacantesAdministrador[0].Id;
+                        ObtenerGridInteresadosAdmin(self.Vacante)
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
+        var ObtenerGridInteresadosAdmin = (Id) => {            
+            btuContext.ObtenerGridInteresados(Id, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        if (btuContext.listInteresadosVac.length !== 0)
+                            self.listInteresadosVacAdmin = btuContext.listInteresadosVac;
+                        else
+                            alert('Ningun candidato ha aplicado a esta vacante');
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
+        this.ObtenerGridInteresadosAdmin = () => {           
+            btuContext.ObtenerGridInteresados(self.Vacante, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        if (btuContext.listInteresadosVac.length !== 0)
+                            self.listInteresadosVacAdmin = btuContext.listInteresadosVac;
+                        else
+                            alert('Ningun candidato ha aplicado a esta vacante');
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
+        this.ObtenerGridVacantesVencidas = () => {
+            $('#tablaVacantesVencidas').modal('toggle');
+            btuContext.ObtenerGridVacantesVencidas(function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listVacantesVencidas = btuContext.listVacantesVencidas;
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
+        this.EnviarCorreoVacanteVencida = (correo, vacante) => {
+            let resultado = confirm('¿Enviar correo a ' + correo + ' ?');
+            if (resultado === true){
+                btuContext.EnviarCorreoVacanteVencida(correo, vacante, function (resp) {
+                    switch (resp.ressult) {
+                        case "tgp":
+                            alert('Correo enviado');
+                            break;
+                        case "notgp":
+                            alert(resp.message);
+                            break;
+                        default:
+                            break;
+                    }
+                    $scope.$apply();
+                });
+            }
+        };
+
+        this.GridCorreosCandidatos = () => {
+            $('#tablaCorreosCandidatos').modal('toggle');
+            ComboVacantesAdministrador();
+        }
+
+        var ComboVacantesAdministrador = () => {
+            btuContext.ComboVacantesAdministrador(function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listVacantesAdministrador = btuContext.listVacantesAdministrador;
+                        self.Vacante = self.listVacantesAdministrador[0].Id;
+                        ObtenerGridCorreosCandidatos();
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };       
+
+        var ObtenerGridCorreosCandidatos = () => {            
+            btuContext.ObtenerGridCorreosCandidatos(function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.listCorreosCandidatos = btuContext.listCorreosCandidatos;
+                        break;
+                    case "notgp":
+                        alert(resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        }
+
         //Funciones para la vista Vacante
 
         this.GlobalInfovacante = () => {            
@@ -2921,7 +3069,7 @@
                             let radicar = self.listDatosVacante[0].Radicar;
                             let viajar = self.listDatosVacante[0].Viajar;
                             self.NombreVacante = self.listDatosVacante[0].Nombre;
-                            self.NumeroVacantes = self.listDatosVacante[0].Total;
+                            self.NumeroVacantes = parseInt(self.listDatosVacante[0].Total);
                             self.EdadMin = self.listDatosVacante[0].Edad_Minima;
                             self.EdadMax = self.listDatosVacante[0].Edad_Maxima;
                             self.Genero = self.listDatosVacante[0].Genero;
@@ -3118,13 +3266,13 @@
             else if (data.Matricula !== null && data.Matricula !== "" && data.Matricula !== undefined) {
                 return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
                     '<tr>' +
-                    '<th>Fecha de nacimiento</th>' +
+                    '<th>Fecha de nacimiento</th>' +                    
                     '<th>Correo</th>' +
                     '<th>Contraseña</th>' +
-                    '<th>Fecha de creación</th>' +
+                    '<th>Fecha de creación</th>' +                    
                     '</tr>' +
                     '<tr>' +
-                    '<td>' + data.Fecha_Nacimiento + '</td>' +
+                    '<td>' + data.Fecha_Nacimiento + '</td>' +                    
                     '<td>' + data.Correo + '</td>' +
                     '<td>' + data.Contrasena + '</td>' +
                     '<td>' + data.Fecha_Creacion + '</td>' +

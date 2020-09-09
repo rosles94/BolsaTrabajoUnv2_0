@@ -7,6 +7,8 @@ namespace BolsaTrabajoUnv2_0.Models
 {
     public class Btu_Vacante
     {
+        private string _Comentarios = string.Empty;
+
         public string Id { get; set; }
         public string Nombre { get; set; }
         public string Total { get; set; }
@@ -28,7 +30,10 @@ namespace BolsaTrabajoUnv2_0.Models
         public string Direccion_Entrevista { get; set; }
         public string Telefono { get; set; }
         public string Correo { get; set; }
-        public string Comentarios { get; set; }
+        public string Comentarios {
+            get { return _Comentarios.Trim(); }
+            set { _Comentarios = value.Trim(); }
+        }
         public string Responsable_Entrevista { get; set; }
         public string Especificaciones_Entrevista { get; set; }
         public string Id_Empresa { get; set; }
