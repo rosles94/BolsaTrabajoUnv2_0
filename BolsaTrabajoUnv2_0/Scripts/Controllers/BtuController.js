@@ -2355,7 +2355,7 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<i data-toggle="tooltip"  title="Ficha Empresa" class="far fa-file-pdf" ng-click="EliminarVacante(&quot;' + row.Id + '&quot;,&quot;' + row.Correo + '&quot;,&quot;' + row.Nombre + '&quot;)"></i>';
+                                            return '<i data-toggle="tooltip"  title="Ficha Empresa" class="far fa-file-pdf" ng-click="ReporteFichaEmpresa(&quot;' + row.Id + '&quot;)"></i>';
                                         }
 
                                     }
@@ -2468,7 +2468,7 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<i data-toggle="tooltip"  title="Ficha Empresa" class="far fa-file-pdf" ng-click="EliminarVacante(&quot;' + row.Id + '&quot;,&quot;' + row.Correo + '&quot;,&quot;' + row.Nombre + '&quot;)"></i>';
+                                            return '<i data-toggle="tooltip"  title="Ficha Empresa" class="far fa-file-pdf" ng-click="ReporteFichaEmpresa(&quot;' + row.Id + '&quot;)"></i>';
                                         }
 
                                     }
@@ -2566,7 +2566,7 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<i data-toggle="tooltip"  title="Ver Cv" class="far fa-file-pdf" ng-click="GuardarIdVacante(&quot;' + row.Id + '&quot;,&quot;' + row.RutaFoto + '&quot;)"></i>';
+                                            return '<i data-toggle="tooltip"  title="Ver Cv" class="far fa-file-pdf" ng-click="ReporteCurriculumAdmin(&quot;' + row.Id + '&quot;,&quot;' + row.Ruta_Foto + '&quot;,&quot;' + 'I' + '&quot;)"></i>';
                                         }
 
                                     },
@@ -2671,7 +2671,7 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<i data-toggle="tooltip"  title="Ver Cv" class="far fa-file-pdf" ng-click="GuardarIdVacante(&quot;' + row.Id + '&quot;,&quot;' + row.RutaFoto + '&quot;)"></i>';
+                                            return '<i data-toggle="tooltip"  title="Ver Cv" class="far fa-file-pdf" ng-click="ReporteCurriculumAdmin(&quot;' + row.Id + '&quot;,&quot;' + row.Ruta_Foto + '&quot;,&quot;' + 'I' + '&quot;)"></i>';
                                         }
 
                                     },
@@ -3415,6 +3415,112 @@
             $('[data-toggle="tooltip"]').tooltip();
         });
 
+        //Reportes PDF
+
+        $scope.ReporteFichaEmpresa = function (Id, callback) {
+            //abrirModal();
+            var xhr = new XMLHttpRequest();
+            var ruta = urlServer + 'Btu/ReporteFichaEmpresa';
+            xhr.responseType = 'blob';
+            xhr.open("POST", ruta, true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {//Call a function when the state changes.
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    if (typeof window.navigator.msSaveBlob === 'function')
+                        window.navigator.msSaveBlob(req.response, "PdfName-" + new Date().getTime() + ".pdf");
+                    else {
+                        var blob = new Blob([this.response], { type: 'application/pdf' });
+                        var link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        //link.download = "report.pdf";
+                        window.open(link);
+                    }
+                    //cerrarModal();
+                }
+            },
+                xhr.send("IdEmpresa=" + Id);
+        }; // SE EJECUTA EN EL PANEL ADMINISTRADOR
+
+        this.ReporteVacante = function (Id) {
+            //abrirModal();
+            var xhr = new XMLHttpRequest();
+            var ruta = urlServer + 'Btu/ReporteVacante';
+            xhr.responseType = 'blob';
+            xhr.open("POST", ruta, true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {//Call a function when the state changes.
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    if (typeof window.navigator.msSaveBlob === 'function') {
+                        window.navigator.msSaveBlob(req.response, "PdfName-" + new Date().getTime() + ".pdf");
+                        //cerrarModal();
+                    }
+                    else {
+                        //cerrarModal();
+                        var blob = new Blob([this.response], { type: 'application/pdf' });
+                        var link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        //link.download = "report.pdf";
+                        window.open(link);
+                    }
+                }
+            },
+
+                xhr.send("Id=" + Id);
+        }; // SE EJECUTA EN EL PANEL ADMINISTRADOR
+
+        this.ReporteCurriculumEmpresa = function (Id, RutaFoto, DatosContacto, callback) {
+            //abrirModal();
+            var xhr = new XMLHttpRequest();
+            var ruta = urlServer + 'Btu/ReporteCurriculum';
+            let datosContacto = DatosContacto.charAt(0);
+            xhr.responseType = 'blob';
+            xhr.open("POST", ruta, true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {//Call a function when the state changes.
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    if (typeof window.navigator.msSaveBlob === 'function') {
+                        window.navigator.msSaveBlob(req.response, "PdfName-" + new Date().getTime() + ".pdf");
+                        cerrarModal();
+                    }
+                    else {
+                        var blob = new Blob([this.response], { type: 'application/pdf' });
+                        var link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        //link.download = "report.pdf";
+                        window.open(link);
+                        cerrarModal();
+                    }
+                }
+            },
+                xhr.send("Id=" + Id + "&RutaFoto=" + RutaFoto + "&DatosContacto=" + datosContacto);
+        };        
+
+        $scope.ReporteCurriculumAdmin = function (Id, RutaFoto, DatosContacto, callback) {
+            //abrirModal();
+            var xhr = new XMLHttpRequest();
+            var ruta = urlServer + 'Btu/ReporteCurriculum';
+            xhr.responseType = 'blob';
+            xhr.open("POST", ruta, true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {//Call a function when the state changes.
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    if (typeof window.navigator.msSaveBlob === 'function') {
+                        window.navigator.msSaveBlob(req.response, "PdfName-" + new Date().getTime() + ".pdf");
+                        //cerrarModal();
+                    }
+                    else {
+                        //cerrarModal();
+                        var blob = new Blob([this.response], { type: 'application/pdf' });
+                        var link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        //link.download = "report.pdf";
+                        window.open(link);
+                    }
+                }
+            },
+
+                xhr.send("Id=" + Id + "&RutaFoto=" + RutaFoto + "&DatosContacto=" + DatosContacto);
+        };
 
     }]);
 })();

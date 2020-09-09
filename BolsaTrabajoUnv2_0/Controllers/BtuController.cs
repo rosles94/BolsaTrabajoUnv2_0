@@ -14,7 +14,9 @@ using System.DirectoryServices;
 using System.Drawing.Printing;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Messaging;
-
+using System.Net;
+using CrystalDecisions.Shared;
+using CrystalDecisions.CrystalReports.Engine;
 
 namespace BolsaTrabajoUnv2_0.Controllers
 {
@@ -868,30 +870,31 @@ namespace BolsaTrabajoUnv2_0.Controllers
                     {
                         objDatosUnach = (Btu_Curriculum)System.Web.HttpContext.Current.Session["SessionIdCvEditar"];
                         if (objDatosUnach.Registrado == "1")
-                            objResultado.Resultado = DataContext.ObtenerDatosCurriculumAlta(objDatosUnach, ref Verificador);
+                            objResultado.Resultado = DataContext.ObtenerDatosCurriculumAlta(objDatosUnach, ref Verificador);                        
                     }
                     else if (System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] != null)
                     {
                         List<Btu_Sesion> listSesionCandidato = new List<Btu_Sesion>();
                         listSesionCandidato = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
                         objDatosUnach.Matricula = listSesionCandidato[0].Matricula;
-                        objResultado.Resultado = DataContext.DatosRegistroUnach(objDatosUnach, ref Verificador);
+                        objResultado.Resultado = DataContext.DatosRegistroUnach(objDatosUnach, ref Verificador);                        
                     }
-
                     if (Verificador == "0")
                     {
                         objFotoCv.Ruta_Foto = objResultado.Resultado[0].Ruta_Foto;
                         System.Web.HttpContext.Current.Session["SessionFotoCv"] = objFotoCv;
                         objResultado.Error = false;
-                        objResultado.MensajeError = "";
+                        objResultado.MensajeError = "";                        
                     }
                     else
                     {
                         objResultado.Error = true;
-                        objResultado.MensajeError = Verificador;
+                        objResultado.MensajeError = Verificador;                        
                     }
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
                 }
-                return Json(objResultadoCm, JsonRequestBehavior.AllowGet);
+                else
+                    return Json(objResultadoCm, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -3501,6 +3504,138 @@ namespace BolsaTrabajoUnv2_0.Controllers
             string ruta = Server.MapPath("../ ImgProfileCv/");
             return Json(ruta, JsonRequestBehavior.AllowGet);
         }
+
+
+
+        // REPORTES PDF 
+
+        public ActionResult ReporteCurriculum(string Id, string RutaFoto, string DatosContacto) // Variable DatosContacto sirve para ver si se muestran los datos que son el correo y num tele, si la variable es I no se muestra, si la variable es E si se muestra
+        {
+            string fichero = "";
+            string url = RutaFoto;
+            string rutaObtenida = url.Substring(0, 38);
+            if (rutaObtenida == "https://btu.unach.mx/Dsia/ImgProfileCv")
+            {
+                string fileName = System.IO.Path.GetFileName(url);
+                fichero = Server.MapPath("../ImgProfileCv/" + fileName);
+            }
+            else
+            {
+                string fileName = System.IO.Path.GetFileName(url);
+
+                WebClient myWebClient = new WebClient();
+                string destino = Path.Combine(Server.MapPath("../ImgProfileCv/") + fileName);
+
+                myWebClient.DownloadFile(url, destino);
+                fichero = Server.MapPath("../ImgProfileCv/" + fileName);
+            }
+
+
+            string P_Id = Id;
+            //string ruta = Request.MapPath(sr);                
+            ConnectionInfo connectionInfo = new ConnectionInfo();
+            System.Web.UI.Page p = new System.Web.UI.Page();
+
+            ReportDocument rd = new ReportDocument();
+            string Ruta = Path.Combine(Server.MapPath("../Reportes"), "Cv.rpt");
+            rd.Load(Path.Combine(Server.MapPath("../Reportes"), "Cv.rpt"));
+            rd.SetParameterValue(0, P_Id);
+            rd.SetParameterValue(1, fichero);
+            rd.SetParameterValue(2, DatosContacto);
+            rd.PrintOptions.PaperSize = CrystalDecisions.Shared.PaperSize.PaperLetter;
+            connectionInfo.ServerName = "DSIA";
+            connectionInfo.UserID = "vincular";
+            connectionInfo.Password = "persona2019";
+            SetDBLogonForReport(connectionInfo, rd);
+
+            Response.Buffer = false;
+            Response.ClearContent();
+            Response.ClearHeaders();
+
+
+            Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            stream.Seek(0, SeekOrigin.Begin);
+            return File(stream, "application/pdf", "Curriculum.pdf");
+        }
+
+        public ActionResult ReporteVacante(int Id)
+        {
+            int P_ID = Id;
+            //string ruta = Request.MapPath(sr);                
+            ConnectionInfo connectionInfo = new ConnectionInfo();
+            System.Web.UI.Page p = new System.Web.UI.Page();
+
+            ReportDocument rd = new ReportDocument();
+            string Ruta = Path.Combine(Server.MapPath("../Reportes"), "DetalleVacante.rpt");
+            rd.Load(Path.Combine(Server.MapPath("../Reportes"), "DetalleVacante.rpt"));
+            rd.SetParameterValue(0, P_ID);
+            rd.PrintOptions.PaperSize = CrystalDecisions.Shared.PaperSize.PaperLetter;
+            connectionInfo.ServerName = "DSIA";
+            connectionInfo.UserID = "vincular";
+            connectionInfo.Password = "persona2019";
+            SetDBLogonForReport(connectionInfo, rd);
+
+            Response.Buffer = false;
+            Response.ClearContent();
+            Response.ClearHeaders();
+
+
+            Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            stream.Seek(0, SeekOrigin.Begin);
+            return File(stream, "application/pdf", "Reporte_Vacante.pdf");
+        }
+
+        public ActionResult ReporteFichaEmpresa(int IdEmpresa)
+        {
+
+            int P_Id = IdEmpresa;
+            //string ruta = Request.MapPath(sr);                
+            ConnectionInfo connectionInfo = new ConnectionInfo();
+            System.Web.UI.Page p = new System.Web.UI.Page();
+
+            ReportDocument rd = new ReportDocument();
+            string Ruta = Path.Combine(Server.MapPath("../Reportes"), "RegistroEmpresa.rpt");
+            rd.Load(Path.Combine(Server.MapPath("../Reportes"), "RegistroEmpresa.rpt"));
+            rd.SetParameterValue(0, P_Id);
+            rd.PrintOptions.PaperSize = CrystalDecisions.Shared.PaperSize.PaperLetter;
+            connectionInfo.ServerName = "DSIA";
+            connectionInfo.UserID = "vincular";
+            connectionInfo.Password = "persona2019";
+            SetDBLogonForReport(connectionInfo, rd);
+
+            Response.Buffer = false;
+            Response.ClearContent();
+            Response.ClearHeaders();
+
+
+            Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            stream.Seek(0, SeekOrigin.Begin);
+            return File(stream, "application/pdf", "Reporete_FichaEmpresa.pdf");
+        }
+
+        private void SetDBLogonForReport(ConnectionInfo connectionInfo, ReportDocument reportDocument)
+        {
+            try
+            {
+                Tables tables = reportDocument.Database.Tables;
+
+                foreach (CrystalDecisions.CrystalReports.Engine.Table table in tables)
+                {
+                    TableLogOnInfo tableLogonInfo = table.LogOnInfo;
+                    tableLogonInfo.ConnectionInfo = connectionInfo;
+                    table.ApplyLogOnInfo(tableLogonInfo);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+
+
+
 
         // GET: Btu
         public ActionResult Index()

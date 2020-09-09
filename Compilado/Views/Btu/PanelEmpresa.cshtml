@@ -85,7 +85,7 @@
                     <span class="sr-only">Loading...</span>
                 </div>
             </div>
-            <div id="containerEmpresa" class="col-md-8" style="overflow-x:scroll;display:none">
+            <div id="containerEmpresa" class="col-md-8">
                 <table class="dataTable table table-striped" id="tablaVacantesEmpresa" style="display:none">
                     <thead>
                         <tr>
@@ -201,6 +201,8 @@
                                         <th scope="col">Nombre</th>
                                         <th scope="col">Estatus</th>
                                         <th scope="col">Edad</th>
+                                        <th scope="col">Ver cv</th>
+                                        <th scope="col">Cambiar estatus</th>
                                     </tr>
                                 </thead>
                                 <tbody ng-repeat="x in ctrl.listInteresadosVac">
@@ -208,7 +210,7 @@
                                         <td>{{x.Nombre}}</td>
                                         <td>{{x.Status}}</td>
                                         <td>{{x.Fecha_Nacimiento}}</td>
-                                        <td><i data-toggle="tooltip" data-placement="top" title="Ver Cv" ng-click="ctrl.GenerarCurriculum(x.Id)" class="fas fa-file-alt"></i></td>
+                                        <td><i data-toggle="tooltip" data-placement="top" title="Ver Cv" ng-click="ctrl.ReporteCurriculumEmpresa(x.Id,x.Ruta_Foto, x.Status)" class="fas fa-file-alt"></i></td>
                                         <td><span data-toggle="modal" data-target="#modalStatusCandidato"><i data-toggle="tooltip" data-placement="top" title="Cambiar estatus candidato" class="fas fa-pencil-alt" ng-click="ctrl.GuardarIdCandidatoInteresado(x.Id_Vac_Cand, x.Id, x.Correo)"></i></span></td>
                                     </tr>
                                 </tbody>
