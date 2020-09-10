@@ -1,4 +1,7 @@
-﻿using System.Web;
+﻿using System.Net;
+using CrystalDecisions.Shared;
+using CrystalDecisions.CrystalReports.Engine;
+using System.Web;
 using System.Web.Mvc;
 using BolsaTrabajoUnv2_0.Data;
 using BolsaTrabajoUnv2_0.Models;
@@ -14,9 +17,7 @@ using System.DirectoryServices;
 using System.Drawing.Printing;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Messaging;
-using System.Net;
-using CrystalDecisions.Shared;
-using CrystalDecisions.CrystalReports.Engine;
+
 
 namespace BolsaTrabajoUnv2_0.Controllers
 {
@@ -3594,8 +3595,8 @@ namespace BolsaTrabajoUnv2_0.Controllers
             System.Web.UI.Page p = new System.Web.UI.Page();
 
             ReportDocument rd = new ReportDocument();
-            string Ruta = Path.Combine(Server.MapPath("../Reportes"), "RegistroEmpresa.rpt");
-            rd.Load(Path.Combine(Server.MapPath("../Reportes"), "RegistroEmpresa.rpt"));
+            string Ruta = Path.Combine(Server.MapPath("~/Reportes"), "RegistroEmpresa.rpt");
+            rd.Load(Path.Combine(Server.MapPath("~/Reportes"), "RegistroEmpresa.rpt"));
             rd.SetParameterValue(0, P_Id);
             rd.PrintOptions.PaperSize = CrystalDecisions.Shared.PaperSize.PaperLetter;
             connectionInfo.ServerName = "DSIA";

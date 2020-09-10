@@ -3419,6 +3419,7 @@
 
         $scope.ReporteFichaEmpresa = function (Id, callback) {
             //abrirModal();
+            $('#modalCargandoSolicitud').modal('show');
             var xhr = new XMLHttpRequest();
             var ruta = urlServer + 'Btu/ReporteFichaEmpresa';
             xhr.responseType = 'blob';
@@ -3436,13 +3437,16 @@
                         window.open(link);
                     }
                     //cerrarModal();
-                }
+                }                
             },
                 xhr.send("IdEmpresa=" + Id);
+
+            $("#modalCargandoSolicitud").modal('toggle');
         }; // SE EJECUTA EN EL PANEL ADMINISTRADOR
 
         this.ReporteVacante = function (Id) {
             //abrirModal();
+            $('#modalCargandoSolicitud').modal('show');
             var xhr = new XMLHttpRequest();
             var ruta = urlServer + 'Btu/ReporteVacante';
             xhr.responseType = 'blob';
@@ -3463,6 +3467,7 @@
                         window.open(link);
                     }
                 }
+                $("#modalCargandoSolicitud").modal('toggle');
             },
 
                 xhr.send("Id=" + Id);
@@ -3470,6 +3475,7 @@
 
         this.ReporteCurriculumEmpresa = function (Id, RutaFoto, DatosContacto, callback) {
             //abrirModal();
+            $('#modalCargandoSolicitud').modal('show');
             var xhr = new XMLHttpRequest();
             var ruta = urlServer + 'Btu/ReporteCurriculum';
             let datosContacto = DatosContacto.charAt(0);
@@ -3491,12 +3497,14 @@
                         cerrarModal();
                     }
                 }
+                $("#modalCargandoSolicitud").modal('toggle');
             },
                 xhr.send("Id=" + Id + "&RutaFoto=" + RutaFoto + "&DatosContacto=" + datosContacto);
         };        
 
         $scope.ReporteCurriculumAdmin = function (Id, RutaFoto, DatosContacto, callback) {
             //abrirModal();
+            $('#modalCargandoSolicitud').modal('show');
             var xhr = new XMLHttpRequest();
             var ruta = urlServer + 'Btu/ReporteCurriculum';
             xhr.responseType = 'blob';
@@ -3517,6 +3525,7 @@
                         window.open(link);
                     }
                 }
+                $("#modalCargandoSolicitud").modal('toggle');
             },
 
                 xhr.send("Id=" + Id + "&RutaFoto=" + RutaFoto + "&DatosContacto=" + DatosContacto);

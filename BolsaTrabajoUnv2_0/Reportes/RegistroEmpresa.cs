@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DesarrolloPersonalDev.Reportes {
+namespace BolsaTrabajoUnv2_0.Reportes {
     using System;
     using System.ComponentModel;
     using CrystalDecisions.Shared;
@@ -41,7 +41,7 @@ namespace DesarrolloPersonalDev.Reportes {
         
         public override string FullResourceName {
             get {
-                return "DesarrolloPersonalDev.Reportes.RegistroEmpresa.rpt";
+                return "BolsaTrabajoUnv2_0.Reportes.RegistroEmpresa.rpt";
             }
             set {
                 // Do nothing
