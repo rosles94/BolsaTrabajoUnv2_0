@@ -3417,7 +3417,7 @@
 
         //Reportes PDF
 
-        $scope.ReporteFichaEmpresa = function (Id, callback) {
+        $scope.ReporteFichaEmpresa = (Id, callback) => {
             //abrirModal();
             $('#modalCargandoSolicitud').modal('show');
             var xhr = new XMLHttpRequest();
@@ -3437,14 +3437,13 @@
                         window.open(link);
                     }
                     //cerrarModal();
-                }                
+                }
+                $("#modalCargandoSolicitud").modal('toggle');
             },
-                xhr.send("IdEmpresa=" + Id);
-
-            $("#modalCargandoSolicitud").modal('toggle');
+                xhr.send("IdEmpresa=" + Id);            
         }; // SE EJECUTA EN EL PANEL ADMINISTRADOR
 
-        this.ReporteVacante = function (Id) {
+        this.ReporteVacante = (Id, callback) => {
             //abrirModal();
             $('#modalCargandoSolicitud').modal('show');
             var xhr = new XMLHttpRequest();
@@ -3469,11 +3468,10 @@
                 }
                 $("#modalCargandoSolicitud").modal('toggle');
             },
-
-                xhr.send("Id=" + Id);
+            xhr.send("Id=" + Id);
         }; // SE EJECUTA EN EL PANEL ADMINISTRADOR
 
-        this.ReporteCurriculumEmpresa = function (Id, RutaFoto, DatosContacto, callback) {
+        this.ReporteCurriculumEmpresa = (Id, RutaFoto, DatosContacto, callback) => {
             //abrirModal();
             $('#modalCargandoSolicitud').modal('show');
             var xhr = new XMLHttpRequest();
@@ -3502,7 +3500,7 @@
                 xhr.send("Id=" + Id + "&RutaFoto=" + RutaFoto + "&DatosContacto=" + datosContacto);
         };        
 
-        $scope.ReporteCurriculumAdmin = function (Id, RutaFoto, DatosContacto, callback) {
+        $scope.ReporteCurriculumAdmin = (Id, RutaFoto, DatosContacto, callback) => {
             //abrirModal();
             $('#modalCargandoSolicitud').modal('show');
             var xhr = new XMLHttpRequest();
@@ -3527,7 +3525,6 @@
                 }
                 $("#modalCargandoSolicitud").modal('toggle');
             },
-
                 xhr.send("Id=" + Id + "&RutaFoto=" + RutaFoto + "&DatosContacto=" + DatosContacto);
         };
 

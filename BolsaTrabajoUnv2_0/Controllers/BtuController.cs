@@ -853,8 +853,6 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return objResultado;
             }
         }
-        
-        
         public JsonResult DatosRegistroUnach()
         {
             ResultadoComun objResultadoCm = new ResultadoComun();
@@ -1477,7 +1475,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return objResultado;
             }
         }
-
+        [System.Web.Services.WebMethod(EnableSession = true)]
         public ResultadoComun VerificarSesionCandidato()
         {
             ResultadoComun objResultado = new ResultadoComun();
@@ -1502,7 +1500,6 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return objResultado;
             }
         }
-
         [HttpPost]
         public ActionResult UploadFiles()
         {
@@ -1566,7 +1563,6 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json("No hay archivos seleccionados.");
             }
         }
-
         //Metodos para la vista Btu
         [System.Web.Services.WebMethod(EnableSession = true)]
         public JsonResult IniciarSesion(string Usuario, string Contrasena, string Tipo)
@@ -2981,8 +2977,6 @@ namespace BolsaTrabajoUnv2_0.Controllers
             }
         }
 
-
-
         //Metodos para la vista Vacantes
         [System.Web.Services.WebMethod(EnableSession = true)]
         public JsonResult GuardarVacante (string NombreVacante, string NumeroVacantes, string EdadMin, string EdadMax, string Genero, string EdoCivil, string GradoEstu, string Expe, string ActReal, string ConoReq,
@@ -3112,9 +3106,11 @@ namespace BolsaTrabajoUnv2_0.Controllers
 
         public JsonResult ObtenerDatosVacante(string Id_Candidato, string Id_Vacante)
         {
+            ResultadoComun objResultadoCm = new ResultadoComun();
             ResultadoVacante objResultado = new ResultadoVacante();
             Btu_Vacante objVacante = new Btu_Vacante();
             string Verificador = string.Empty;
+            objResultadoCm = VerificarSesionEmpresa();
             try
             {
                 if(Id_Candidato != null && Id_Candidato != "")
@@ -3132,19 +3128,27 @@ namespace BolsaTrabajoUnv2_0.Controllers
                         objResultado.Error = true;
                         objResultado.MensajeError = Verificador;
                     }
-                }
+                }                
                 else if (System.Web.HttpContext.Current.Session["SessionIdVacante"] != null) {
-                    objVacante = (Btu_Vacante)System.Web.HttpContext.Current.Session["SessionIdVacante"];
-                    objResultado.Resultado = DataContext.ObtenerDatosVacante(objVacante, ref Verificador);
-                    if (Verificador == "0")
+                    if (objResultadoCm.Error == false)
                     {
-                        objResultado.Error = false;
-                        objResultado.MensajeError = "";
+                        objVacante = (Btu_Vacante)System.Web.HttpContext.Current.Session["SessionIdVacante"];
+                        objResultado.Resultado = DataContext.ObtenerDatosVacante(objVacante, ref Verificador);
+                        if (Verificador == "0")
+                        {
+                            objResultado.Error = false;
+                            objResultado.MensajeError = "";
+                        }
+                        else
+                        {
+                            objResultado.Error = true;
+                            objResultado.MensajeError = Verificador;
+                        }
                     }
                     else
                     {
                         objResultado.Error = true;
-                        objResultado.MensajeError = Verificador;
+                        objResultado.MensajeError = "Error al iniciar sesión, cierre sesión e ingrese nuevamente";
                     }
                 }
                 else
@@ -3408,7 +3412,6 @@ namespace BolsaTrabajoUnv2_0.Controllers
             }
             return objResultado;
         }
-
         public JsonResult EnviarCorreoVacanteVencida(string Correo, string Vacante)
         {
             ResultadoComun objResultado = new ResultadoComun();           
@@ -3499,17 +3502,13 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 Error = (ex.Message);
             }
         }
-
         public JsonResult PruebaRutaServer ()
         {
             string ruta = Server.MapPath("../ ImgProfileCv/");
             return Json(ruta, JsonRequestBehavior.AllowGet);
         }
 
-
-
         // REPORTES PDF 
-
         public ActionResult ReporteCurriculum(string Id, string RutaFoto, string DatosContacto) // Variable DatosContacto sirve para ver si se muestran los datos que son el correo y num tele, si la variable es I no se muestra, si la variable es E si se muestra
         {
             string fichero = "";
@@ -3538,8 +3537,8 @@ namespace BolsaTrabajoUnv2_0.Controllers
             System.Web.UI.Page p = new System.Web.UI.Page();
 
             ReportDocument rd = new ReportDocument();
-            string Ruta = Path.Combine(Server.MapPath("../Reportes"), "Cv.rpt");
-            rd.Load(Path.Combine(Server.MapPath("../Reportes"), "Cv.rpt"));
+            string Ruta = Path.Combine(Server.MapPath("~/Reportes"), "Cv.rpt");
+            rd.Load(Path.Combine(Server.MapPath("~/Reportes"), "Cv.rpt"));
             rd.SetParameterValue(0, P_Id);
             rd.SetParameterValue(1, fichero);
             rd.SetParameterValue(2, DatosContacto);
@@ -3558,62 +3557,79 @@ namespace BolsaTrabajoUnv2_0.Controllers
             stream.Seek(0, SeekOrigin.Begin);
             return File(stream, "application/pdf", "Curriculum.pdf");
         }
-
         public ActionResult ReporteVacante(int Id)
         {
-            int P_ID = Id;
-            //string ruta = Request.MapPath(sr);                
-            ConnectionInfo connectionInfo = new ConnectionInfo();
-            System.Web.UI.Page p = new System.Web.UI.Page();
+            ResultadoComun objResultado = new ResultadoComun();
+            try
+            {
+                int P_ID = Id;
+                //string ruta = Request.MapPath(sr);                
+                ConnectionInfo connectionInfo = new ConnectionInfo();
+                System.Web.UI.Page p = new System.Web.UI.Page();
 
-            ReportDocument rd = new ReportDocument();
-            string Ruta = Path.Combine(Server.MapPath("../Reportes"), "DetalleVacante.rpt");
-            rd.Load(Path.Combine(Server.MapPath("../Reportes"), "DetalleVacante.rpt"));
-            rd.SetParameterValue(0, P_ID);
-            rd.PrintOptions.PaperSize = CrystalDecisions.Shared.PaperSize.PaperLetter;
-            connectionInfo.ServerName = "DSIA";
-            connectionInfo.UserID = "vincular";
-            connectionInfo.Password = "persona2019";
-            SetDBLogonForReport(connectionInfo, rd);
+                ReportDocument rd = new ReportDocument();
+                string Ruta = Path.Combine(Server.MapPath("~/Reportes"), "DetalleVacante.rpt");
+                rd.Load(Path.Combine(Server.MapPath("~/Reportes"), "DetalleVacante.rpt"));
+                rd.SetParameterValue(0, P_ID);
+                rd.PrintOptions.PaperSize = CrystalDecisions.Shared.PaperSize.PaperLetter;
+                connectionInfo.ServerName = "DSIA";
+                connectionInfo.UserID = "Vincular";
+                connectionInfo.Password = "persona2019";
+                SetDBLogonForReport(connectionInfo, rd);
 
-            Response.Buffer = false;
-            Response.ClearContent();
-            Response.ClearHeaders();
+                Response.Buffer = false;
+                Response.ClearContent();
+                Response.ClearHeaders();
 
 
-            Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
-            stream.Seek(0, SeekOrigin.Begin);
-            return File(stream, "application/pdf", "Reporte_Vacante.pdf");
+                Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                stream.Seek(0, SeekOrigin.Begin);
+                return File(stream, "application/pdf", "Reporte_Vacante.pdf");
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
         }
-
         public ActionResult ReporteFichaEmpresa(int IdEmpresa)
         {
+            ResultadoComun objResultado = new ResultadoComun();
+            try
+            {
+                int P_Id = IdEmpresa;
+                //string ruta = Request.MapPath(sr);                
+                ConnectionInfo connectionInfo = new ConnectionInfo();
+                System.Web.UI.Page p = new System.Web.UI.Page();
 
-            int P_Id = IdEmpresa;
-            //string ruta = Request.MapPath(sr);                
-            ConnectionInfo connectionInfo = new ConnectionInfo();
-            System.Web.UI.Page p = new System.Web.UI.Page();
+                ReportDocument rd = new ReportDocument();
+                string Ruta = Path.Combine(Server.MapPath("~/Reportes"), "RegistroEmpresa.rpt");
+                rd.Load(Path.Combine(Server.MapPath("~/Reportes"), "RegistroEmpresa.rpt"));
+                rd.SetParameterValue(0, P_Id);
+                rd.PrintOptions.PaperSize = CrystalDecisions.Shared.PaperSize.PaperLetter;
+                connectionInfo.ServerName = "DSIA";
+                connectionInfo.UserID = "vincular";
+                connectionInfo.Password = "persona2019";
+                SetDBLogonForReport(connectionInfo, rd);
 
-            ReportDocument rd = new ReportDocument();
-            string Ruta = Path.Combine(Server.MapPath("~/Reportes"), "RegistroEmpresa.rpt");
-            rd.Load(Path.Combine(Server.MapPath("~/Reportes"), "RegistroEmpresa.rpt"));
-            rd.SetParameterValue(0, P_Id);
-            rd.PrintOptions.PaperSize = CrystalDecisions.Shared.PaperSize.PaperLetter;
-            connectionInfo.ServerName = "DSIA";
-            connectionInfo.UserID = "vincular";
-            connectionInfo.Password = "persona2019";
-            SetDBLogonForReport(connectionInfo, rd);
-
-            Response.Buffer = false;
-            Response.ClearContent();
-            Response.ClearHeaders();
+                Response.Buffer = false;
+                Response.ClearContent();
+                Response.ClearHeaders();
 
 
-            Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
-            stream.Seek(0, SeekOrigin.Begin);
-            return File(stream, "application/pdf", "Reporete_FichaEmpresa.pdf");
+                Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                stream.Seek(0, SeekOrigin.Begin);
+                return File(stream, "application/pdf", "Reporete_FichaEmpresa.pdf");
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            
         }
-
         private void SetDBLogonForReport(ConnectionInfo connectionInfo, ReportDocument reportDocument)
         {
             try
@@ -3634,11 +3650,8 @@ namespace BolsaTrabajoUnv2_0.Controllers
             }
         }
 
-
-
-
-
         // GET: Btu
+
         public ActionResult Index()
         {
             return View();
