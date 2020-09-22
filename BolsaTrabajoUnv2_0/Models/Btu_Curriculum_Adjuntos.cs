@@ -10,6 +10,7 @@ namespace BolsaTrabajoUnv2_0.Models
         public string Id { get; set; }
         public string Id_Curriculum { get; set; }
         public string Tipo { get; set; }
+        public string Subtipo { get; set; }
         public string Ruta { get; set; }
     }
 

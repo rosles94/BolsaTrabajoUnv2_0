@@ -348,5 +348,27 @@ namespace BolsaTrabajoUnv2_0.Data
                 exeProc.LimpiarOracleCommand(ref cmd);
             }
         }
+
+        public static void GuardarDocumentoAdjunto(Btu_Curriculum_Adjuntos objadjunto, ref string Verificador)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { "p_id_curriculum", "p_tipo", "p_subtipo", "p_ruta" };
+                object[] Valores = { objadjunto.Id_Curriculum, objadjunto.Tipo, objadjunto.Subtipo, objadjunto.Ruta };
+                string[] ParametrosOut = { "P_BANDERA" };
+                cmd = exeProc.GenerarOracleCommand("INS_BTU_CURRICULUM_ADJUNTOS", ref Verificador, ref dr, Parametros, Valores, ParametrosOut);
+            }
+            catch (Exception ex)
+            {
+                Verificador = ex.Message;
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+        }
     }
 }

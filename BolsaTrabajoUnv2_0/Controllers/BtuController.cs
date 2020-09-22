@@ -1563,6 +1563,80 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json("No hay archivos seleccionados.");
             }
         }
+
+        [HttpPost]
+        public ActionResult CargarCvOpcional()
+        {
+            string Respuesta = "";
+            List<Btu_Sesion> lisInfoPersonal = new List<Btu_Sesion>();
+            if (System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] != null)
+                lisInfoPersonal = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
+            else if (System.Web.HttpContext.Current.Session["SessionAdminCandidato"] != null)
+                lisInfoPersonal = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionAdminCandidato"];
+            Btu_Curriculum objCv = new Btu_Curriculum();
+            ResultadoComun objResultado = new ResultadoComun();
+
+            // Checking no of files injected in Request object  
+            if (Request.Files.Count > 0)
+            {
+                try
+                {
+                    //  Get all files from Request object  
+                    HttpFileCollectionBase files = Request.Files;
+                    for (int i = 0; i < files.Count; i++)
+                    {
+                        //string path = AppDomain.CurrentDomain.BaseDirectory + "Uploads/";  
+                        //string filename = Path.GetFileName(Request.Files[i].FileName);  
+
+                        HttpPostedFileBase file = files[i];
+                        string fname;
+                        string extencion;
+
+                        // Checking for Internet Explorer  
+                        if (Request.Browser.Browser.ToUpper() == "IE" || Request.Browser.Browser.ToUpper() == "INTERNETEXPLORER")
+                        {
+                            string[] testfiles = file.FileName.Split(new char[] { '\\' });
+                            fname = testfiles[testfiles.Length - 1];
+                        }
+                        else
+                        {
+                            fname = file.FileName;
+                        }
+                        extencion = Path.GetExtension(fname);
+                        if ( extencion != "js" || extencion != "gif")
+                        {
+                            // Get the complete folder path and store the file inside it.
+                            //string fnameDoc = "../ImgProfileCv/" + fname;
+                            string fnameDoc = "../CvCandidatos/" + lisInfoPersonal[0].Matricula + extencion;
+                            objCv.Id = lisInfoPersonal[0].Id;
+                            objCv.Ruta_Documento = "https://btu.unach.mx/Dsia/CvCandidatos/" + lisInfoPersonal[0].Matricula + extencion; // esta ruta se manjea así porque este es el directorio del servidor
+                            //System.Web.HttpContext.Current.Session["SessionFotoCv"] = objCv;
+                            objResultado = GuardarCv(objCv);
+                            fname = Server.MapPath(fnameDoc);
+                            file.SaveAs(fname);
+                            if (objResultado.Error == false)
+                                Respuesta = "1";
+                            else
+                                Respuesta = "0";
+                        }
+                        else
+                        {
+                            Respuesta = "0";
+                        }
+                    }
+                    // Returns message that successfully uploaded  
+                    return Json(Respuesta);
+                }
+                catch (Exception ex)
+                {
+                    return Json("Un error ha ocurrido. Error: " + ex.Message);
+                }
+            }
+            else
+            {
+                return Json("No hay archivos seleccionados.");
+            }
+        }
         //Metodos para la vista Btu
         [System.Web.Services.WebMethod(EnableSession = true)]
         public JsonResult IniciarSesion(string Usuario, string Contrasena, string Tipo)
@@ -2263,6 +2337,34 @@ namespace BolsaTrabajoUnv2_0.Controllers
             {
                 objResultado.MensajeError = ex.Message;
                 objResultado.Error = true;
+                return objResultado;
+            }
+        }
+
+        public ResultadoComun GuardarCv(Btu_Curriculum objCv)
+        {
+            ResultadoComun objResultado = new ResultadoComun();
+            Btu_Curriculum_Adjuntos objAdjunto = new Btu_Curriculum_Adjuntos();
+            string Verificador = string.Empty;
+            try
+            {
+                objAdjunto.Ruta = objCv.Ruta_Documento;
+                objAdjunto.Tipo = "DOCUMENTO";
+                objAdjunto.Subtipo = "CURRICULUM";
+                objAdjunto.Id_Curriculum = objCv.Id;
+                GuardarDataContext.GuardarDocumentoAdjunto(objAdjunto, ref Verificador);
+                if (Verificador == "0")
+                    objResultado.Error = false;
+                else {
+                    objResultado.Error = true;
+                    objResultado.MensajeError = Verificador;
+                }
+                return objResultado;
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
                 return objResultado;
             }
         }
