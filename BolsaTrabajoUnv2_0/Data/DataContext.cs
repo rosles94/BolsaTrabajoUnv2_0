@@ -1048,5 +1048,87 @@ namespace BolsaTrabajoUnv2_0.Data
                 exeProc.LimpiarOracleCommand(ref cmd);
             }
         }
+
+
+        public static MENU ObtenerMenu(string Valor)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+
+            try
+            {
+
+                OracleDataReader dr = null;
+                string[] Parametros = { "p_tipo" };
+                object[] Valores = { Valor };
+                cmd = exeProc.GenerarOracleCommandCursor("PKG_VINCULAR.Obt_Menu_Usuario", ref dr, Parametros, Valores);
+                List<MENU> listMenu = new List<MENU>();
+                List<MENU> listMenu2 = new List<MENU>();
+                List<MENU> list = new List<MENU>();
+                //List<MENUPADRE> listMenuPadre = new List<MENUPADRE>();
+                List<SUBMENU> listSubMenu = new List<SUBMENU>();
+                MENU objMenu = new MENU();
+                MENU objMenu2 = new MENU();
+                while (dr.Read())
+                {
+                    objMenu.MENUPADRE.Add(new MENUPADRE(Convert.ToInt32(dr[0]), Convert.ToString(dr[1]), Convert.ToString(dr[2]), Convert.ToString(dr[3]), Convert.ToInt32(dr[4])));
+                    listMenu.Add(objMenu);
+                    listMenu2.Add(objMenu);
+                }
+
+                var listMenuPadre = from c in listMenu[0].MENUPADRE
+                                    where (c.ID_PADRE == 15808)
+                                    select c;
+
+                //foreach (MENU mnu in listMenu)
+                //{
+                foreach (MENUPADRE mnuPadre in listMenuPadre)//mnu.MENUPADRE)
+                {
+                    if (mnuPadre.PADRE == "")
+                    {
+                        listSubMenu = SubMenu(listMenu2, mnuPadre.ID);
+                        objMenu2.MENUPADRE.Add(new MENUPADRE(mnuPadre.ID, mnuPadre.NOMBRE, mnuPadre.CLAVE, mnuPadre.PADRE, 0, listSubMenu));
+                    }
+                }
+                //}
+
+                //var list = from c in listMenu[0].MENUPADRE
+                //           where (c.ID_PADRE==10)
+                //           select c;
+                //list.Add(objMenu2);
+                return objMenu2;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+
+        }
+
+        public static List<SUBMENU> SubMenu(List<MENU> ListMenu, int IdMenu)
+        {
+            try
+            {
+                List<SUBMENU> listarSubMenu = new List<SUBMENU>();
+                var list = from c in ListMenu[0].MENUPADRE
+                           where (c.ID_PADRE == IdMenu)
+                           select c;
+                foreach (MENUPADRE mnuPadre in list)
+                {
+                    listarSubMenu.Add(new SUBMENU(mnuPadre.ID, mnuPadre.NOMBRE, mnuPadre.CLAVE));
+                }
+
+                return listarSubMenu;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

@@ -49,6 +49,7 @@ var btuContext =
     listVacantesAdministrador: [],
     listVacantesVencidas: [],
     listCorreosCandidatos: [],
+    listMenu : [],
 
     BuscarEmpresa: function (Rfc, callBackResult) {
         let self = this;
@@ -2150,6 +2151,38 @@ var btuContext =
                 callBackResult({ ressult: 'notgp', message: resp.MensajeError });
             }
         });
-    }
+    },
 
+    CargarMenuOpciones: function (callBackResult) {
+        var self = this;
+        self.listMenu.length = 0;
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: urlServer + "Btu/GetMainMenu",
+            data: {
+            },
+            success: function (resp) {
+                if (resp !== null) {
+                    for (let i = 0; i < resp.length; i++) {
+                        let caracteristica = "";
+                        if (1 === 1)//if (resp[i].ID === 15769)//cambiar por id del adjunto cuando se agregué las caracteristicas del submenu cambiar por el id correspondiente
+                            caracteristica = '_blank"';
+                        self.listMenu.push({
+                            ID: resp[i].ID, NOMBRE: resp[i].NOMBRE, SubMenu: resp[i].SubMenu, caracteristica
+                        });
+                    }
+                    callBackResult({ ressult: 'tgp' });
+                }
+                else {
+                    callBackResult({ ressult: 'notgp', message: resp });
+                }
+            },
+            error: function (ex) {
+                if (callBackResult !== undefined) {
+                    callBackResult({ ressult: 'notgp', message: ex.statusText });
+                }
+            }
+        });
+    },
 };
