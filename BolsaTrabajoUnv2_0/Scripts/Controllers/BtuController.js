@@ -70,6 +70,7 @@
         let listInteresadosVacAdmin = "";
         let listVacantesVencidas = "";
         let listCorreosCandidatos = "";
+        let datosMenu = "";
 
         let administrador = false;
         let datosPersonales = false;
@@ -3279,7 +3280,25 @@
             ComboAreaConocimiento();
             $('#verCandDisp').show();
             $('#containerEmpresa').show();
-        };        
+        };      
+
+        //Valores Menu
+        this.CargarMenuOpciones = () => {
+            btuContext.CargarMenuOpciones(function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.datosMenu = btuContext.listMenu;
+                        console.log(btuContext.listMenu);
+                        break;
+                    case "notgp":
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
 
         //Funciones para el detalle de las tablas
         function format(data) {

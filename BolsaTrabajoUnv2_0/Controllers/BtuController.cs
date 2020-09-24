@@ -3752,6 +3752,81 @@ namespace BolsaTrabajoUnv2_0.Controllers
             }
         }
 
+        // Menu usuarios
+        public JsonResult GetMainMenu()
+        {
+            Btu_Sesion SesionUsu = new Btu_Sesion();
+            SesionUsu = (Btu_Sesion)System.Web.HttpContext.Current.Session["UsuarioAdq"];
+            try
+            {
+                var ListaMenu = System.Web.HttpContext.Current.Session["ListaMenu"];
+                if (ListaMenu == null)
+                {
+                    var Lista = DataContext.ObtenerMenu("1");
+                    List<MENUPADRE> list = new List<MENUPADRE>();
+                    if (Lista.MENUPADRE.Count > 0)
+                    {
+                        MENU dc = new MENU();
+                        {
+                            var menu = Lista.MENUPADRE.Select(c => new
+                            {
+                                c.ID,
+                                c.NOMBRE,
+                                SubMenu = c.SUBMENU.Select(s => new
+                                {
+                                    s.NOMBRE,
+                                    s.CONTROL_NOMBRE
+                                })
+                            });
+                            System.Web.HttpContext.Current.Session["ListaMenu"] = Lista;
+                            return new JsonResult
+                            {
+                                Data = menu,
+                                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+                            };
+                        }
+                    }
+                    else
+                        return Json(false, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    var Lista = System.Web.HttpContext.Current.Session["ListaMenu"] as MENU;
+                    List<MENUPADRE> list = new List<MENUPADRE>();
+                    if (Lista.MENUPADRE.Count > 0)
+                    {
+                        MENU dc = new MENU();
+                        {
+                            var menu = Lista.MENUPADRE.Select(c => new
+                            {
+                                c.ID,
+                                c.NOMBRE,
+                                SubMenu = c.SUBMENU.Select(s => new
+                                {
+                                    s.NOMBRE,
+                                    s.CONTROL_NOMBRE
+                                })
+                            });
+                            System.Web.HttpContext.Current.Session["ListaMenu"] = Lista;
+                            return new JsonResult
+                            {
+                                Data = menu,
+                                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+                            };
+                        }
+                    }
+                    else
+                        return Json(false, JsonRequestBehavior.AllowGet);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return Json("Error256" + ex.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
         // GET: Btu
 
         public ActionResult Index()
