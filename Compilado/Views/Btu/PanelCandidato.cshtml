@@ -60,6 +60,8 @@
                     <p ng-model="ctrl.Registrado" class="card-text">La información de tu curriculum puede ser modificada si lo deseas presionando el  botón que está abajo.</p>
                     <p ng-model="ctrl.Matricula" class="card-text"><small id="statusCand" style="display:none" class="text-muted">El usuario está en estatus {{ctrl.StatusCand}}.</small></p>
                     <input ng-model="ctrl.IdUsuario" type="button" class="btn btn-success" value="Ver Información del Curriculum" ng-click="ctrl.GuardarIdCv(ctrl.IdUsuario, ctrl.Matricula, ctrl.Registrado)" />
+                    <input type="button" class="btn btn-warning" value="Cargar cv" data-toggle="modal" data-target="#modalCargarCv" />       
+                    <a href="../CvCandidatos/{{ctrl.Matricula}}.pdf"> <i class="far fa-file-pdf" data-toggle="tooltip" title="Ver Cv"></i> </a>
                 </div>
             </div>
         </div>
@@ -69,16 +71,18 @@
         <div class="col-md-2">
 
         </div>
-        <div id="VacantesXStatus" class="card-deck col-md-8" style="display:none">
-            <div class="card" ng-repeat="x in ctrl.listVacantesXstatus">
-                @*<img src="https://scontent-dfw5-2.xx.fbcdn.net/v/t31.0-8/905430_402189089889179_1981293549_o.jpg?_nc_cat=107&_nc_sid=85a577&_nc_ohc=vHKt3IAIG64AX-g_2_Y&_nc_ht=scontent-dfw5-2.xx&oh=207f66161f498f8138ca10494465e58c&oe=5EE123DC" class="card-img-top" alt="...">*@
-                <div class="card-body">
-                    <h5 class="card-title">{{x.Empresa}}</h5>
-                    <p class="card-text">{{x.Nombre}}.</p>
-                    <input type="button" class="btn btn-info" value="Ver Vacante" ng-click="ctrl.ObtenerDetalleVacante(ctrl.IdUsuario, x.Id, x.Status, x.Id_Vac_Cand)" data-toggle="modal" data-target="#modalDetVac" />
-                </div>
-                <div class="card-footer">
-                    <small class="text-muted">Estatus: {{x.Status}}</small>
+        <div class="row row-cols-3 row-cols-md-3  col-md-8">
+            <div id="VacantesXStatus" class="col mb-4" ng-repeat="x in ctrl.listVacantesXstatus">
+                <div class="card">
+                    @*<img src="https://scontent-dfw5-2.xx.fbcdn.net/v/t31.0-8/905430_402189089889179_1981293549_o.jpg?_nc_cat=107&_nc_sid=85a577&_nc_ohc=vHKt3IAIG64AX-g_2_Y&_nc_ht=scontent-dfw5-2.xx&oh=207f66161f498f8138ca10494465e58c&oe=5EE123DC" class="card-img-top" alt="...">*@
+                    <div class="card-body">
+                        <h5 class="card-title">{{x.Empresa}}</h5>
+                        <p class="card-text">{{x.Nombre}}.</p>
+                        <input type="button" class="btn btn-info" value="Ver Vacante" ng-click="ctrl.ObtenerDetalleVacante(ctrl.IdUsuario, x.Id, x.Status, x.Id_Vac_Cand)" data-toggle="modal" data-target="#modalDetVac" />
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">Estatus: {{x.Status}}</small>
+                    </div>
                 </div>
             </div>
         </div>
@@ -231,11 +235,12 @@
         </div>
     </div>
 
+
     <div class="modal fade" id="modalCargandoSolicitud" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Realizando Solicitud</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Realizando Solicitud</h5>                    
                 </div>
                 <div class="modal-body">
                     <div id="cargandoPanelEmpresa" class="col-md-12">
@@ -252,6 +257,33 @@
                             <span class="sr-only">Loading...</span>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalCargarCv" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Cargar Cv</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group py-1">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon03" ng-click="ctrl.SubirCvCandidato()">Subir cv</button>
+                        </div>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="archivoCvOpc" aria-describedby="inputGroupFileAddon03">
+                            <label class="custom-file-label" for="inputGroupFile03">Seleccionar cv</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>                    
                 </div>
             </div>
         </div>

@@ -70,6 +70,7 @@
         let listInteresadosVacAdmin = "";
         let listVacantesVencidas = "";
         let listCorreosCandidatos = "";
+        let datosMenu = "";
 
         let administrador = false;
         let datosPersonales = false;
@@ -1601,6 +1602,53 @@
                 }
                 $scope.$apply();
             });
+        };
+
+        this.SubirCvCandidato = () => {
+            var fileUpload = $("#archivoCvOpc").get(0);
+            var files = fileUpload.files;
+            if (files.length <= 1) {
+                // Create FormData object  
+                var fileData = new FormData();
+                // Looping over all files and add it to FormData object  
+                for (var i = 0; i < files.length; i++) {
+                    fileData.append(files[i].name, files[i]);
+                }
+                var nombreArchivo = files[0].name;
+                // Adding one more key to FormData object  
+                fileData.append('username', "UNACH-DSIA");
+                $.ajax({
+                    url: '../Btu/CargarCvOpcional',
+                    type: "POST",
+                    contentType: false, // Not to set any content header  
+                    processData: false, // Not to process data  
+                    data: fileData,
+                    success: function (result) {
+                        if (result === "1") {
+                            //let nombreFoto = $("#Matricula").val();
+                            //let formatoFoto = nombreArchivo.slice((nombreArchivo.lastIndexOf(".") - 1 >>> 0) + 2);
+                            alert("Archivos subidos correctamente.");
+                            //var rutaImg = "../Imagenes/ImgProfileCv/" + nombreFoto + "." + formatoFoto; ruta local para cargar imagenes
+                            //var rutaImg = "../ImgProfileCv/" + nombreFoto + "." + formatoFoto; // ruta del servidor para cargar imagenes
+                            //$("#imgCadidato").attr("src", rutaImg);
+                            //$("#btnVerDoc").show();
+                            //$("#btnUploadDoc").hide();                            
+                            //var control = jQuery('#cargarFoto');
+                            //control.replaceWith(control = control.val('').clone(true));
+                            //existeImagenPerfilCv = true;
+                        }
+                        else if (result !== 0)
+                            alert('Error al cargar el archivo.');
+
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                    }
+                });
+            }
+            else {
+                alert("Solo se permite subir un archivo.");
+            }
         };
 
         //Funciones para la vista Panel Empresa
@@ -3232,7 +3280,25 @@
             ComboAreaConocimiento();
             $('#verCandDisp').show();
             $('#containerEmpresa').show();
-        };        
+        };      
+
+        //Valores Menu
+        this.CargarMenuOpciones = () => {
+            btuContext.CargarMenuOpciones(function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.datosMenu = btuContext.listMenu;
+                        console.log(btuContext.listMenu);
+                        break;
+                    case "notgp":
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
 
         //Funciones para el detalle de las tablas
         function format(data) {
