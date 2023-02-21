@@ -71,6 +71,7 @@
         let listVacantesVencidas = "";
         let listCorreosCandidatos = "";
         let datosMenu = "";
+        let text_tooltip = ""
 
         let administrador = false;
         let datosPersonales = false;
@@ -79,6 +80,100 @@
         let existeImagenPerfilCv = false;
         let datosPerfilVacante = false;
         let datosInfoEntrevista = false;
+
+
+        //Funciones Vista Registrar Externos
+
+        this.GlobalInfoCandidato = () => {
+
+            if (self.nombre !== undefined && self.paterno !== undefined && self.materno !== undefined && self.escuela !== undefined && self.Estado !== undefined &&
+                self.Municipio !== undefined && self.Colonia !== undefined && self.Domicilio !== undefined && self.email != undefined && self.contrasenia != undefined && self.contrasenia_1 != undefined &&
+                self.fecnac !== undefined && self.curp !== undefined &&
+                self.nombre !== '' && self.paterno !== '' && self.materno !== '' && self.escuela !== '' && self.Estado !== '' &&
+                self.Municipio !== '' && self.Colonia !== '' && self.Domicilio !== '' && self.email != '' && self.contrasenia != '' &&
+                self.contrasenia_1 != '' && self.fecnac !== '' && self.curp !== '') {
+                $("#infemp1").show();
+                $("#infemp2").hide();
+                $("#globalInfoCand").css('background-color', 'green');
+            }
+            else {
+                $("#infemp1").hide();
+                $("#infemp2").show();
+                $("#globalInfoCand").css('background-color', 'yellow');
+            }
+        };
+
+
+
+        this.guardarDatosExterno = () => {
+            if (self.contrasenia === self.contrasenia_1) {
+                $('#buscandoEmpresa').modal('show');
+
+                let fechaNac = $("#fecnac").val();
+
+                let d1 = new Date(fechaNac + 'T00:00:00');
+                let month = (d1.getMonth() + 1);
+                let nuevomes = month >= 10 ? month : '0' + month;
+                let day = d1.getDate();
+                let year = d1.getFullYear();
+                let date1 = day + '/' + nuevomes + '/' + year;
+
+                btuContext.RegistrarDatosExterno(self.nombre, self.paterno, self.materno, self.escuela, self.Estado, self.Municipio, self.Colonia, self.Domicilio, self.email,
+                    self.contrasenia, date1, self.curp, function (resp) {
+                        switch (resp.ressult) {
+                            case "tgp":
+                                $('#buscandoEmpresa').modal('toggle');
+
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '',
+                                    text: 'Cuenta registrada. \n Su cuenta ha sido registrada satisfactoriamente, se le notificará a través del correo electrónico una vez que el personal de Bolsa de Trabajo le haya dado de alta en el sistema, o bien inicie sesión con su usuario y contraseña para saber su estatus. \n Teléfono: 61 13859 Ext 22 y 61 13478. Correo: btu@unach.mx',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                                setTimeout(function () {
+                                    window.location.assign(urlServer + "Btu");
+                                }, 3000);
+
+
+                                break;
+                            case "notgp":
+                                if (resp.message == 3) {
+                                    Swal.fire({
+                                        icon: 'info',
+                                        title: 'Datos Encontrados',
+                                        text: 'La CURP ya ha sido registrada',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    })
+                                }
+                                else {
+                                    $('#buscandoEmpresa').modal('toggle');
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: resp.message,
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    })
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                        $scope.$apply();
+                    });
+            }
+            else {
+                Swal.fire({
+                    icon: 'info',
+                    title: '',
+                    text: 'Las contraseñas no coinciden.',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+        }
 
 
         //Funciones Vista Registrar Empresas
@@ -90,6 +185,10 @@
             ComboMedioContacto();
             CargarDatosEmpresa();
         };
+
+        this.CargarCombos = () => {
+            ComboEstados()
+        }
 
         var CargarDatosEmpresa = () => {
             btuContext.ObtenerDatosEmpresa(function (resp) {
@@ -144,7 +243,7 @@
                         }                            
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -153,6 +252,8 @@
                 $('#buscandoEmpresa').hide();
             });
         };
+
+        
 
         this.GlobalInfoPer = () => {
 
@@ -200,7 +301,7 @@
         };
 
         this.BuscarEmpresa = () => {
-            $('#buscandoEmpresa').modal('show');
+            //$('#buscandoEmpresa').modal('show');
             btuContext.BuscarEmpresa(self.RfcBuscarEmpresa, function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
@@ -232,36 +333,65 @@
                             $("#RfcEmpresa").prop("disabled", true);
                             $("#guardarEmpresa").show();
                             $("#editarEmpresa").hide();
-                            alert("La empresa no existe, complete el siguiente formulario para registrarla.");
+                            Swal.fire({
+                                icon: 'info',
+                                title: '',
+                                text: 'No hay datos registrados en nuestro sistema, complete el siguiente formulario para registrarla.'
+                            })
+                            setTimeout(function () { document.getElementById("medioContacto").value = "string:MAIL" }, 2000);
+                            /*var userVoted = setInterval(() => {
+                                let elemento = document.getElementById("medioContacto")
+                                elemento.disabled = true
+                            }, 100)*/
                         }
-                        else
-                            alert("La empresa ya ha sido registrada, comuniquese con el personal de BTU para más detalles.");
+                        else {
+                            Swal.fire({
+                                icon: 'question',
+                                title: '',
+                                text: 'La empresa ya ha sido registrada, comuniquese con el personal de BTU para más detalles.'
+                            })
+                        }
                         break;
-                    case "notgp":
-                        alert(resp.message);
+                    case "notgp": {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error...',
+                            text: resp.message
+                        })
+                    }
                         break;
                     default:
                         break;
                 }
-                $('#buscandoEmpresa').modal('toggle');
+                //$('#buscandoEmpresa').modal('toggle');
                 $scope.$apply();
             });
         };
 
         this.RegistrarDatosEmpresa = () => {            
             if (self.Contrasena2 === self.Contrasena) {
-                $('#buscandoEmpresa').modal('show');
+                //$('#buscandoEmpresa').modal('show');
                 btuContext.RegistrarDatosEmpresa(self.RazonSocial, self.NombreComercial, self.Actividad, self.CodigoPost, self.Estado, self.Municipio, self.Colonia, self.Domicilio, self.Usuario,
                     self.PersonaContacto, self.Cargo, self.TelOficina, self.Celular, self.Email, self.MedioContacto, self.Contrasena, self.TipoPersona, function (resp) {
                         switch (resp.ressult) {
                             case "tgp":
-                                $('#buscandoEmpresa').modal('toggle');
-                                alert("Empresa registrada. \n Su empresa ha sido registrada satisfactoriamente, se le notificará a través del correo electrónico una vez que el personal de Bolsa de Trabajo le haya dado de alta en el sistema, o bien inicie sesión con su usuario y contraseña para saber su estatus. \n Teléfono: 61 13859 Ext 22 y 61 13478. Correo: btu@unach.mx");
-                                setTimeout(window.location.assign(urlServer + "Btu/Btu"), 4500);
+                                //$('#buscandoEmpresa').modal('toggle');
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Empresa registrada',
+                                    text: 'Su empresa ha sido registrada satisfactoriamente, una vez que el personal de Bolsa de Trabajo haya validado sus datos se le notificará mediante un correo electrónico. \n Teléfono: 61 13859 Ext 22 y 61 13478. Correo: btu@unach.mx',
+                                    confirmButtonText: '<a href="http://btu.unach.mx/">Regresar al Sitio</a>'
+                                })
+                                //setTimeout(window.location.assign(urlServer + "Btu/Btu"), 8000);
+                                
                                 break;
                             case "notgp":
-                                $('#buscandoEmpresa').modal('toggle');
-                                alert(resp.message);
+                                //$('#buscandoEmpresa').modal('toggle');
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error...',
+                                    text: resp.message
+                                })
                                 break;
                             default:
                                 break;
@@ -269,8 +399,13 @@
                         $scope.$apply();
                     });
             }
-            else
-                alert("Las contraseñas no coinciden.");
+            else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'Las contraseñas no coinciden.'
+                })
+            }
         };
 
         var TipoPersona = () => {
@@ -280,7 +415,7 @@
                         self.listTipoPersona = btuContext.listTipoPersona;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -293,34 +428,51 @@
             btuContext.ComboMedioContacto(function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
-                        self.listMedioContacto = btuContext.listMedioContacto;
+                        self.listMedioContacto = btuContext.listMedioContacto
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
                 }
-                $scope.$apply();
+                $scope.$apply();                
             });
         };
 
         this.EditarDatosEmpresa = () => {
-            btuContext.EditarDatosEmpresa(self.RazonSocial, self.NombreComercial, self.Actividad, self.CodigoPost, self.Estado, self.Municipio, self.Colonia, self.Domicilio, self.Usuario,
-                self.PersonaContacto, self.Cargo, self.TelOficina, self.Celular, self.Email, self.MedioContacto, self.Contrasena, self.TipoPersona, function (resp) {
-                    switch (resp.ressult) {
-                        case "tgp":
-                            alert("Datos modificados correctamente.");
-                            window.location.assign(urlServer + "Btu/PanelEmpresa");
-                            break;
-                        case "notgp":
-                            alert(resp.message);
-                            break;
-                        default:
-                            break;
-                    }
-                    $scope.$apply();
-                });
+            if (self.Contrasena2 === self.Contrasena) {
+                btuContext.EditarDatosEmpresa(self.RazonSocial, self.NombreComercial, self.Actividad, self.CodigoPost, self.Estado, self.Municipio, self.Colonia, self.Domicilio, self.Usuario,
+                    self.PersonaContacto, self.Cargo, self.TelOficina, self.Celular, self.Email, self.MedioContacto, self.Contrasena, self.TipoPersona, function (resp) {
+                        switch (resp.ressult) {
+                            case "tgp":
+                                Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'success',
+                                    title: 'Datos modificados correctamente.',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                                setTimeout(function () {
+                                    window.location.assign(urlServer + "Btu/PanelEmpresa");
+                                }, 2000);
+                                break;
+                            case "notgp":
+                                Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
+                                break;
+                            default:
+                                break;
+                        }
+                        $scope.$apply();
+                    });
+            }
+            else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'Las contraseñas no coinciden.'
+                })
+            }
         }
 
         this.RegresarPanelEmpresa = () => {
@@ -330,7 +482,7 @@
                         window.location.assign(urlServer + "Btu/PanelEmpresa");
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -345,7 +497,11 @@
         };
 
         this.AceptarAviso = () => {
-            alert('Ingrese su RFC para verficar que su empresa aún no haya sido registrada.');
+            Swal.fire({
+                icon: 'info',
+                title: 'Aviso...',
+                text: 'Ingrese su RFC para verficar que su empresa aún no haya sido registrada.'
+            })
         };
         //Funciones Vista DatosCandidatos
 
@@ -427,7 +583,7 @@
                         self.listEstAcadGuardados = btuContext.listEstAcadGuardados;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -449,14 +605,19 @@
             btuContext.DatosRegistroUnach(function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
-                        alert("Si tienes problemas para registrar tus datos intenta cerrar la sesión e ingresar de nuevo.");
                         self.listDatosRegistroUnach = btuContext.listDatosRegistroUnach;
+                        let fecha_nac = self.listDatosRegistroUnach[0].FechaNacimiento
+                        let dia_nac = fecha_nac.substr(0, 2)
+                        let mes_nac = fecha_nac.substr(3, 2)
+                        let anio_nac = fecha_nac.substr(8, 2)
+                        fecha_nac = mes_nac + '/' + dia_nac + '/' + anio_nac
+
                         self.DescCarrera = self.listDatosRegistroUnach[0].Carrera;
                         self.Matricula = self.listDatosRegistroUnach[0].Matricula;
                         self.NombreCandidato = self.listDatosRegistroUnach[0].Nombre;
                         self.ApePatCandidato = self.listDatosRegistroUnach[0].Paterno;
                         self.ApeMatCandidato = self.listDatosRegistroUnach[0].Materno;
-                        fechaNac = self.listDatosRegistroUnach[0].FechaNacimiento;
+                        self.FecNac = new Date(fecha_nac);
                         self.Estado = self.listDatosRegistroUnach[0].Estado === "ESTADO" ? "" : self.listDatosRegistroUnach[0].Estado;
                         self.Municipio = self.listDatosRegistroUnach[0].Municipio === "MUNICIPIO" ? "" : self.listDatosRegistroUnach[0].Municipio;
                         self.Domicilio = self.listDatosRegistroUnach[0].Domicilio;
@@ -467,18 +628,21 @@
                         self.AreaInt = self.listDatosRegistroUnach[0].Intereses === null ? "" : self.listDatosRegistroUnach[0].Intereses;
                         self.ObjPersonal = self.listDatosRegistroUnach[0].Objetivo === null ? "" : self.listDatosRegistroUnach[0].Objetivo;
                         DependenciaAlumno = self.listDatosRegistroUnach[0].Dependencia;
-                        if (self.listDatosRegistroUnach[0].Genero !== null && self.listDatosRegistroUnach[0].Genero !== "" && self.listDatosRegistroUnach[0].Genero !== undefined) {
-                            if (self.listDatosRegistroUnach[0].Genero === "M")
-                                $('#radioMale').prop('checked', true);
-                            else
-                                $('#radioFemale').prop('checked', true);
+                        if (self.listDatosRegistroUnach[0].Genero === "M")
+                            $('#radioMale').prop('checked', true);
+                        else if (self.listDatosRegistroUnach[0].Genero === "F")
+                            $('#radioFemale').prop('checked', true);
+                        else {
+                            $('#radioMale').prop('checked', false)
+                            $('#radioFemale').prop('checked', false)
                         }
+
                         if (self.listDatosRegistroUnach[0].Ruta_Foto !== undefined && self.listDatosRegistroUnach[0].Ruta_Foto !== "" && self.listDatosRegistroUnach[0].Ruta_Foto !== null) {
                             $("#imgCadidato").attr("src", self.listDatosRegistroUnach[0].Ruta_Foto);
                             existeImagenPerfilCv = true;
                         }
-                        else
-                            obtFotoCandidato(self.Matricula, DependenciaAlumno);
+                        /*else
+                            obtFotoCandidato(self.Matricula, DependenciaAlumno);*/
                         if (self.Estado !== "ESTADO")
                             comboMunicipios();
                         $("#Matricula").prop("disabled", true);
@@ -494,7 +658,7 @@
                         }
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -513,15 +677,17 @@
                 genero = true;
                 sexo = isSexM === true ? "M" : "F"; // sentencia que devuelve un valor
             }
+            self.FecNac = document.getElementById('FecNac').value
             if (genero === true) {
                 btuContext.GuardarInformacionCandidato(self.Matricula, self.NombreCandidato, self.ApePatCandidato, self.ApeMatCandidato, self.FecNac, self.Estado,
                     self.Municipio, self.Domicilio, self.TelCel, self.TelAd, self.Email, self.AreaInt, self.ObjPersonal, sexo, function (resp) {
                         switch (resp.ressult) {
                             case "tgp":
                                 datosPersonales = true;
+                                $("#estuAcad-tab").tab('show');
                                 break;
                             case "notgp":
-                                alert(resp.message);
+                                Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                                 break;
                             default:
                                 break;
@@ -572,7 +738,7 @@
                         datosAcademicos = true;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -591,7 +757,7 @@
                             self.NivelSoftware = "";
                             break;
                         case "notgp":
-                            alert(resp.message);
+                            Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                             break;
                         default:
                             break;
@@ -614,7 +780,7 @@
                             self.NivelIdioma = "";
                             break;
                         case "notgp":
-                            alert(resp.message);
+                            Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                             break;
                         default:
                             break;
@@ -654,7 +820,7 @@
                         datosExpProfesional = true;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -688,7 +854,7 @@
                         self.FecFinCur = "";
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -707,7 +873,7 @@
                                 window.location.assign(urlServer + "Btu/Btu");
                                 break;
                             case "notgp":
-                                alert(resp.message);
+                                Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                                 break;
                             default:
                                 break;
@@ -728,12 +894,27 @@
                     btuContext.EditarInfoGeneralCandidato(function (resp) {
                         switch (resp.ressult) {
                             case "tgp":
-                                alert("Datos guardarados correctamente.");
-                                window.location.assign(urlServer + "Btu/PanelCandidato");
+                                Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'success',
+                                    title: 'OK',
+                                    text: 'Datos guardarados correctamente.',
+                                    showConfirmButton: false,
+                                    timer: 3000
+                                })
+                                setTimeout(function () {
+                                    window.location.assign(urlServer + "Btu/PanelCandidato");
+                                }, 2000);
                                 break;
                             case "notgp":
-                                alert(resp.message);
-                                window.location.assign(urlServer + "Btu/PanelCandidato");
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: resp.message,
+                                    showConfirmButton: false,
+                                    timer: 3000
+                                })
+                                //window.location.assign(urlServer + "Btu/PanelCandidato");
                                 break;
                             default:
                                 break;
@@ -763,7 +944,7 @@
                             }
                             break;
                         case "notgp":
-                            alert(resp.message);
+                            Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                             break;
                         default:
                             break;
@@ -782,7 +963,7 @@
                             self.listSoftware = btuContext.listSoftware;
                             break;
                         case "notgp":
-                            alert(resp.message);
+                            Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                             break;
                         default:
                             break;
@@ -801,7 +982,7 @@
                             self.listIdioma = btuContext.listIdioma;
                             break;
                         case "notgp":
-                            alert(resp.message);
+                            Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                             break;
                         default:
                             break;
@@ -826,7 +1007,7 @@
                             }
                             break;
                         case "notgp":
-                            alert(resp.message);
+                            Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                             break;
                         default:
                             break;
@@ -845,7 +1026,7 @@
                             self.listCursoTaller = btuContext.listCursoTaller;
                             break;
                         case "notgp":
-                            alert(resp.message);
+                            Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                             break;
                         default:
                             break;
@@ -875,7 +1056,7 @@
         this.cargarFotoPerfilCv = () => {
             var fileUpload = $("#cargarFoto").get(0);
             var files = fileUpload.files;
-            if (files.length <= 1) {
+            if (files.length === 1 ) {
                 // Create FormData object  
                 var fileData = new FormData();
                 // Looping over all files and add it to FormData object  
@@ -884,7 +1065,7 @@
                 }
                 var nombreArchivo = files[0].name;
                 // Adding one more key to FormData object  
-                fileData.append('username', "UNACH-DSIA");
+                //fileData.append('username', "UNACH-DSIA");
                 $.ajax({
                     url: '../Btu/UploadFiles',
                     type: "POST",
@@ -896,7 +1077,7 @@
                             let nombreFoto = $("#Matricula").val();
                             let formatoFoto = nombreArchivo.slice((nombreArchivo.lastIndexOf(".") - 1 >>> 0) + 2);
                             alert("Archivos subidos correctamente.");
-                            //var rutaImg = "../Imagenes/ImgProfileCv/" + nombreFoto + "." + formatoFoto; ruta local para cargar imagenes
+                            //var rutaImg = "../Imagenes/ImgProfileCv/" + nombreFoto + "." + formatoFoto; //ruta local para cargar imagenes
                             var rutaImg = "../ImgProfileCv/" + nombreFoto + "." + formatoFoto; // ruta del servidor para cargar imagenes
                             $("#imgCadidato").attr("src", rutaImg);
                             //$("#btnVerDoc").show();
@@ -906,7 +1087,7 @@
                             existeImagenPerfilCv = true;
                         }
                         else if (result !== 0)
-                            alert('Error al cargar el archivo.');
+                            alert('Error al cargar el archivo. ' + result);
 
                     },
                     error: function (err) {
@@ -915,7 +1096,7 @@
                 });
             }
             else {
-                alert("Solo se permite subir un archivo.");
+                alert("Selecciona un archivo");
             }
         };
 
@@ -947,7 +1128,7 @@
                         }
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -964,7 +1145,7 @@
                         self.listSoftware = btuContext.listSoftware;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -981,7 +1162,7 @@
                         self.listIdioma = btuContext.listIdioma;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1002,7 +1183,7 @@
                         $("#globalExpProf").css('background-color', 'green');
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1019,7 +1200,7 @@
                         self.listCursoTaller = btuContext.listCursoTaller;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1040,7 +1221,7 @@
                         self.listEstados = btuContext.listEstados;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1056,7 +1237,7 @@
                         self.listMunicipios = btuContext.listMunicipios;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1072,7 +1253,7 @@
                         self.listMunicipios = btuContext.listMunicipios;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1089,7 +1270,7 @@
                         self.GradoEst = self.listGradoEstudios[3].Id;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1105,7 +1286,7 @@
                         self.listCarreras = btuContext.listCarreras;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1121,7 +1302,7 @@
                         self.listAreaConocimiento = btuContext.listAreaConocimiento;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1137,7 +1318,7 @@
                         self.listNivelSoftware = btuContext.listNvlSoft;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1153,7 +1334,7 @@
                         self.listNivelIdioma = btuContext.listNvlIdi;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1169,7 +1350,7 @@
                         self.listTipoCurso = btuContext.listTipoCurso;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1183,11 +1364,21 @@
                 switch (resp.ressult) {
                     case "tgp":
                         self.listVacRegEmp = btuContext.listVacRegEmp;
-                        self.Vacante = self.listVacRegEmp[0].Id;
-                        ObtenerGridCandidatosDisponibles(self.listVacRegEmp[0].Id);
+                        if (self.listVacRegEmp.length > 0) {
+                            self.Vacante = self.listVacRegEmp[0].Id;
+                            ObtenerGridCandidatosDisponibles(self.listVacRegEmp[0].Id);
+                            $('#verCandDisp').show();
+                            $('#containerEmpresa').show();
+                        }
+                        else {
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'No hay vacantes registradas'
+                            })
+                        }
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1203,7 +1394,7 @@
                         self.listGenero = btuContext.listGenero;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1219,7 +1410,7 @@
                         self.listEdoCivil = btuContext.listEdoCivil;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1235,7 +1426,7 @@
                         self.listTipoSalario = btuContext.listTipoSalario;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1251,7 +1442,7 @@
                         self.listIdiomaExt = btuContext.listIdiomaExt;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1267,7 +1458,7 @@
                         self.listTipoVacante = btuContext.listTipoVacante;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1289,7 +1480,7 @@
                             window.location.assign(urlServer + "Btu/PanelCandidato");
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 4000 })
                         break;
                     default:
                         break;
@@ -1310,7 +1501,7 @@
                             alert("Usuario o contraseña incorrectos");
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1326,7 +1517,7 @@
                         window.location.assign(urlServer + "Btu/PanelAdministrador");
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1342,7 +1533,7 @@
                         window.location.assign(urlServer);
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1359,7 +1550,7 @@
                         self.Total = self.listTotalVac[0].Total_Vacantes;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1387,14 +1578,17 @@
                         self.Matricula = self.listDatosPanel[0].Matricula;
                         self.Registrado = self.listDatosPanel[0].Registrado;
                         idCandidato = self.listDatosPanel[0].Id;
-                        eMailCandidato = self.listDatosPanel[0].Email;
+                        if (self.listDatosPanel[0].Email_Unach !== null)
+                            eMailCandidato = self.listDatosPanel[0].Email_Unach;
+                        else if (self.listDatosPanel[0].Email_Unach === null)
+                            eMailCandidato = self.listDatosPanel[0].Email;
                         nombreCandidato = self.listDatosPanel[0].NombreCandidato;
                         administrador = self.listDatosPanel[0].Administrador;
                         if (self.listDatosPanel[0].Administrador === true)
                             $('#btnPanelAdmin').show();
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1411,7 +1605,7 @@
                         window.location.assign(urlServer + "Btu/DatosCandidato");
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1429,7 +1623,7 @@
                         
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1449,7 +1643,7 @@
                             $('#totalVac').hide();
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1478,7 +1672,7 @@
                         }
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1497,7 +1691,7 @@
                         $('#VacantesXStatus').show();
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1515,13 +1709,20 @@
                 switch (resp.ressult) {
                     case "tgp":
                         self.listVacantesXstatus = btuContext.listVacantesCandidato;
-                        if (self.listVacantesXstatus.length === 0)
-                            alert('No hay vacantes registradas');
+                        if (self.listVacantesXstatus.length === 0) {
+                            Swal.fire({
+                                icon: 'info',
+                                title: '',
+                                text: 'No hay vacantes registradas',
+                                showConfirmButton: false,
+                                timer: 3000
+                            })
+                        }
                         else
                             $('#VacantesXStatus').show();
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1573,7 +1774,7 @@
                         idVacCand = Id_Vac_Cand;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1595,7 +1796,7 @@
                         else if (resp.message === '2')
                             alert('Tu usuario no está en estatus alta, por lo que no puedes aplicar a las vacantes.');
                         else
-                            alert(resp.message);
+                            Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:                        
                         break;
@@ -1663,18 +1864,22 @@
                             $('#infemp1').show();
                             $("#globalStatusEmpresa").css('background-color', 'green');
                             self.StatusEmpresa = 'Alta';
+                            self.text_tooltip = "Agregar una vacante"
+                            
                         }
                         else if (self.listDatosPanelEmpresa[0].Status === 'B') {
                             $('#infemp2').show();
                             $("#globalStatusEmpresa").css('background-color', 'yellow');
                             self.StatusEmpresa = 'Baja Temporal';
                             $('#nuevaVacante').prop('disabled', true);
+                            self.text_tooltip = 'No podrá agregar vacantes debido a que su usuario está en el status: BAJA TEMPORAL';
                         }
                         else {
                             $('#infemp2').show();
                             $("#globalStatusEmpresa").css('background-color', 'yellow');
                             self.StatusEmpresa = 'Pendiente Por Activar';
                             $('#nuevaVacante').prop('disabled', true);
+                            self.text_tooltip = 'No podrá agregar vacantes debido a que su usuario está en el status: Pendiente Por Activar';
                         }
                         $('#statusDesc').show();
                         if (self.listDatosPanelEmpresa[0].Administrador === true)
@@ -1682,7 +1887,7 @@
                         self.IdEmpresa = self.listDatosPanelEmpresa[0].Id_Empresa;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1739,7 +1944,7 @@
                                 pageLength: 5,
                                 columns: [
                                     {
-                                        "className": 'details-control',                                        
+                                        "className": 'details-control',
                                         "orderable": false,
                                         "data": null,
                                         "defaultContent": '',
@@ -1777,6 +1982,12 @@
                                     }
                                 }
                             });
+                        }
+                        else {
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'No hay vacantes registradas'
+                            })
                         }
                         break;
                     case "notgp":
@@ -1887,7 +2098,7 @@
                         window.location.assign(urlServer + "Btu/Vacante");
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1908,7 +2119,7 @@
                         self.listInteresadosVac = btuContext.listInteresadosVac;                        
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -1958,7 +2169,7 @@
                                 },
                                 data: self.listVacantesApliEmpresa,
                                 pageLength: 5,
-                                columns: [                                    
+                                columns: [
                                     { data: "Nombre" },
                                     { data: "Total" },
                                     { data: "Edad_Minima" },
@@ -1971,7 +2182,7 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<p data-toggle="tooltip"  title="Ver Interesados" class"  ><i class="fas fa-user" data-toggle="modal" data-target="#modalIntVac" ng-click="ObtenerGridInteresados(&quot;' + row.Id + '&quot;,&quot;' + row.Nombre + '&quot;)"></i></p>';                                            
+                                            return '<p data-toggle="tooltip"  title="Ver Interesados" class"  ><i class="fas fa-user" data-toggle="modal" data-target="#modalIntVac" ng-click="ObtenerGridInteresados(&quot;' + row.Id + '&quot;,&quot;' + row.Nombre + '&quot;)"></i></p>';
                                         }
 
                                     }
@@ -1983,10 +2194,16 @@
                                     }
                                 }
                             });
+                        } else {
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Sin postulantes',
+                                text: 'No hay candidatos postulados, quiza quiera enviarles una invitación a los candidatos.'
+                            })
                         }
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -2043,7 +2260,7 @@
                                         data: "Id",
                                         "className": "text-center",
                                         render: function (data, type, row, meta) {
-                                            return '<i data-toggle="tooltip"  title="Ver Curriculum" class="fas fa-file-alt" ng-click="GuardarIdVacante(&quot;' + row.Id + '&quot;,&quot;' + row.RutaFoto + '&quot;)"></i>';
+                                            return '<i data-toggle="tooltip"  title="Ver Curriculum" class="fas fa-file-alt" ng-click="ReporteCurriculumAdmin(&quot;' + row.Id + '&quot;,&quot;' + row.Ruta_Foto + '&quot;,&quot;' + 'I' + '&quot;)"></i>';
                                         }
 
                                     },
@@ -2066,7 +2283,7 @@
                         }
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -2146,7 +2363,7 @@
                         }
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -2156,23 +2373,32 @@
         };
 
         $scope.EliminarVacante = (Id) => {
-            let respuesta = confirm("¿Desea borrar la vacante?");
-            if (respuesta) {
-                btuContext.EliminarVacante(Id, function (resp) {
-                    switch (resp.ressult) {
-                        case "tgp":
-                            alert("Vacante borrada.");
-                            VerVacantesEmpresa();
-                            break;
-                        case "notgp":
-                            alert(resp.message);
-                            break;
-                        default:
-                            break;
-                    }
-                    $scope.$apply();
-                });
-            }
+            Swal.fire({
+                title: '¿Desea borrar la vacante?',
+                showDenyButton: true,
+                confirmButtonText: 'Si',
+                denyButtonText: `No`,
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    btuContext.EliminarVacante(Id, function (resp) {
+                        switch (resp.ressult) {
+                            case "tgp":
+                                Swal.fire('Vacante borrada.!', '', 'success')
+                                VerVacantesEmpresa();
+                                break;
+                            case "notgp":
+                                Swal.fire(resp.message, '', 'info')
+                                break;
+                            default:
+                                break;
+                        }
+                        $scope.$apply();
+                    });                    
+                } else if (result.isDenied) {
+                    Swal.fire('No se borro la vacante', '', 'info')
+                }
+            })
         };
 
         this.GuardarIdCandidatoInteresado = (idVacCand, idCandidato, emailCand) => {
@@ -2196,7 +2422,7 @@
                             $('#modalIntVac').modal('toggle');
                             break;
                         case "notgp":
-                            alert(resp.message);
+                            Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                             alert('Estatus modificado correctamente');
                             $('#modalStatusCandidato').modal('toggle');
                             $('#modalIntVac').modal('toggle');
@@ -2230,7 +2456,7 @@
                             break;
                         case "notgp":
                             $("#modalCargandoSolicitud").modal('toggle');
-                            alert(resp.message);
+                            Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                             break;
                         default:
                             $("#modalCargandoSolicitud").modal('toggle');
@@ -2264,7 +2490,7 @@
                         self.TotalEmpresas = TotalEmpresas;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -2286,7 +2512,7 @@
                         self.TotalCandReg = TotalCandidatos;
                         break;
                     case "notgp":
-                        alert(resp.message);                        
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })                        
                         break;
                     default:
                         break;
@@ -2304,7 +2530,7 @@
                         self.lycorreo = self.listDatosSesion[0].Email;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -2418,7 +2644,7 @@
                         }
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -2531,7 +2757,7 @@
                         }
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -2638,7 +2864,7 @@
 
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -2743,7 +2969,7 @@
 
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -2765,7 +2991,7 @@
                         window.location.assign(urlServer + "Btu/PanelEmpresa");
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -2782,14 +3008,26 @@
                 btuContext.EditarStatusEmpresa(self.statusEmpresa, rfcEmpresa, self.observacionesStatus, eMailEmpresa, function (resp) {
                     switch (resp.ressult) {
                         case "tgp":
-                            alert('Estatus modificado');
                             $('#modalCargandoSolicitud').modal('toggle');
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'Estatus Modificado',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
                             ObtenerTotalEmpresas();
                             ObtenerGridEmpresasRegistradas();
                             break;
                         case "notgp":
-                            $('#modalCargandoSolicitud').modal('toggle');
-                            alert(resp.message);
+                            $('#modalCargandoSolicitud').modal('toggle')
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: resp.message,
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
                             break;
                         default:
                             $('#modalCargandoSolicitud').modal('toggle');
@@ -2817,7 +3055,7 @@
                         ObtenerGridCandidatosRegistrados();
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -2833,7 +3071,7 @@
                         window.location.assign(urlServer + "Btu/PanelCandidato");
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -2856,7 +3094,7 @@
 
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -2875,7 +3113,7 @@
                             ObtenerGridEmpresasRegistradas();
                             break;
                         case "notgp":
-                            alert(resp.message);
+                            Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                             break;
                         default:
                             break;
@@ -2897,7 +3135,7 @@
                         }
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -2920,7 +3158,7 @@
                         ObtenerGridInteresadosAdmin(self.Vacante)
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -2939,7 +3177,7 @@
                             alert('Ningun candidato ha aplicado a esta vacante');
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -2958,7 +3196,7 @@
                             alert('Ningun candidato ha aplicado a esta vacante');
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -2975,7 +3213,7 @@
                         self.listVacantesVencidas = btuContext.listVacantesVencidas;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -2993,7 +3231,7 @@
                             alert('Correo enviado');
                             break;
                         case "notgp":
-                            alert(resp.message);
+                            Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                             break;
                         default:
                             break;
@@ -3017,7 +3255,7 @@
                         ObtenerGridCorreosCandidatos();
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -3033,7 +3271,7 @@
                         self.listCorreosCandidatos = btuContext.listCorreosCandidatos;
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -3113,6 +3351,18 @@
                     case "tgp":
                         self.listDatosVacante = btuContext.listDatosVacante;
                         if (self.listDatosVacante.length > 0) {
+                            let fecha_inicio_edit = self.listDatosVacante[0].Vigencia_Inicio
+                            let fecha_fin_edit = self.listDatosVacante[0].Vigencia_Fin
+                            let dia_inicio = fecha_inicio_edit.substr(0,2)
+                            let mes_inicio = fecha_inicio_edit.substr(3, 2)
+                            let anio_inicio = fecha_inicio_edit.substr(6, 2)
+                            let dia_fin = fecha_fin_edit.substr(0, 2)
+                            let mes_fin = fecha_fin_edit.substr(3, 2)
+                            let anio_fin = fecha_fin_edit.substr(6, 2)
+
+                            fecha_inicio_edit = mes_inicio +'/'+ dia_inicio +'/'+ anio_inicio
+                            fecha_fin_edit = mes_fin + '/' + dia_fin + '/' + anio_fin
+
                             let licencia = self.listDatosVacante[0].Licencia;
                             let radicar = self.listDatosVacante[0].Radicar;
                             let viajar = self.listDatosVacante[0].Viajar;
@@ -3132,8 +3382,8 @@
                             self.PrestacionesLab = self.listDatosVacante[0].Prestaciones;
                             self.UbicVacante = self.listDatosVacante[0].Ubicacion;
                             self.IdiomaExtra = self.listDatosVacante[0].Idioma;
-                            self.VigIniVac = self.listDatosVacante[0].Vigencia_Inicio;
-                            self.VigFinVac = self.listDatosVacante[0].Vigencia_Fin;
+                            self.VigIniVac = new Date(fecha_inicio_edit)
+                            self.VigFinVac = new Date(fecha_fin_edit)
                             self.TipoVacante = self.listDatosVacante[0].Tipo;
                             self.PersonaEntrevista = self.listDatosVacante[0].Responsable_Entrevista;
                             self.DiaHorarioEntre = self.listDatosVacante[0].Especificaciones_Entrevista;
@@ -3170,7 +3420,7 @@
                         }
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
                         break;
                     default:
                         break;
@@ -3181,51 +3431,80 @@
 
         this.GuardarVacante = () => {
             if (datosPerfilVacante === true && datosInfoEntrevista === true) {
-                let sViaja = $("#rSiViaja").is(':checked');
-                let nViaja = $("#rNoViaja").is(':checked');
-                let sRadica = $("#rSiRadica").is(':checked');
-                let nRadica = $("#rNoRadica").is(':checked');
-                let sLicencia = $("#rSiLicencia").is(':checked');
-                let nLicencia = $("#rNoLicencia").is(':checked');
+                let esNumeroVac = expReguarNumeros(self.NumeroVacantes);
+                if (esNumeroVac) {
+                    let sViaja = $("#rSiViaja").is(':checked');
+                    let nViaja = $("#rNoViaja").is(':checked');
+                    let sRadica = $("#rSiRadica").is(':checked');
+                    let nRadica = $("#rNoRadica").is(':checked');
+                    let sLicencia = $("#rSiLicencia").is(':checked');
+                    let nLicencia = $("#rNoLicencia").is(':checked');
 
-                let viaja = false;
-                let tipoViaja = "";
-                let radica = false;
-                let tipoRadica = "";
-                let licencia = false;
-                let tipoLicencia = "";
+                    let viaja = false;
+                    let tipoViaja = "";
+                    let radica = false;
+                    let tipoRadica = "";
+                    let licencia = false;
+                    let tipoLicencia = "";
 
-                if (sViaja === true || nViaja === true) {
-                    viaja == true;
-                    tipoViaja = sViaja === true ? "S" : "N"; // sentencia que devuelve un valor
+                    if (sViaja === true || nViaja === true) {
+                        viaja == true;
+                        tipoViaja = sViaja === true ? "S" : "N"; // sentencia que devuelve un valor
+                    }
+                    if (sRadica === true || nRadica === true) {
+                        viaja == true;
+                        tipoRadica = sRadica === true ? "S" : "N"; // sentencia que devuelve un valor
+                    }
+                    if (sLicencia === true || nLicencia === true) {
+                        viaja == true;
+                        tipoLicencia = sLicencia === true ? "S" : "N"; // sentencia que devuelve un valor
+                    }
+                    self.VigIniVac = document.getElementById('VigIniVac').value
+                    self.VigFinVac = document.getElementById('VigFinVac').value
+                    btuContext.GuardarVacante(self.NombreVacante, self.NumeroVacantes, self.EdadMin, self.EdadMax, self.Genero, self.EdoCivil, self.GradoEstu, self.Expe, self.ActReal, self.ConoReq, self.HorioDiaLab,
+                        self.TipoSuedo, self.Salario, self.PrestacionesLab, self.UbicVacante, self.IdiomaExtra, self.VigIniVac, self.VigFinVac, self.TipoVacante, self.PersonaEntrevista, self.DiaHorarioEntre,
+                        self.DircEntre, self.TelOfc, self.Email, self.Comentarios, tipoViaja, tipoRadica, tipoLicencia, function (resp) {
+                            switch (resp.ressult) {
+                                case "tgp":
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'success',
+                                        title: 'Vacante agregada correctamente.',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    })
+                                    setTimeout(function () {
+                                        window.location.assign(urlServer + "Btu/PanelEmpresa");
+                                    }, 2000);
+                                    break;
+                                case "notgp":
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: resp.message,
+                                        showConfirmButton: false,
+                                        timer: 3000
+                                    })
+                                    break;
+                                default:
+                                    break;
+                            }
+                            $scope.$apply();
+                        });
                 }
-                if (sRadica === true || nRadica === true) {
-                    viaja == true;
-                    tipoRadica = sRadica === true ? "S" : "N"; // sentencia que devuelve un valor
+                else {
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Debe introducir solo números en el campo Numero de vacantes'
+                    })
                 }
-                if (sLicencia === true || nLicencia === true) {
-                    viaja == true;
-                    tipoLicencia = sLicencia === true ? "S" : "N"; // sentencia que devuelve un valor
-                }
-                btuContext.GuardarVacante(self.NombreVacante, self.NumeroVacantes, self.EdadMin, self.EdadMax, self.Genero, self.EdoCivil, self.GradoEstu, self.Expe, self.ActReal, self.ConoReq, self.HorioDiaLab,
-                    self.TipoSuedo, self.Salario, self.PrestacionesLab, self.UbicVacante, self.IdiomaExtra, self.VigIniVac, self.VigFinVac, self.TipoVacante, self.PersonaEntrevista, self.DiaHorarioEntre,
-                    self.DircEntre, self.TelOfc, self.Email, self.Comentarios, tipoViaja, tipoRadica, tipoLicencia, function (resp) {
-                        switch (resp.ressult) {
-                            case "tgp":
-                                alert("Vacante agregada correctamente.");
-                                window.location.assign(urlServer + "Btu/PanelEmpresa");
-                                break;
-                            case "notgp":
-                                alert(resp.message);
-                                break;
-                            default:
-                                break;
-                        }
-                        $scope.$apply();
-                    });
             }
             else {
-                alert('No se han completado todos los campos requeridos');
+                Swal.fire({
+                    icon: 'info',
+                    title: 'No se han completado todos los campos requeridos'
+                })
             }
         }
 
@@ -3256,17 +3535,34 @@
                 viaja == true;
                 tipoLicencia = sLicencia === true ? "S" : "N"; // sentencia que devuelve un valor
             }
+            self.VigIniVac = document.getElementById('VigIniVac').value
+            self.VigFinVac = document.getElementById('VigFinVac').value
             btuContext.EditarVacante(self.NombreVacante,
                 self.NumeroVacantes, self.EdadMin, self.EdadMax, self.EdoCivil, self.GradoEstu, self.Expe, self.ActReal, self.ConoReq, self.Salario, self.TipoSuedo, self.PrestacionesLab, self.UbicVacante,
                 tipoLicencia, self.VigIniVac, self.VigFinVac, self.TipoVacante, self.DircEntre, self.TelOfc, self.Email, self.Comentarios, self.PersonaEntrevista, self.DiaHorarioEntre, self.IdiomaExtra,
                 tipoRadica, tipoViaja, self.Genero, self.HorioDiaLab,function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
-                        alert("Vacante editada correctamente.");
-                        window.location.assign(urlServer + "Btu/PanelEmpresa");
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Vacante editada correctamente.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        setTimeout(function () {
+                            window.location.assign(urlServer + "Btu/PanelEmpresa");
+                        }, 2000);
                         break;
                     case "notgp":
-                        alert(resp.message);
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'Error.',
+                            text: resp.message,
+                            showConfirmButton: false,
+                            timer: 3000
+                        })
                         break;
                     default:
                         break;
@@ -3278,8 +3574,6 @@
         this.VerCandidatosDisponibles = () => {
             ComboVacantesEmpresa();
             ComboAreaConocimiento();
-            $('#verCandDisp').show();
-            $('#containerEmpresa').show();
         };      
 
         //Valores Menu
@@ -3314,7 +3608,7 @@
                     '<th>Usuario</th>' +
                     '<th>Contraseña</th>' +
                     '<th>Medio de contacto</th>' +
-                    '<th>Código postal</th>' +
+                    '<th>Fecha Registro</th>' +
                     '<th>Persona de contacto</th>' +
                     '</tr>' +
                     '<tr>' +
@@ -3325,7 +3619,7 @@
                     '<td>' + data.Rfc + '</td>' +
                     '<td>' + data.Contrasena + '</td>' +
                     '<td>' + data.Medio_Contacto + '</td>' +
-                    '<td>' + data.Codigo_Postal + '</td>' +
+                    '<td>' + data.Alta_Fecha + '</td>' +
                     '<td>' + data.Contacto + '</td>' +
                     '</tr>' +
                     '</table>';
@@ -3483,6 +3777,32 @@
 
         //Reportes PDF
 
+        this.ReporteListaEmpresas = (callback) => {
+            //abrirModal();
+            $('#modalCargandoSolicitud').modal('show');
+            var xhr = new XMLHttpRequest();
+            var ruta = urlServer + 'Btu/ReporteListaEmpresa';
+            xhr.responseType = 'blob';
+            xhr.open("POST", ruta, true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {//Call a function when the state changes.
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    if (typeof window.navigator.msSaveBlob === 'function')
+                        window.navigator.msSaveBlob(req.response, "PdfName-" + new Date().getTime() + ".pdf");
+                    else {
+                        var blob = new Blob([this.response], { type: 'application/pdf' });
+                        var link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        //link.download = "report.pdf";
+                        window.open(link);
+                    }
+                    //cerrarModal();
+                }
+                $("#modalCargandoSolicitud").modal('toggle');
+            }
+            xhr.send();
+        }; // SE EJECUTA EN EL PANEL ADMINISTRADOR
+
         $scope.ReporteFichaEmpresa = (Id, callback) => {
             //abrirModal();
             $('#modalCargandoSolicitud').modal('show');
@@ -3593,6 +3913,26 @@
             },
                 xhr.send("Id=" + Id + "&RutaFoto=" + RutaFoto + "&DatosContacto=" + DatosContacto);
         };
+
+
+        var expReguarNumeros = (valor) => {
+            //^: el emparejamiento se debe realizar desde el principio de la cadena.
+            //[A - Z]: cualquier carácter entre la A mayúscula y la Z mayúscula.
+            //{ 1, 2 }: uno o dos caracteres.
+            //\s: un espacio en blanco.
+            //\d: un dígito.
+            //{ 4 }: cuatro dígitos.
+            //\s: un espacio en blanco.
+            //([B - D] | [F - H] | [J - N] | [P - T] | [V - Z]): cualquier carácter entre la B mayúscula y la Z mayúscula, excepto las vocales.
+            //{ 3 }: tres caracteres.
+            //$: el emparejamiento se debe realizar hasta el final de la cadena.
+            //let expreg = /^[0-9]{1,2}\s\d{4}\s([B-D]|[F-H]|[J-N]|[P-T]|[V-Z]){3}$/;
+            let expreg = /^[0-9]{1,2}$/;
+            if (expreg.test(valor))
+                return true;
+            else
+                return false;
+        }
 
     }]);
 })();

@@ -370,5 +370,27 @@ namespace BolsaTrabajoUnv2_0.Data
                 exeProc.LimpiarOracleCommand(ref cmd);
             }
         }
+
+        public static void GuardarCandidatoExterno(Btu_CandidatoExterno objExterno, ref string Verificador)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { "P_PATERNO", "P_MATERNO", "P_NOMBRE", "P_COLONIA", "P_DOMICILIO", "P_EMAIL", "P_CONTRASENIA", "P_CURP", "P_FEC_NAC", "P_CONTRASENIA_ENCRIPTADA","P_ESTADO", "P_MUNICIPIO"};
+                object[] Valores = { objExterno.Paterno, objExterno.Materno, objExterno.Nombre, objExterno.Colonia, objExterno.Domicilio, objExterno.Email, objExterno.Contrasenia, objExterno.Curp, objExterno.Fecha_Nacimiento, objExterno.Contrasenia_encriptada, objExterno.Estado, objExterno.Municipio };
+                string[] ParametrosOut = { "P_BANDERA" };
+                cmd = exeProc.GenerarOracleCommand("INS_BTU_CANDIDATO_EXTERNO", ref Verificador, ref dr, Parametros, Valores, ParametrosOut);
+            }
+            catch (Exception ex)
+            {
+                Verificador = ex.Message;
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+        }
     }
 }

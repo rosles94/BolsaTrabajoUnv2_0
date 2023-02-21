@@ -13,11 +13,12 @@
     @*<link href="~/Icons/fontawesome-free-5.13.0-web/css/all.css" rel="stylesheet" />*@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
     <link href="~/DataTables/DataTables-1.10.20/css/jquery.dataTables.css" rel="stylesheet" />
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="py-0">
 
-    <nav class="navbar navbar-light" style="background-color:#1f84cc">
-        <a><img src="~/Imagenes/ImagenesSitio/BTU_Encabezado.jpg" style="max-width:100%" /></a>
+    <nav class="navbar navbar-light">
+        <a><img src="~/Imagenes/ImagenesSitio/Encabezado_btu.jpg" style="max-width:100%" /></a>
     </nav>    
     @*<nav class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="navbar-brand" href="#">Navbar</a>
@@ -59,6 +60,10 @@
         <hr />
     </div>
 
+    <footer>
+        <img src="~/Imagenes/ImagenesSitio/Pie_btu.jpg" style="max-width:100%" />
+    </footer>
+
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
@@ -67,8 +72,8 @@
     <script src="~/Scripts/angular.min.js"></script>
     <script src="~/Scripts/global.js"></script>
     <script src="~/Scripts/angular.js"></script>
-    <script src="~/Scripts/Models/BtuModel.js"></script>
-    <script src="~/Scripts/Controllers/BtuController.js"></script>
+    <script src="~/Scripts/Models/BtuModel.js?002"></script>
+    <script src="~/Scripts/Controllers/BtuController.js?002"></script>
     <script src="~/Scripts/bootstrap.bundle.min.js"></script>
 </body>
 </html>

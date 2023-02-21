@@ -1,0 +1,230 @@
+﻿
+@{
+    ViewBag.Title = "Registrar Datos de la Empresa";
+}
+<div id="buscandoEmpresa" class="col-md-6" style="display:none">
+    <div class="spinner-grow text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+    <div class="spinner-grow text-success" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+    <div class="spinner-grow text-warning" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+    <div class="spinner-grow text-danger" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+
+<div class="container-fluid py-5" ng-init="ctrl.CargarCombos()" >
+    <div id="formularioRegistro" class="row" >
+        <div class="col-md-2">
+            <ul class="list-group">
+                <li id="globalInfoCand" class="list-group-item d-flex justify-content-between align-items-center" style="background-color:yellow">
+                    Información del Candidato
+                    <span class="badge badge-primary badge-pill">
+                        <i id="infemp1" style="display:none" class="fas fa-check"></i>
+                        <i id="infemp2" class="fas fa-exclamation"></i>
+                    </span>
+                </li>                  
+            </ul>
+            <br />
+            <input id="regresarPanelEmpresa" type="button" class="btn btn-danger" value="Regresar" ng-click="ctrl.RegresarPanelEmpresa()" style="display:none" />
+        </div>
+
+        <div class="col-md-10">
+            <ul class="nav nav-tabs" id="tabInfoEmpresa" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="infCanidato-tab" data-toggle="tab" href="#infoCandidato" role="tab" aria-controls="infoCandidato" aria-selected="true">Información del Candidato</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="infoCandidato" role="tabpanel" aria-labelledby="home-tab">
+                    <form name="myForm">
+                        <div class="row">
+                            <div class="col-md-6 py-3">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">Nombre(s)</span>
+                                    </div>
+                                    <input ng-model="ctrl.nombre" id="nombre" name="nombre" ng-change="ctrl.GlobalInfoCandidato()" type="text" class="form-control" placeholder="Nombre(s)" aria-label="nombre" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                </div>
+                                <span style="color:red" ng-show="myForm.nombre.$invalid" />
+                                <span ng-show="myForm.nombre.$error.required">*Nombre(s) Requerido</span>
+                            </div>
+                            <div class="col-md-6 py-3">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">Paterno</span>
+                                    </div>
+                                    <input ng-model="ctrl.paterno" id="paterno" name="paterno" ng-change="ctrl.GlobalInfoCandidato()" type="text" class="form-control" placeholder="Apellido Paterno" aria-label="paterno" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                </div>
+                                <span style="color:red" ng-show="myForm.paterno.$invalid" />
+                                <span ng-show="myForm.paterno.$error.required">*Apellido Paterno Requerido</span>
+                            </div>
+
+                            <div class="col-md-6 py-3">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">Materno</span>
+                                    </div>
+                                    <input ng-model="ctrl.materno" id="materno" name="materno" ng-change="ctrl.GlobalInfoCandidato()" type="text" class="form-control" placeholder="Apellido Materno" aria-label="materno" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                </div>
+                                <span style="color:red" ng-show="myForm.materno.$invalid" />
+                                <span ng-show="myForm.materno.$error.required">*Apellido Materno Requerido</span>
+                            </div>
+
+                            <div class="col-md-6 py-3">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">Fecha de Nacimiento</span>
+                                    </div>
+                                    <input ng-model="ctrl.fecnac" id="fecnac" name="fecnac" ng-change="ctrl.GlobalInfoCandidato()" type="date" class="form-control" aria-label="materno" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                </div>
+                                <span style="color:red" ng-show="myForm.fecnac.$invalid" />
+                                <span ng-show="myForm.fecnac.$error.required">*Fecha de Nacimiento Requerida</span>
+                            </div>
+
+                            <div class="col-md-6 py-3">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">CURP</span>
+                                    </div>
+                                    <input ng-model="ctrl.curp" id="curp" name="curp" ng-change="ctrl.GlobalInfoCandidato()" type="text" placeholder="CURP" class="form-control" aria-label="curp" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                </div>
+                                <span style="color:red" ng-show="myForm.curp.$invalid" />
+                                <span ng-show="myForm.curp.$error.required">*CURP Requerida</span>
+                            </div>
+
+                            <div class="col-md-6 py-3">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">Escuela de Procedencia</span>
+                                    </div>
+                                    <input ng-model="ctrl.escuela" id="escuela" name="escuela" type="text" ng-change="ctrl.GlobalInfoCandidato()" class="form-control" placeholder="Escuela de Procedencia" aria-label="EscuelaProcedencia" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                </div>
+                                <span style="color:red" ng-show="myForm.escuela.$invalid" />
+                                <span ng-show="myForm.escuela.$error.required">*Escuela de Procedencia requerida</span>
+                            </div>
+                            <div class="col-md-6 py-2">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">Estado</span>
+                                    </div>
+                                    <select name="Estado" id="Estado" ng-model="ctrl.Estado" ng-change="ctrl.GlobalInfoCandidato()" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listEstados" ng-click="ctrl.ComboMunicipios()" style="max-width:100%" required></select>
+                                </div>
+                                <span style="color:red" ng-show="myForm.Estado.$invalid" />
+                                <span ng-show="myForm.Estado.$error.required">*Estado requerido</span>
+                            </div>
+                            <div class="col-md-6 py-2">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">Municipio</span>
+                                    </div>
+                                    <select name="Municipio" id="Municipio" ng-change="ctrl.GlobalInfoCandidato()" ng-model="ctrl.Municipio" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listMunicipios" style="max-width:100%" required></select>
+                                </div>
+                                <span style="color:red" ng-show="myForm.Municipio.$invalid" />
+                                <span ng-show="myForm.Municipio.$error.required">*Municipio requerido</span>
+                            </div>
+                            <div class="col-md-6 py-2">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">Cólonia</span>
+                                    </div>
+                                    <input ng-model="ctrl.Colonia" id="Colonia" name="Colonia" type="text" ng-change="ctrl.GlobalInfoCandidato()" class="form-control" placeholder="Cólonia" aria-label="Cólonia" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                </div>
+                                <span style="color:red" ng-show="myForm.Colonia.$invalid" />
+                                <span ng-show="myForm.Colonia.$error.required">*Cólonia requerida</span>
+                            </div>
+                            <div class="col-md-12 py-2">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">Domicilio</span>
+                                    </div>
+                                    <input ng-model="ctrl.Domicilio" id="Domicilio" name="Domicilio" type="text" ng-change="ctrl.GlobalInfoCandidato()" class="form-control" placeholder="Domicilio" aria-label="Domicilio" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                </div>
+                                <span style="color:red" ng-show="myForm.Domicilio.$invalid" />
+                                <span ng-show="myForm.Domicilio.$error.required">*Domicilio requerido</span>
+                            </div>
+
+                            <div class="col-md-6 py-2">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">Email</span>
+                                    </div>
+                                    <input ng-model="ctrl.email" id="email" name="email" type="text" ng-change="ctrl.GlobalInfoCandidato()" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                </div>
+                                <span style="color:red" ng-show="myForm.email.$invalid" />
+                                <span ng-show="myForm.email.$error.required">*Email requerido</span>
+                            </div>
+
+                            <div class="col-md-6 py-2">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">Contraseña</span>
+                                    </div>
+                                    <input ng-model="ctrl.contrasenia" id="contrasenia" name="contrasenia" type="password" ng-change="ctrl.GlobalInfoCandidato()" class="form-control" placeholder="Contraseña" aria-label="Domicilio" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                </div>
+                                <span style="color:red" ng-show="myForm.contrasenia.$invalid" />
+                                <span ng-show="myForm.contrasenia.$error.required">*Contraseña requerida</span>
+                            </div>
+
+                            <div class="col-md-6 py-2">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">Confirmar Contraseña</span>
+                                    </div>
+                                    <input ng-model="ctrl.contrasenia_1" id="contrasenia_1" name="contrasenia_1" type="password" ng-change="ctrl.GlobalInfoCandidato()" class="form-control" placeholder="Contraseña" aria-label="Domicilio" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                </div>
+                                <span style="color:red" ng-show="myForm.contrasenia_1.$invalid" />
+                                <span ng-show="myForm.contrasenia_1.$error.required">*Contraseña requerida</span>
+                            </div>
+
+                            <div class="col-md-6 py-2">
+                                <div></div>
+                            </div>
+
+
+                            <div class="col-md-1">
+                                <input id="inforCandidato" type="button" class="btn btn-info" value="Guardar" ng-click="ctrl.guardarDatosExterno()"
+                                       ng-disabled="myForm.nombre.$invalid || myForm.paterno.$invalid || myForm.materno.$invalid
+                                       || myForm.escuela.$invalid || myForm.Estado.$invalid || myForm.Municipio.$invalid || myForm.Colonia.$invalid
+                                       || myForm.Domicilio.$invalid || myForm.email.$invalid || myForm.contrasenia.$invalid || myForm.contrasenia_1.$invalid || myForm.fecnac.$invalid || myForm.curp.$invalid" />
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="avisoPrivacidad" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="exampleModalLabel">Aviso de Privacidad</h5>
+                    @*<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>*@
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-2">
+                            </div>
+                            <div class="col-md-10">
+                                <img src="~/Imagenes/AvisoPrivacidad/avisoPrivacidad.png" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="ctrl.AceptarAviso()">Aceptar</button>
+                    <button type="button" class="btn btn-secondary" ng-click="ctrl.RechazarAviso()">Rechazar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>

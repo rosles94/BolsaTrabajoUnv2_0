@@ -41,8 +41,8 @@
     position: absolute;
     /*height:150px;
   width:150px;*/
-    top: 42%;
-    left: 30%;
+    top: 55%;
+    left: 51%;
     z-index: 3;
 }
 
@@ -55,6 +55,7 @@
     line-height: 1.33;
     border-radius: 70px;
     background-color: #efe6a0;
+    /*background-color: #efe6a0;*/
 }
 
 
@@ -81,8 +82,8 @@
     position: absolute;
     /*height:150px;
   width:150px;*/
-    top: 42%;
-    left: 60%;
+    top: 16%;
+    left: 51%;
     z-index: 3;
 }
 
@@ -96,7 +97,8 @@
     font-weight: bold;
     line-height: 1.33;
     border-radius: 70px;
-    background-color: #C8C5E2;
+    background-color: #efe6a0;
+    /*background-color: #C8C5E2;*/
 }
 
 .bouton-image3:before {
@@ -133,7 +135,8 @@
     font-weight: bold;
     line-height: 1.33;
     border-radius: 70px;
-    background-color: #adc9d8;
+    background-color: #abc5dc;
+    /*background-color: #adc9d8;*/
 }
 
 .bouton-image4:before {

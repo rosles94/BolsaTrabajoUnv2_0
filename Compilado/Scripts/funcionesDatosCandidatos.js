@@ -3,10 +3,7 @@
     //$("#btnEditarDatos").hide();
 
 
-    $('#btninformacionCandidato').on('click', function (e) {
-        e.preventDefault();        
-        $("#estuAcad-tab").tab('show');        
-    });
+    
 
     $('#btnDatosContactoRegrear').on('click', function (e) {
         e.preventDefault();

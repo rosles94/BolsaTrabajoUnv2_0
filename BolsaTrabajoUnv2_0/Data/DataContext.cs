@@ -81,13 +81,14 @@ namespace BolsaTrabajoUnv2_0.Data
                 {
                     objDatosSesion.Tipo = objSesion.Tipo;
                     objDatosSesion.Email = objSesion.Email;
+                    objDatosSesion.Email_Unach = objSesion.Email_Unach;
                     objDatosSesion.Password = objSesion.Password;
                     objDatosSesion.Existe = Convert.ToString(cmd.Parameters["P_EXISTE"].Value);
                     objDatosSesion.Matricula = Convert.ToString(cmd.Parameters["P_MATRICULA"].Value);
                     objDatosSesion.Nombre = Convert.ToString(cmd.Parameters["P_NOMBRE"].Value);
                     objDatosSesion.Registrado = Convert.ToString(cmd.Parameters["P_REGISTRADO"].Value);
                     objDatosSesion.Id = Convert.ToString(cmd.Parameters["P_ID"].Value);
-                    objDatosSesion.Email2 = Convert.ToString(cmd.Parameters["P_EMAIL_2"].Value);
+                    objDatosSesion.Email2 = Convert.ToString(cmd.Parameters["P_EMAIL_2"].Value); // EMAIL EMPRESA
                 }
                 list.Add(objDatosSesion);
             }
@@ -115,10 +116,9 @@ namespace BolsaTrabajoUnv2_0.Data
                 string[] ParametrosOut = { "p_paterno", "p_materno", "p_nombre", "p_domicilio", "p_municipio", "p_estado","p_nacimiento", "p_telefono", "p_celular","p_correo",
                     "p_contrasena", "p_genero", "p_dep", "p_carrera", "p_id_carrera","p_id_registrado", "p_bandera" };
                 cmd = exeProc.GenerarOracleCommand("SEL_ALUMNO_UNACH", ref Verificador, ref dr, Parametros, Valores, ParametrosOut);
-
+                objDatosUnach.Matricula = objSesion.Matricula;
                 if (Verificador == "0")
                 {
-                    objDatosUnach.Matricula = objSesion.Matricula;
                     objDatosUnach.Paterno = Convert.ToString(cmd.Parameters["p_paterno"].Value);
                     objDatosUnach.Materno = Convert.ToString(cmd.Parameters["p_materno"].Value);
                     objDatosUnach.Nombre = Convert.ToString(cmd.Parameters["p_nombre"].Value);
@@ -150,6 +150,53 @@ namespace BolsaTrabajoUnv2_0.Data
             }
             return list;
         }
+
+
+        public static List<Btu_Curriculum> DatosRegistroExterno(Btu_Curriculum objSesion, ref string Verificador)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            List<Btu_Curriculum> list = new List<Btu_Curriculum>();
+            Btu_Curriculum objDatosUnach = new Btu_Curriculum();
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { "p_matricula" };
+                object[] Valores = { objSesion.Matricula };
+                string[] ParametrosOut = { "p_paterno", "p_materno", "p_nombre", "p_colonia", "p_domicilio", "p_municipio", "p_estado", "p_correo", "p_nacimiento", "p_celular",
+                    "p_carrera", "p_genero", "p_bandera" };
+                cmd = exeProc.GenerarOracleCommand("SEL_ALUMNO_EXTERNO", ref Verificador, ref dr, Parametros, Valores, ParametrosOut);
+                objDatosUnach.Matricula = objSesion.Matricula;
+                if (Verificador == "0")
+                {                    
+                    objDatosUnach.Paterno = Convert.ToString(cmd.Parameters["p_paterno"].Value);
+                    objDatosUnach.Materno = Convert.ToString(cmd.Parameters["p_materno"].Value);
+                    objDatosUnach.Nombre = Convert.ToString(cmd.Parameters["p_nombre"].Value);
+                    objDatosUnach.Domicilio = Convert.ToString(cmd.Parameters["p_domicilio"].Value);
+                    objDatosUnach.Municipio = Convert.ToString(cmd.Parameters["p_municipio"].Value);
+                    objDatosUnach.Estado = Convert.ToString(cmd.Parameters["p_estado"].Value);
+                    objDatosUnach.Correo = Convert.ToString(cmd.Parameters["p_correo"].Value);
+                    objDatosUnach.Fecha_Nacimiento = Convert.ToString(cmd.Parameters["p_nacimiento"].Value);
+                    objDatosUnach.Celular = Convert.ToString(cmd.Parameters["p_celular"].Value);
+                    objDatosUnach.Carrera = Convert.ToString(cmd.Parameters["p_carrera"].Value);
+                    objDatosUnach.Genero = Convert.ToString(cmd.Parameters["p_genero"].Value);
+                    objDatosUnach.Ruta_Foto = null;
+                    objDatosUnach.Registrado = "0";
+                }
+                list.Add(objDatosUnach);
+            }
+            catch (Exception ex)
+            {
+                Verificador = ex.Message;
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+            return list;
+        }
+
+
         public static List<Btu_Curriculum> ObtenerDatosCurriculumAlta(Btu_Curriculum objUsuarioAlta, ref string Verificador)
         {
             OracleCommand cmd = null;
@@ -482,6 +529,7 @@ namespace BolsaTrabajoUnv2_0.Data
                     objInteresados.Genero = Convert.ToString(dr[5]);
                     fechanac = Convert.ToDateTime(dr[6]);
                     objInteresados.Ruta_Foto = Convert.ToString(dr[7]);
+                    objInteresados.Celular = Convert.ToString(dr[8]);
                     int año = fechanac.Year;
                     int mes = fechanac.Month;
                     int dia = fechanac.Day;
@@ -901,6 +949,7 @@ namespace BolsaTrabajoUnv2_0.Data
                     objGridEmpresa.Id = Convert.ToString(dr[13]);
                     objGridEmpresa.Total = Convert.ToString(dr[14]);
                     objGridEmpresa.Motivo = Convert.ToString(dr[15]);
+                    objGridEmpresa.Alta_Fecha = Convert.ToString(dr[16]);
                     listGridEmpresas.Add(objGridEmpresa);
                 }
                 return listGridEmpresas;

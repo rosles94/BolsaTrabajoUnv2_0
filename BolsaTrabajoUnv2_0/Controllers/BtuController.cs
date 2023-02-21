@@ -11,20 +11,72 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Antlr.Runtime.Misc;
-using Microsoft.Ajax.Utilities;
-using System.DirectoryServices;
-using System.Drawing.Printing;
-using System.Runtime.Remoting;
-using System.Runtime.Remoting.Messaging;
+
 
 
 namespace BolsaTrabajoUnv2_0.Controllers
 {
     public class BtuController : Controller
     {
+
+        //Metodos usados en la vista Registrar Externos        
+
+        public JsonResult RegistrarDatosExterno(string nombre, string paterno, string materno, string escuela, string Estado, string Municipio, string Colonia, string Domicilio, string email, string contrasenia, string curp, string fec_nac)
+        {
+            ResultadoCandidatoExterno objResultado = new ResultadoCandidatoExterno();
+            try
+            {
+                string Verificador = string.Empty;
+                Btu_CandidatoExterno objExterno = new Btu_CandidatoExterno();
+
+                string password = string.Empty;
+                byte[] encryted = System.Text.Encoding.Unicode.GetBytes(contrasenia);
+                password = Convert.ToBase64String(encryted);
+
+                objExterno.Nombre = nombre.ToUpper();
+                objExterno.Paterno = paterno.ToUpper();
+                objExterno.Materno = materno.ToUpper();
+                objExterno.Escuela = escuela.ToUpper();
+                objExterno.Estado = Estado;
+                objExterno.Municipio = Municipio;
+                objExterno.Colonia = Colonia;
+                objExterno.Domicilio = Domicilio;
+                objExterno.Email = email;
+                objExterno.Contrasenia = contrasenia;
+                objExterno.Curp = curp.ToUpper();
+                objExterno.Fecha_Nacimiento = fec_nac;
+                objExterno.Contrasenia_encriptada = password;
+
+                GuardarDataContext.GuardarCandidatoExterno(objExterno, ref Verificador);
+                if (Verificador == "0")
+                {
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";
+                }
+                else
+                {
+                    objResultado.Error = true;
+                    objResultado.MensajeError = Verificador;
+                }
+            }
+            catch(Exception ex)
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = ex.Message;
+            }
+            return Json(objResultado, JsonRequestBehavior.AllowGet);
+        }
+
+        
+
         //Metodos usados en la vista Registrar Empresa
-            public JsonResult BuscarEmpresa(string Rfc)
+        /// <summary>
+        /// La función de este metodo es buscar si la empresa ya ha sido dada de alta en el sistema
+        /// Método : BuscarEmpresa
+        /// </summary>
+        /// <param name="Rfc"></param>
+        /// <returns>Json</returns>
+        public JsonResult BuscarEmpresa(string Rfc)
         {
             Btu_Empresa objEmpresa = new Btu_Empresa();
             ResultadoEmpresa objResultado = new ResultadoEmpresa();
@@ -53,6 +105,28 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es dar de alta a la empresa que desea registrarse
+        /// </summary>
+        /// <param name="RazonSocial"></param>
+        /// <param name="NombreComercial"></param>
+        /// <param name="Actividad"></param>
+        /// <param name="CodigoPostal"></param>
+        /// <param name="Estado"></param>
+        /// <param name="Ciudad"></param>
+        /// <param name="Colonia"></param>
+        /// <param name="Domicilio"></param>
+        /// <param name="Rfc"></param>
+        /// <param name="Contacto"></param>
+        /// <param name="ContactoCargo"></param>
+        /// <param name="Telefono"></param>
+        /// <param name="Celular"></param>
+        /// <param name="Email"></param>
+        /// <param name="MedioContacto"></param>
+        /// <param name="Contrasena"></param>
+        /// <param name="RutaFoto"></param>
+        /// <param name="TipoPersona"></param>
+        /// <returns>Json</returns>
         public JsonResult RegistrarDatosEmpresa(string RazonSocial, string NombreComercial, string Actividad, string CodigoPostal, string Estado, string Ciudad, string Colonia, string Domicilio, string Rfc,
             string Contacto, string ContactoCargo, string Telefono, string Celular, string Email, string MedioContacto, string Contrasena, string RutaFoto, string TipoPersona)
         {
@@ -103,7 +177,28 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
-
+        /// <summary>
+        /// La función de este método es editar los datos de la empresa desde el perfil del administrador
+        /// Método : EditarDatosEmpresa
+        /// </summary>
+        /// <param name="RazonSocial"></param>
+        /// <param name="NombreComercial"></param>
+        /// <param name="Actividad"></param>
+        /// <param name="CodigoPostal"></param>
+        /// <param name="Estado"></param>
+        /// <param name="Ciudad"></param>
+        /// <param name="Colonia"></param>
+        /// <param name="Domicilio"></param>
+        /// <param name="Rfc"></param>
+        /// <param name="Contacto"></param>
+        /// <param name="ContactoCargo"></param>
+        /// <param name="Telefono"></param>
+        /// <param name="Celular"></param>
+        /// <param name="Email"></param>
+        /// <param name="MedioContacto"></param>
+        /// <param name="Contrasena"></param>
+        /// <param name="TipoPersona"></param>
+        /// <returns>Json</returns>
         public JsonResult EditarDatosEmpresa(string RazonSocial, string NombreComercial, string Actividad, string CodigoPostal, string Estado, string Ciudad, string Colonia, string Domicilio, string Rfc,
             string Contacto, string ContactoCargo, string Telefono, string Celular, string Email, string MedioContacto, string Contrasena, string TipoPersona)
         {
@@ -160,6 +255,25 @@ namespace BolsaTrabajoUnv2_0.Controllers
             }
         }
         //Metodos usados en la vista Datos Candidato
+        /// <summary>
+        /// La función de este método es guardar la información principal del candidto
+        /// Método : GuardarInformacionCandidato
+        /// </summary>
+        /// <param name="Matricula"></param>
+        /// <param name="NombreCandidato"></param>
+        /// <param name="ApePatCandidato"></param>
+        /// <param name="ApeMatCandidato"></param>
+        /// <param name="FecNac"></param>
+        /// <param name="Estado"></param>
+        /// <param name="Municipio"></param>
+        /// <param name="Domicilio"></param>
+        /// <param name="TelCel"></param>
+        /// <param name="TelAd"></param>
+        /// <param name="Email"></param>
+        /// <param name="AreaInt"></param>
+        /// <param name="ObjPersonal"></param>
+        /// <param name="Sexo"></param>
+        /// <returns>Json</returns>
         public JsonResult GuardarInformacionCandidato(string Matricula, string NombreCandidato, string ApePatCandidato, string ApeMatCandidato, string FecNac, string Estado,
             string Municipio, string Domicilio, string TelCel, string TelAd, string Email, string AreaInt, string ObjPersonal, string Sexo)
         {
@@ -175,30 +289,38 @@ namespace BolsaTrabajoUnv2_0.Controllers
 
                 if ((Btu_Curriculum)System.Web.HttpContext.Current.Session["SessionFotoCv"] != null)
                     objDatosCandidato = (Btu_Curriculum)System.Web.HttpContext.Current.Session["SessionFotoCv"];
-
-                objDatosCandidato.Matricula = Matricula.ToUpper();
-                objDatosCandidato.Nombre = NombreCandidato.ToUpper();
-                objDatosCandidato.Materno = ApeMatCandidato.ToUpper();
-                objDatosCandidato.Paterno = ApePatCandidato.ToUpper();
-                objDatosCandidato.Fecha_Nacimiento = FecNac;
-                objDatosCandidato.Estado = Estado;
-                objDatosCandidato.Municipio = Municipio;
-                objDatosCandidato.Domicilio = Domicilio.ToUpper();
-                objDatosCandidato.Celular = TelCel;
-                objDatosCandidato.Telefono = TelAd;
-                objDatosCandidato.Correo = Email;
-                objDatosCandidato.Intereses = AreaInt.ToUpper();
-                objDatosCandidato.Objetivo = ObjPersonal.ToUpper();
-                objDatosCandidato.Tipo = listSesion[0].Tipo;
-                objDatosCandidato.Contrasena = listSesion[0].Password;
-                objDatosCandidato.Usuario_Modificacion = NombreCandidato.ToUpper();
-                objDatosCandidato.Codigo_Postal = "CDGPT";
-                objDatosCandidato.Colonia = "COLONIA";
-                objDatosCandidato.Genero = Sexo;
-                System.Web.HttpContext.Current.Session["SessionInformacionPersonalCandidato"] = objDatosCandidato;
-                objResultado.Error = false;
-                objResultado.MensajeError = "";
-                objResultado.Resultado = null;
+                if (objDatosCandidato.Ruta_Foto != null)
+                {
+                    objDatosCandidato.Matricula = Matricula.ToUpper();
+                    objDatosCandidato.Nombre = NombreCandidato.ToUpper();
+                    objDatosCandidato.Materno = ApeMatCandidato.ToUpper();
+                    objDatosCandidato.Paterno = ApePatCandidato.ToUpper();
+                    objDatosCandidato.Fecha_Nacimiento = FecNac;
+                    objDatosCandidato.Estado = Estado;
+                    objDatosCandidato.Municipio = Municipio;
+                    objDatosCandidato.Domicilio = Domicilio.ToUpper();
+                    objDatosCandidato.Celular = TelCel;
+                    objDatosCandidato.Telefono = TelAd;
+                    objDatosCandidato.Correo = Email;
+                    objDatosCandidato.Intereses = AreaInt.ToUpper();
+                    objDatosCandidato.Objetivo = ObjPersonal.ToUpper();
+                    objDatosCandidato.Tipo = listSesion[0].Tipo;
+                    objDatosCandidato.Contrasena = listSesion[0].Password;
+                    objDatosCandidato.Usuario_Modificacion = NombreCandidato.ToUpper();
+                    objDatosCandidato.Codigo_Postal = "CDGPT";
+                    objDatosCandidato.Colonia = "COLONIA";
+                    objDatosCandidato.Genero = Sexo;
+                    System.Web.HttpContext.Current.Session["SessionInformacionPersonalCandidato"] = objDatosCandidato;
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";
+                    objResultado.Resultado = null;
+                }
+                else
+                {
+                    objResultado.Error = true;
+                    objResultado.MensajeError = "No hay imagen de perfil";
+                    objResultado.Resultado = null;
+                }
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -209,6 +331,19 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es guardar la información academica del candidato
+        /// Método : GuardarEstudiosAcademicos
+        /// </summary>
+        /// <param name="GradoEst"></param>
+        /// <param name="NombEsc"></param>
+        /// <param name="IdCarrera"></param>
+        /// <param name="AreaConoc"></param>
+        /// <param name="FechaIni"></param>
+        /// <param name="FechaFin"></param>
+        /// <param name="Carrera"></param>
+        /// <param name="DescGradoEstu"></param>
+        /// <returns>Json</returns>
         public JsonResult GuardarEstudiosAcademicos(string GradoEst, string NombEsc, string IdCarrera, string AreaConoc, string FechaIni, string FechaFin, string Carrera, string DescGradoEstu)
         {
             List<Btu_Curriculum_Informacion> list = new List<Btu_Curriculum_Informacion>();
@@ -266,6 +401,13 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es guardar el software que domina el candidato
+        /// Método : GuardarSoftware
+        /// </summary>
+        /// <param name="Software"></param>
+        /// <param name="Nivel"></param>
+        /// <returns>Json</returns>
         public JsonResult GuardarSoftware(string Software, string Nivel)
         {
             Btu_Curriculum_Informacion objInfoSotware = new Btu_Curriculum_Informacion();
@@ -320,6 +462,13 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es guardar los idiomas que domina el candidato
+        /// Método : GuardarIdioma
+        /// </summary>
+        /// <param name="Idioma"></param>
+        /// <param name="Nivel"></param>
+        /// <returns>Json</returns>
         public JsonResult GuardarIdioma(string Idioma, string Nivel)
         {
             Btu_Curriculum_Informacion objInfoIdioma = new Btu_Curriculum_Informacion();
@@ -374,6 +523,16 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es guardar la experiencia profesional del candidato
+        /// Método : GuardarExpProfesional
+        /// </summary>
+        /// <param name="NombreEmpresa"></param>
+        /// <param name="FechaIniExpProf"></param>
+        /// <param name="FechaFinExpProf"></param>
+        /// <param name="DescAct"></param>
+        /// <param name="ReferenciaTrabajo"></param>
+        /// <returns>Json</returns>
         public JsonResult GuardarExpProfesional(string NombreEmpresa, string FechaIniExpProf, string FechaFinExpProf, string DescAct, string ReferenciaTrabajo)
         {
             Btu_Curriculum_Informacion objInformacion = new Btu_Curriculum_Informacion();
@@ -429,6 +588,16 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es guardar los cursos o talleres en los que ha participado el candidato
+        /// Método : GuardarCursoTaller
+        /// </summary>
+        /// <param name="CursoTaller"></param>
+        /// <param name="TipoCurso"></param>
+        /// <param name="InstTaller"></param>
+        /// <param name="FecIniCur"></param>
+        /// <param name="FecFinCur"></param>
+        /// <returns>Json</returns>
         public JsonResult GuardarCursoTaller(string CursoTaller, string TipoCurso, string InstTaller, string FecIniCur, string FecFinCur)
         {
             Btu_Curriculum_Informacion objDatosCurso = new Btu_Curriculum_Informacion();
@@ -484,6 +653,11 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es guardar la infomración general del candidato
+        /// Método : GuardarInfoGeneralCandidato
+        /// </summary>
+        /// <returns>Json</returns>
         public JsonResult GuardarInfoGeneralCandidato()
         {
             ResultadoComun objResultado = new ResultadoComun();
@@ -511,7 +685,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                                     objResultadoInfoCv = GuardarCursoTallerBD(objResp);
                                     if (objResultadoInfoCv.Error == false)
                                     {
-                                        objResultado = CorreoAltaCandidato(objResp.Correo);
+                                        objResultado = CorreoAltaCandidato(objResp);
                                         if (objResultado.Error == false)
                                             return Json(objResultado, JsonRequestBehavior.AllowGet);
                                         else
@@ -556,6 +730,11 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La funcion de este método es modificar la información general del candidato
+        /// Método : EditarInfoGeneralCandidato
+        /// </summary>
+        /// <returns>Json</returns>
         public JsonResult EditarInfoGeneralCandidato()
         {
             Btu_Curriculum objCv = new Btu_Curriculum();
@@ -644,7 +823,11 @@ namespace BolsaTrabajoUnv2_0.Controllers
                         return Json(objResultadoCm, JsonRequestBehavior.AllowGet);
                 }
                 else
+                {
+                    objResultadoCv.Error = objResultado.Error;
+                    objResultadoCv.MensajeError = objResultado.MensajeError;
                     return Json(objResultadoCv, JsonRequestBehavior.AllowGet);
+                }
             }
             catch (Exception ex)
             {
@@ -853,6 +1036,11 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return objResultado;
             }
         }
+        /// <summary>
+        /// La función de este método es validar si el usuario que ha iniciado sesión es un usario registrado o un usuario nuevo
+        /// Método : DatosRegistroUnach
+        /// </summary>
+        /// <returns>Json</returns>
         public JsonResult DatosRegistroUnach()
         {
             ResultadoComun objResultadoCm = new ResultadoComun();
@@ -876,7 +1064,10 @@ namespace BolsaTrabajoUnv2_0.Controllers
                         List<Btu_Sesion> listSesionCandidato = new List<Btu_Sesion>();
                         listSesionCandidato = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
                         objDatosUnach.Matricula = listSesionCandidato[0].Matricula;
-                        objResultado.Resultado = DataContext.DatosRegistroUnach(objDatosUnach, ref Verificador);                        
+                        if(listSesionCandidato[0].Tipo == "UNACH")
+                            objResultado.Resultado = DataContext.DatosRegistroUnach(objDatosUnach, ref Verificador);
+                        else if (listSesionCandidato[0].Tipo == "EXTERNO")
+                            objResultado.Resultado = DataContext.DatosRegistroExterno(objDatosUnach, ref Verificador);
                     }
                     if (Verificador == "0")
                     {
@@ -1445,6 +1636,10 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es editar la informaci
+        /// </summary>
+        /// <returns></returns>
         public ResultadoComun EditarInformacionCandidato()
         {
             string Verificador = string.Empty;
@@ -1475,6 +1670,11 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return objResultado;
             }
         }
+        /// <summary>
+        /// Verifica si el usuario tiene una sesión activa en el sistema
+        /// Método : VerificarSesionCandidato
+        /// </summary>
+        /// <returns>Json</returns>
         [System.Web.Services.WebMethod(EnableSession = true)]
         public ResultadoComun VerificarSesionCandidato()
         {
@@ -1500,10 +1700,16 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return objResultado;
             }
         }
-        [HttpPost]
+        /// <summary>
+        /// La función de este método es cargar al servidor la imagen de perfil del candidato
+        /// Método : UploadFiles
+        /// </summary>
+        /// <returns>ActionResult</returns>
+        [HttpPost]        
         public ActionResult UploadFiles()
         {
             string Respuesta = "";
+            string Status_Updload = "No hay archivo";
             List<Btu_Sesion> lisInfoPersonal = new List<Btu_Sesion>();
             lisInfoPersonal = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
             Btu_Curriculum objFotoCv = new Btu_Curriculum();
@@ -1512,10 +1718,12 @@ namespace BolsaTrabajoUnv2_0.Controllers
             {
                 try
                 {
+                    Status_Updload = "Existe el archivo";
                     //  Get all files from Request object  
                     HttpFileCollectionBase files = Request.Files;
                     for (int i = 0; i < files.Count; i++)
                     {
+                        Status_Updload = "Obteniendo el archivo";
                         //string path = AppDomain.CurrentDomain.BaseDirectory + "Uploads/";  
                         //string filename = Path.GetFileName(Request.Files[i].FileName);  
 
@@ -1533,21 +1741,24 @@ namespace BolsaTrabajoUnv2_0.Controllers
                         {
                             fname = file.FileName;
                         }
+                        Status_Updload = "Archivo obtenido";
                         extencion = Path.GetExtension(fname);
-                        if (extencion != "pdf" || extencion != "PDF" || extencion != "js" || extencion != "gif")
+                        if (extencion == ".jpg" || extencion == ".png")
                         {
+                            Status_Updload = "Cargando el archivo al servidor";
                             // Get the complete folder path and store the file inside it.
                             //string fnameDoc = "../ImgProfileCv/" + fname;
                             string fnameDoc = "../ImgProfileCv/" + lisInfoPersonal[0].Matricula + extencion;
-                            objFotoCv.Ruta_Foto = "https://btu.unach.mx/Dsia/ImgProfileCv/" + lisInfoPersonal[0].Matricula + extencion; // esta ruta se manjea así porque este es el directorio del servidor
+                            objFotoCv.Ruta_Foto = "http://btu.unach.mx/ImgProfileCv/" + lisInfoPersonal[0].Matricula + extencion; // esta ruta se manjea así porque este es el directorio del servidor
                             System.Web.HttpContext.Current.Session["SessionFotoCv"] = objFotoCv;
                             fname = Server.MapPath(fnameDoc);
                             file.SaveAs(fname);
                             Respuesta = "1";
+                            Status_Updload = "Se cargó el archivo al servidor";
                         }
                         else
                         {
-                            Respuesta = "0";
+                            Respuesta = "Solo archivos formato jpg / png";
                         }
                     }
                     // Returns message that successfully uploaded  
@@ -1555,7 +1766,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return Json("Un error ha ocurrido. Error: " + ex.Message);
+                    return Json("Un error ha ocurrido. Error: "+ Status_Updload+ " ," + ex.Message);
                 }
             }
             else
@@ -1563,7 +1774,11 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json("No hay archivos seleccionados.");
             }
         }
-
+        /// <summary>
+        /// La función de este método es cargar el cv que el candidato desea
+        /// Método : CargarCvOpcional
+        /// </summary>
+        /// <returns>ActionResult</returns>
         [HttpPost]
         public ActionResult CargarCvOpcional()
         {
@@ -1609,7 +1824,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                             //string fnameDoc = "../ImgProfileCv/" + fname;
                             string fnameDoc = "../CvCandidatos/" + lisInfoPersonal[0].Matricula + extencion;
                             objCv.Id = lisInfoPersonal[0].Id;
-                            objCv.Ruta_Documento = "https://btu.unach.mx/Dsia/CvCandidatos/" + lisInfoPersonal[0].Matricula + extencion; // esta ruta se manjea así porque este es el directorio del servidor
+                            objCv.Ruta_Documento = "http://btu.unach.mx/btu/CvCandidatos/" + lisInfoPersonal[0].Matricula + extencion; // esta ruta se manjea así porque este es el directorio del servidor
                             //System.Web.HttpContext.Current.Session["SessionFotoCv"] = objCv;
                             objResultado = GuardarCv(objCv);
                             fname = Server.MapPath(fnameDoc);
@@ -1638,6 +1853,14 @@ namespace BolsaTrabajoUnv2_0.Controllers
             }
         }
         //Metodos para la vista Btu
+        /// <summary>
+        /// La función de este método es verficiar las credenciales de acceso del candidato
+        /// Método : IniciarSesion
+        /// </summary>
+        /// <param name="Usuario"></param>
+        /// <param name="Contrasena"></param>
+        /// <param name="Tipo"></param>
+        /// <returns>Json</returns>
         [System.Web.Services.WebMethod(EnableSession = true)]
         public JsonResult IniciarSesion(string Usuario, string Contrasena, string Tipo)
         {
@@ -1646,22 +1869,80 @@ namespace BolsaTrabajoUnv2_0.Controllers
             string Verificador = string.Empty;
             try
             {
-                objSesion.Email = Usuario;
-                objSesion.Password = Contrasena;
-                objSesion.Tipo = Tipo;
-                objResultado.Resultado = DataContext.InciarSesion(objSesion, ref Verificador);
-                System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] = objResultado.Resultado;
-                if (Verificador == "0")
+                var client = new RestClient("http://ldapm.unach.mx/authldap.php");
+                client.Timeout = -1;
+                var request = new RestRequest(Method.POST);
+                request.AddHeader("Username", "ldapru");
+                request.AddHeader("Password", "01#lDhyr983wry");
+                request.AddHeader("Authorization", "Basic bGRhcHJ1OjAxI2xEaHlyOTgzd3J5");
+                request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+                request.AddParameter("ldapuser", Usuario);
+                request.AddParameter("ldappasswd", Contrasena);
+                IRestResponse response = client.Execute(request);
+                //lblError.Text = response.Content;
+                var jObject = JObject.Parse(response.Content);
+
+                //Extracting Node element using Getvalue method
+                string Autorizado = jObject.GetValue("valido").ToString();
+                if (Autorizado == "0")
                 {
-                    objResultado.Error = false;
-                    objResultado.MensajeError = "";
+                    string Grupo = jObject.GetValue("group").ToString();
+                    string Matricula = jObject.GetValue("id").ToString();
+                    objSesion.Email = Matricula;
+                    objSesion.Tipo = Tipo;
+                    objSesion.Password = "";
+                    objSesion.Email_Unach = Usuario;
+                    
+                    objResultado.Resultado = DataContext.InciarSesion(objSesion, ref Verificador);
+                    Session["SessionInicioSesionUnach"] = objResultado.Resultado;
+                    if (Verificador == "0")
+                    {
+                        objResultado.Error = false;
+                        objResultado.MensajeError = "";
+                    }
+                    else
+                    {
+                        objResultado.Error = true;
+                        objResultado.MensajeError = Verificador;
+                    }
                 }
-                else
+                else if (Autorizado != "0")
                 {
+                    objSesion.Email = Usuario;
+                    objSesion.Tipo = Tipo;
+                    objSesion.Password = Contrasena;
+                    objResultado.Resultado = DataContext.InciarSesion(objSesion, ref Verificador);
+                    Session["SessionInicioSesionUnach"] = objResultado.Resultado;
+                    if (Verificador == "0")
+                    {
+                        objResultado.Error = false;
+                        objResultado.MensajeError = "";
+                    }
+                    else
+                    {
+                        objResultado.Error = true;
+                        objResultado.MensajeError = Verificador;
+                    }
+                }
+                else 
+                {
+                    string Mensaje = jObject.GetValue("msg").ToString();
                     objResultado.Error = true;
-                    objResultado.MensajeError = Verificador;
+                    objResultado.MensajeError = Mensaje;
                 }
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
+
+
+                //if (Tipo == "EXTERNO")
+                //{
+                //    string password = string.Empty;
+                //    byte[] encryted = System.Text.Encoding.Unicode.GetBytes(Contrasena);
+                //    password = Convert.ToBase64String(encryted);
+                //    objSesion.Password = password;
+                //}
+                //else if (Tipo == "UNACH")
+                //    objSesion.Password = Contrasena;
+                
             }
             catch (Exception ex)
             {
@@ -1670,6 +1951,14 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es verificar las credenciles de acceso de la empresa
+        /// Método : IniciarSesionEmpresa
+        /// </summary>
+        /// <param name="Usuario"></param>
+        /// <param name="Contrasena"></param>
+        /// <param name="Tipo"></param>
+        /// <returns>Json</returns>
         [System.Web.Services.WebMethod(EnableSession = true)]
         public JsonResult IniciarSesionEmpresa(string Usuario, string Contrasena, string Tipo)
         {
@@ -1685,8 +1974,17 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"] = objResultado.Resultado;
                 if (Verificador == "0")
                 {
-                    objResultado.Error = false;
-                    objResultado.MensajeError = "";
+                    if (objResultado.Resultado[0].Existe == "1")
+                    {
+                        objResultado.Error = false;
+                        objResultado.MensajeError = "";
+                    }
+                    else
+                    {
+                        objResultado.Error = true;
+                        objResultado.MensajeError = "Error en sus datos de inicio de sesión";
+                    }
+                    
                 }
                 else
                 {
@@ -1702,6 +2000,13 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es verificar las credenciales de acceso de el administrador
+        /// Método : IniciarSesionAdmin
+        /// </summary>
+        /// <param name="Usuario"></param>
+        /// <param name="Contrasena"></param>
+        /// <returns>Json</returns>
         [System.Web.Services.WebMethod(EnableSession = true)]
         public JsonResult IniciarSesionAdmin(string Usuario, string Contrasena)
         {
@@ -1727,23 +2032,31 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 //Extracting Node element using Getvalue method
                 string Autorizado = jObject.GetValue("valido").ToString();
 
-                objSesion.Status = jObject.GetValue("valido").ToString();
-                objSesion.Usuario = jObject.GetValue("gecos").ToString();
-                objSesion.Email = Usuario;
-                objSesion.Tipo = "";
-                objSesion.Password = "";
-                list.Add(objSesion);
-                objResultado.Resultado = DataContext.InciarSesion(objSesion, ref Verificador);
-                if (Verificador == "0")
+                if(Autorizado == "0")
                 {
-                    objResultado.Error = false;
-                    objResultado.MensajeError = "";
-                    System.Web.HttpContext.Current.Session["SessionInicioAdministrador"] = objResultado.Resultado;
+                    objSesion.Status = jObject.GetValue("valido").ToString();
+                    objSesion.Usuario = jObject.GetValue("gecos").ToString();
+                    objSesion.Email = Usuario;
+                    objSesion.Tipo = "";
+                    objSesion.Password = "";
+                    list.Add(objSesion);
+                    objResultado.Resultado = DataContext.InciarSesion(objSesion, ref Verificador);
+                    if (Verificador == "0")
+                    {
+                        objResultado.Error = false;
+                        objResultado.MensajeError = "";
+                        System.Web.HttpContext.Current.Session["SessionInicioAdministrador"] = objResultado.Resultado;
+                    }
+                    else
+                    {
+                        objResultado.Error = true;
+                        objResultado.MensajeError = Verificador;
+                    }
                 }
                 else
                 {
                     objResultado.Error = true;
-                    objResultado.MensajeError = Verificador;
+                    objResultado.MensajeError = jObject.GetValue("msg").ToString();
                 }
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
 
@@ -1756,6 +2069,10 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es cerrar la sesión de cualquiera de los 3 tipos de usuario
+        /// </summary>
+        /// <returns>Json</returns>
         [System.Web.Services.WebMethod(EnableSession = true)]
         public JsonResult CerrarSesion()
         {
@@ -1811,6 +2128,11 @@ namespace BolsaTrabajoUnv2_0.Controllers
         }
 
         //Combos
+        /// <summary>
+        /// La función de este método es obtner la lista de estados 
+        /// Método : ComboEstados
+        /// </summary>
+        /// <returns>Json</returns>
         public JsonResult ComboEstados() //Se utiliza en la vista Registrar Empresa,
         {
             Comun objComun = new Comun();
@@ -1830,6 +2152,11 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es obtner la lista de municipios 
+        /// </summary>
+        /// <param name="Estado"></param>
+        /// <returns>Json</returns>
         public JsonResult ComboMunicipios(string Estado)//Se utiliza en la vista Registrar Empresa,
         {
             Comun objComun = new Comun();
@@ -2171,6 +2498,11 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json (objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es obtener el total de vacantes vigentes registradas
+        /// Método : ObtenerTotalVacantes
+        /// </summary>
+        /// <returns>Json</returns>
         public JsonResult ObtenerTotalVacantes ()
         {
             ResultadoVacantesCandidatos objResultado = new ResultadoVacantesCandidatos();
@@ -2194,6 +2526,12 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es obtener el estatus del candidato
+        /// Método : ObtenerStatusCandidato
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns>Json</returns>
         public JsonResult ObtenerStatusCandidato (string Id)
         {
             Btu_Curriculum objCv = new Btu_Curriculum();
@@ -2219,6 +2557,11 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es 
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
         public JsonResult ObtenerGridStatusAplicaciones (string Id)
         {
             ResultadoVacantesCandidatos objResultado = new ResultadoVacantesCandidatos();
@@ -2239,6 +2582,13 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es obtener las vacantes por el tipo de estatus
+        /// Método : ObtenerVacantesXstatus
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <param name="Status"></param>
+        /// <returns>Json</returns>
         public JsonResult ObtenerVacantesXstatus(string Id, string Status)
         {
             ResultadoVacante objResultado = new ResultadoVacante();
@@ -2277,6 +2627,19 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es registrar quien aplico a una vacante
+        /// Método : AplicarVacante
+        /// </summary>
+        /// <param name="Id_Vacante"></param>
+        /// <param name="Id_Interesado"></param>
+        /// <param name="Status"></param>
+        /// <param name="CorreoEmpresa"></param>
+        /// <param name="CorreoCandidato"></param>
+        /// <param name="Candidato"></param>
+        /// <param name="Vacante"></param>
+        /// <param name="IdVacCand"></param>
+        /// <returns></returns>
         public JsonResult AplicarVacante(string Id_Vacante, string Id_Interesado, int Status, string CorreoEmpresa, string CorreoCandidato, string Candidato, string Vacante, string IdVacCand)
         {
             ResultadoComun objResultado = new ResultadoComun();
@@ -2284,7 +2647,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
             try
             {
                 objVacCand.Id_Vacante = Id_Vacante;
-                objVacCand.Id_Interesado = Id_Interesado;                
+                objVacCand.Id_Interesado = Id_Interesado;
                 string Verificador = string.Empty;
                 if (Status == 1)
                 {
@@ -2370,6 +2733,11 @@ namespace BolsaTrabajoUnv2_0.Controllers
         }
 
         //Metodos para la vista Panel Empresa
+        /// <summary>
+        /// La función de este método es cargar los datos del panel de la empresa
+        /// Método : CargarDatosPanelEmpresa
+        /// </summary>
+        /// <returns>Json</returns>
         [System.Web.Services.WebMethod(EnableSession = true)]
         public JsonResult CargarDatosPanelEmpresa()
         {
@@ -2412,6 +2780,11 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es cargar los datos que la empresa completo en su registro
+        /// Método : ObtenerDatosEmpresa
+        /// </summary>
+        /// <returns>Json</returns>
         [System.Web.Services.WebMethod(EnableSession = true)]
         public JsonResult ObtenerDatosEmpresa()
         {
@@ -2467,6 +2840,11 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// /La función de este método es obtner las vacantes registradas
+        /// Método : ObtenerGridVacantes
+        /// </summary>
+        /// <returns>Json</returns>
         [System.Web.Services.WebMethod(EnableSession = true)]
         public JsonResult ObtenerGridVacantes()
         {
@@ -2519,6 +2897,12 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es obtner los candidatos que se han interesado en una vacante
+        /// Método : ObtenerGridInteresados
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns>Json</returns>
         [System.Web.Services.WebMethod(EnableSession = true)]
         public JsonResult ObtenerGridInteresados(string Id)
         {
@@ -2539,6 +2923,11 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es obtener las vacantes las que han aplicado los candidatos
+        /// Método : ObtenerGridVacantesAplicadasEmpresas
+        /// </summary>
+        /// <returns>Json</returns>
         [System.Web.Services.WebMethod(EnableSession = true)]
         public JsonResult ObtenerGridVacantesAplicadasEmpresas ()
         {
@@ -2568,6 +2957,12 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es obtener los candidatos disponibles para las vacantes de una empresa
+        /// Método : ObtenerGridCandidatosDisponibles
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns>Json</returns>
         [System.Web.Services.WebMethod(EnableSession = true)]
         public JsonResult ObtenerGridCandidatosDisponibles(string Id)
         {
@@ -2600,6 +2995,17 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es modificar el estatus del candidato interesado
+        /// Método : EditarStatusInteresado
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <param name="Status"></param>
+        /// <param name="Observaciones"></param>
+        /// <param name="Id_Interesado"></param>
+        /// <param name="Vacante"></param>
+        /// <param name="CorreoCand"></param>
+        /// <returns>Json</returns>
         [System.Web.Services.WebMethod(EnableSession = true)]
         public JsonResult EditarStatusInteresado (string Id, string Status, string Observaciones, string Id_Interesado, string Vacante, string CorreoCand)
         {
@@ -2645,6 +3051,16 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es invitar al candidato a que aplique a la vacante
+        /// Método : InvitarCandidato
+        /// </summary>
+        /// <param name="Id_Vacante"></param>
+        /// <param name="Id_Interesado"></param>
+        /// <param name="Vacante"></param>
+        /// <param name="NombreCandidatoInv"></param>
+        /// <param name="CorreoCandidato"></param>
+        /// <returns>Json</returns>
         [System.Web.Services.WebMethod(EnableSession = true)]
         public JsonResult InvitarCandidato(string Id_Vacante, string Id_Interesado, string Vacante, string NombreCandidatoInv, string CorreoCandidato)
         {
@@ -2708,6 +3124,11 @@ namespace BolsaTrabajoUnv2_0.Controllers
         }
 
         //Metodos para la vista Panel Administrador
+        /// <summary>
+        /// La función de este método es obtener el número total de empresas registradas
+        /// Método : ObtenerTotalEmpresas
+        /// </summary>
+        /// <returns>Json</returns>
         public JsonResult ObtenerTotalEmpresas ()
         {
             ResultadoEmpresa objResultado = new ResultadoEmpresa();
@@ -2742,6 +3163,11 @@ namespace BolsaTrabajoUnv2_0.Controllers
             else
                 return Json(objResultadoCm, JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// La función de este método es obtener el total de candidatos registrados
+        /// Método : ObtenerTotalCandidatos
+        /// </summary>
+        /// <returns>Json</returns>
         public JsonResult ObtenerTotalCandidatos()
         {
             ResultadoBtuCurriculum objResultado = new ResultadoBtuCurriculum();
@@ -2769,6 +3195,11 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es obtener la lista de empresas registradas
+        /// Método : ObtenerGridEmpresasRegistradas
+        /// </summary>
+        /// <returns>Json</returns>
         public JsonResult ObtenerGridEmpresasRegistradas()
         {
             ResultadoEmpresa objResultado = new ResultadoEmpresa();
@@ -2796,6 +3227,11 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es ontener la lista de los candidatos
+        /// Método : ObtenerGridCandidatos
+        /// </summary>
+        /// <returns>Json</returns>
         public JsonResult ObtenerGridCandidatos ()
         {
             ResultadoBtuCurriculum objResultado = new ResultadoBtuCurriculum();
@@ -2823,6 +3259,15 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es modificar el estatus de la empresa
+        /// Método : EditarStatusEmpresa
+        /// </summary>
+        /// <param name="Status"></param>
+        /// <param name="Rfc"></param>
+        /// <param name="Motivo"></param>
+        /// <param name="EmailEmpresa"></param>
+        /// <returns>Json</returns>
         public JsonResult EditarStatusEmpresa (string Status, string Rfc, string Motivo, string EmailEmpresa)
         {
             ResultadoComun objResultado = new ResultadoComun();
@@ -2876,6 +3321,14 @@ namespace BolsaTrabajoUnv2_0.Controllers
 
             }
         }
+        /// <summary>
+        /// La función de este método es modificar el estatus del candidato
+        /// Método : EditarStatusCandidato
+        /// </summary>
+        /// <param name="Status"></param>
+        /// <param name="Matricula"></param>
+        /// <param name="EmailCandidato"></param>
+        /// <returns>Json</returns>
         public JsonResult EditarStatusCandidato(string Status, string Matricula, string EmailCandidato)
         {
             ResultadoComun objResultado = new ResultadoComun();
@@ -2932,6 +3385,12 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es obtener la lista de las vacantes para el administrador
+        /// Método : ObtenerGridVacantesPanelAdmin
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns>Json</returns>
         public JsonResult ObtenerGridVacantesPanelAdmin(string Id)
         {
             ResultadoVacante objResultado = new ResultadoVacante();
@@ -2951,6 +3410,12 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es eliminar a la empresa seleccionada
+        /// Método : EliminarEmpresa
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns>Json</returns>
         public JsonResult EliminarEmpresa (string Id)
         {
             Btu_Empresa objEmpresa = new Btu_Empresa();
@@ -2975,7 +3440,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
             catch(Exception ex)
             {
                 objResultado.Error = true;
-                objResultado.MensajeError = Verificador;
+                objResultado.MensajeError = ex.Message;
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
 
@@ -2999,57 +3464,101 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es obtener en forma de combo las vacantes para mostrarlas 
+        /// al administrador
+        /// Método : ComboVacantesAdministrador
+        /// </summary>
+        /// <returns>Json</returns>
         public JsonResult ComboVacantesAdministrador ()
         {
             ResultadoComun objResultado = new ResultadoComun();
-            try
+            if (System.Web.HttpContext.Current.Session["SessionInicioAdministrador"] != null)
             {
-                objResultado.Resultado = CursorDataContext.ComboVacantesAdministrador();
-                objResultado.Error = false;
-                objResultado.MensajeError = "";
-                return Json(objResultado, JsonRequestBehavior.AllowGet);
+                try
+                {
+                    objResultado.Resultado = CursorDataContext.ComboVacantesAdministrador();
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
+                catch (Exception ex)
+                {
+                    objResultado.Resultado = null;
+                    objResultado.Error = true;
+                    objResultado.MensajeError = ex.Message;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
             }
-            catch(Exception ex)
+            else
             {
                 objResultado.Resultado = null;
                 objResultado.Error = true;
-                objResultado.MensajeError = ex.Message;
+                objResultado.MensajeError =  "No es administrador";
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
+                
         }
+        /// <summary>
+        /// La función de este método es listar las vacantes vencidas
+        /// Método : ObtenerGridVacantesVencidas
+        /// </summary>
+        /// <returns>Json</returns>
         public JsonResult ObtenerGridVacantesVencidas()
         {
             ResultadoVacante objResultado = new ResultadoVacante();
-            try
+            if (System.Web.HttpContext.Current.Session["SessionInicioAdministrador"] != null)
             {
-                objResultado.Resultado = DataContext.ObtenerGridVacantesVencidas();
-                objResultado.Error = false;
-                objResultado.MensajeError = "";
-                return Json(objResultado, JsonRequestBehavior.AllowGet);
+                try
+                {
+                    objResultado.Resultado = DataContext.ObtenerGridVacantesVencidas();
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
+                catch (Exception ex)
+                {
+                    objResultado.Resultado = null;
+                    objResultado.Error = true;
+                    objResultado.MensajeError = ex.Message;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
             }
-            catch(Exception ex)
+            else
             {
                 objResultado.Resultado = null;
                 objResultado.Error = true;
-                objResultado.MensajeError = ex.Message;
+                objResultado.MensajeError = "No es administrador";
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
+
+                
         }
         public JsonResult ObtenerGridCorreosCandidatos()
         {
             ResultadoBtuCurriculum objResultado = new ResultadoBtuCurriculum();
-            try
-            {
-                objResultado.Resultado = DataContext.ObtenerGridCorreosCandidatos();
-                objResultado.Error = false;
-                objResultado.MensajeError = "";
-                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            if (System.Web.HttpContext.Current.Session["SessionInicioAdministrador"] != null)
+            {                
+                try
+                {
+                    objResultado.Resultado = DataContext.ObtenerGridCorreosCandidatos();
+                    objResultado.Error = false;
+                    objResultado.MensajeError = "";
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
+                catch (Exception ex)
+                {
+                    objResultado.Resultado = null;
+                    objResultado.Error = true;
+                    objResultado.MensajeError = ex.Message;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
             }
-            catch(Exception ex)
+            else
             {
                 objResultado.Resultado = null;
                 objResultado.Error = true;
-                objResultado.MensajeError = ex.Message;
+                objResultado.MensajeError = "No tiene permisos para realizar esta acción";
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
@@ -3080,6 +3589,39 @@ namespace BolsaTrabajoUnv2_0.Controllers
         }
 
         //Metodos para la vista Vacantes
+        /// <summary>
+        /// La función de este método es guardar las vacantes registradas por una empresa
+        /// Método : GuardarVacante
+        /// </summary>
+        /// <param name="NombreVacante"></param>
+        /// <param name="NumeroVacantes"></param>
+        /// <param name="EdadMin"></param>
+        /// <param name="EdadMax"></param>
+        /// <param name="Genero"></param>
+        /// <param name="EdoCivil"></param>
+        /// <param name="GradoEstu"></param>
+        /// <param name="Expe"></param>
+        /// <param name="ActReal"></param>
+        /// <param name="ConoReq"></param>
+        /// <param name="HorioDiaLab"></param>
+        /// <param name="TipoSuedo"></param>
+        /// <param name="Salario"></param>
+        /// <param name="PrestacionesLab"></param>
+        /// <param name="UbicVacante"></param>
+        /// <param name="IdiomaExtra"></param>
+        /// <param name="VigIniVac"></param>
+        /// <param name="VigFinVac"></param>
+        /// <param name="TipoVacante"></param>
+        /// <param name="PersonaEntrevista"></param>
+        /// <param name="DiaHorarioEntre"></param>
+        /// <param name="DircEntre"></param>
+        /// <param name="TelOfc"></param>
+        /// <param name="Email"></param>
+        /// <param name="Comentarios"></param>
+        /// <param name="Viaja"></param>
+        /// <param name="Licencia"></param>
+        /// <param name="Radica"></param>
+        /// <returns>Json</returns>
         [System.Web.Services.WebMethod(EnableSession = true)]
         public JsonResult GuardarVacante (string NombreVacante, string NumeroVacantes, string EdadMin, string EdadMax, string Genero, string EdoCivil, string GradoEstu, string Expe, string ActReal, string ConoReq,
             string HorioDiaLab, string TipoSuedo, string Salario, string PrestacionesLab, string UbicVacante, string IdiomaExtra, string VigIniVac, string VigFinVac, string TipoVacante, string PersonaEntrevista,
@@ -3091,59 +3633,101 @@ namespace BolsaTrabajoUnv2_0.Controllers
             string Verificador = string.Empty;
             try
             {
-                list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"];
-                objVacante.Nombre = NombreVacante.ToUpper();
-                objVacante.Total = NumeroVacantes;
-                objVacante.Edad_Minima = EdadMin;
-                objVacante.Edad_Maxima = EdadMax;
-                objVacante.Genero = Genero.ToUpper();
-                objVacante.Estado_Civil = EdoCivil.ToUpper();
-                objVacante.Grado = GradoEstu.ToUpper();
-                objVacante.Experiencia = Expe.ToUpper();
-                objVacante.Actividades = ActReal.ToUpper();
-                objVacante.Conocimientos = ConoReq.ToUpper();
-                objVacante.Jornada_Laboral = HorioDiaLab.ToUpper();
-                objVacante.Frecuencia_Salario = TipoSuedo;
-                objVacante.Salario = Salario;
-                objVacante.Prestaciones = PrestacionesLab.ToUpper();
-                objVacante.Ubicacion = UbicVacante.ToUpper();
-                objVacante.Idioma = IdiomaExtra;
-                objVacante.Vigencia_Inicio = VigIniVac;
-                objVacante.Vigencia_Fin = VigFinVac;
-                objVacante.Tipo = TipoVacante;
-                objVacante.Responsable_Entrevista = PersonaEntrevista.ToUpper();
-                objVacante.Especificaciones_Entrevista = DiaHorarioEntre.ToUpper();
-                objVacante.Direccion_Entrevista = DircEntre.ToUpper();
-                objVacante.Telefono = TelOfc;
-                objVacante.Correo = Email;
-                //objVacante.Comentarios = (Comentarios == null) ? "" : Comentarios.ToUpper();
-                objVacante.Comentarios = Comentarios.ToUpper();
-                objVacante.Viajar = Viaja;
-                objVacante.Licencia = Licencia;
-                objVacante.Radicar = Radica;
-                objVacante.Flayer_Empresa = "";
-                objVacante.Id_Empresa = list[0].Id;
-                objVacante.Rfc = list[0].Email;
-                GuardarDataContext.GuardarVacante(objVacante, ref Verificador);
-                if(Verificador == "0")
+                if (Session["SessionInicioSesionEmpresa"] != null)
                 {
-                    objResultado.Error = false;
-                    objResultado.MensajeError = "";
+                    list = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"];
+                    objVacante.Nombre = NombreVacante.ToUpper();
+                    objVacante.Total = NumeroVacantes;
+                    objVacante.Edad_Minima = EdadMin;
+                    objVacante.Edad_Maxima = EdadMax;
+                    objVacante.Genero = Genero.ToUpper();
+                    objVacante.Estado_Civil = EdoCivil.ToUpper();
+                    objVacante.Grado = GradoEstu.ToUpper();
+                    objVacante.Experiencia = Expe.ToUpper();
+                    objVacante.Actividades = ActReal.ToUpper();
+                    objVacante.Conocimientos = ConoReq.ToUpper();
+                    objVacante.Jornada_Laboral = HorioDiaLab.ToUpper();
+                    objVacante.Frecuencia_Salario = TipoSuedo;
+                    objVacante.Salario = Salario;
+                    objVacante.Prestaciones = PrestacionesLab.ToUpper();
+                    objVacante.Ubicacion = UbicVacante.ToUpper();
+                    objVacante.Idioma = IdiomaExtra;
+                    objVacante.Vigencia_Inicio = VigIniVac;
+                    objVacante.Vigencia_Fin = VigFinVac;
+                    objVacante.Tipo = TipoVacante;
+                    objVacante.Responsable_Entrevista = PersonaEntrevista.ToUpper();
+                    objVacante.Especificaciones_Entrevista = DiaHorarioEntre.ToUpper();
+                    objVacante.Direccion_Entrevista = DircEntre.ToUpper();
+                    objVacante.Telefono = TelOfc;
+                    objVacante.Correo = Email;
+                    objVacante.Comentarios = (Comentarios == null) ? "SIN COMENTARIOS" : Comentarios.ToUpper();
+                    //objVacante.Comentarios = Comentarios.ToUpper();
+                    objVacante.Viajar = Viaja;
+                    objVacante.Licencia = Licencia;
+                    objVacante.Radicar = Radica;
+                    objVacante.Flayer_Empresa = "";
+                    objVacante.Id_Empresa = list[0].Id;
+                    objVacante.Rfc = list[0].Email;
+                    GuardarDataContext.GuardarVacante(objVacante, ref Verificador);
+                    if (Verificador == "0")
+                    {
+                        objResultado.Error = false;
+                        objResultado.MensajeError = "";
+                    }
+                    else
+                    {
+                        objResultado.Error = true;
+                        objResultado.MensajeError = Verificador;
+                    }
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
                     objResultado.Error = true;
-                    objResultado.MensajeError = Verificador;
+                    objResultado.MensajeError = "Datos de sesión no encontrados";
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
                 }
-                return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
             catch(Exception ex)
             {
                 objResultado.Error = true;
-                objResultado.MensajeError = ex.Message;
+                objResultado.MensajeError = "Error al ejecutar la función" + ex.Message;
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es editar las vacantes publicadas por una empresa
+        /// Método : EditarVacante
+        /// </summary>
+        /// <param name="Nombre"></param>
+        /// <param name="Total"></param>
+        /// <param name="Edad_Minima"></param>
+        /// <param name="Edad_Maxima"></param>
+        /// <param name="Estado_Civil"></param>
+        /// <param name="Grado"></param>
+        /// <param name="Experiencia"></param>
+        /// <param name="Actividades"></param>
+        /// <param name="Conocimientos"></param>
+        /// <param name="Salario"></param>
+        /// <param name="Frecuencia_Salario"></param>
+        /// <param name="Prestaciones"></param>
+        /// <param name="Ubicacion"></param>
+        /// <param name="Licencia"></param>
+        /// <param name="Vigencia_Inicio"></param>
+        /// <param name="Vigencia_Fin"></param>
+        /// <param name="Tipo"></param>
+        /// <param name="Direccion_Entrevista"></param>
+        /// <param name="Telefono"></param>
+        /// <param name="Correo"></param>
+        /// <param name="Comentarios"></param>
+        /// <param name="Responsable_Entrevista"></param>
+        /// <param name="Especificaciones_Entrevista"></param>
+        /// <param name="Idioma"></param>
+        /// <param name="Radicar"></param>
+        /// <param name="Viajar"></param>
+        /// <param name="Genero"></param>
+        /// <param name="Jornada_Laboral"></param>
+        /// <returns>Json</returns>
         public JsonResult EditarVacante(string Nombre, string Total, string Edad_Minima, string Edad_Maxima, string Estado_Civil, string Grado, string Experiencia,
                 string Actividades , string Conocimientos, string Salario, string Frecuencia_Salario , string Prestaciones, string Ubicacion, string Licencia,
                 string Vigencia_Inicio, string Vigencia_Fin, string Tipo, string Direccion_Entrevista, string Telefono, string Correo, string Comentarios,
@@ -3155,57 +3739,72 @@ namespace BolsaTrabajoUnv2_0.Controllers
             string Verificador = string.Empty;
             try
             {
-                objVacante = (Btu_Vacante)System.Web.HttpContext.Current.Session["SessionIdVacante"];                
-                objVacante.Nombre = Nombre.ToUpper();
-                objVacante.Total = Total;
-                objVacante.Edad_Minima = Edad_Minima;
-                objVacante.Edad_Maxima = Edad_Maxima;
-                objVacante.Estado_Civil = Estado_Civil;
-                objVacante.Grado = Grado.ToUpper();
-                objVacante.Experiencia = Experiencia.ToUpper();
-                objVacante.Actividades = Actividades.ToUpper();
-                objVacante.Conocimientos = Conocimientos.ToUpper();
-                objVacante.Salario = Salario;
-                objVacante.Frecuencia_Salario = Frecuencia_Salario;
-                objVacante.Prestaciones = Prestaciones.ToUpper();
-                objVacante.Ubicacion = Ubicacion.ToUpper();
-                objVacante.Licencia = Licencia;
-                objVacante.Vigencia_Inicio = Vigencia_Inicio;
-                objVacante.Vigencia_Fin = Vigencia_Fin;
-                objVacante.Tipo = Tipo;
-                objVacante.Direccion_Entrevista = Direccion_Entrevista.ToUpper();
-                objVacante.Telefono = Telefono;
-                objVacante.Correo = Correo;
-                objVacante.Comentarios = Comentarios.ToUpper();
-                objVacante.Responsable_Entrevista = Responsable_Entrevista.ToUpper();
-                objVacante.Especificaciones_Entrevista = Especificaciones_Entrevista.ToUpper();
-                objVacante.Idioma = Idioma;
-                objVacante.Radicar = Radicar;
-                objVacante.Viajar = Viajar;
-                objVacante.Flayer_Empresa = ""; ;
-                objVacante.Genero = Genero;
-                objVacante.Jornada_Laboral = Jornada_Laboral.ToUpper();
-                GuardarDataContext.EditarVacante(objVacante, ref Verificador);
-                if (Verificador == "0")
+                if (Session["SessionIdVacante"] != null)
                 {
-                    objResultado.Error = false;
-                    objResultado.MensajeError = "";
+                    objVacante = (Btu_Vacante)System.Web.HttpContext.Current.Session["SessionIdVacante"];
+                    objVacante.Nombre = Nombre.ToUpper();
+                    objVacante.Total = Total;
+                    objVacante.Edad_Minima = Edad_Minima;
+                    objVacante.Edad_Maxima = Edad_Maxima;
+                    objVacante.Estado_Civil = Estado_Civil;
+                    objVacante.Grado = Grado.ToUpper();
+                    objVacante.Experiencia = Experiencia.ToUpper();
+                    objVacante.Actividades = Actividades.ToUpper();
+                    objVacante.Conocimientos = Conocimientos.ToUpper();
+                    objVacante.Salario = Salario;
+                    objVacante.Frecuencia_Salario = Frecuencia_Salario;
+                    objVacante.Prestaciones = Prestaciones.ToUpper();
+                    objVacante.Ubicacion = Ubicacion.ToUpper();
+                    objVacante.Licencia = Licencia;
+                    objVacante.Vigencia_Inicio = Vigencia_Inicio;
+                    objVacante.Vigencia_Fin = Vigencia_Fin;
+                    objVacante.Tipo = Tipo;
+                    objVacante.Direccion_Entrevista = Direccion_Entrevista.ToUpper();
+                    objVacante.Telefono = Telefono;
+                    objVacante.Correo = Correo;
+                    objVacante.Comentarios = Comentarios.ToUpper();
+                    objVacante.Responsable_Entrevista = Responsable_Entrevista.ToUpper();
+                    objVacante.Especificaciones_Entrevista = Especificaciones_Entrevista.ToUpper();
+                    objVacante.Idioma = Idioma;
+                    objVacante.Radicar = Radicar;
+                    objVacante.Viajar = Viajar;
+                    objVacante.Flayer_Empresa = ""; ;
+                    objVacante.Genero = Genero;
+                    objVacante.Jornada_Laboral = Jornada_Laboral.ToUpper();
+                    GuardarDataContext.EditarVacante(objVacante, ref Verificador);
+                    if (Verificador == "0")
+                    {
+                        objResultado.Error = false;
+                        objResultado.MensajeError = "";
+                    }
+                    else
+                    {
+                        objResultado.Error = true;
+                        objResultado.MensajeError = Verificador;
+                    }
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
                     objResultado.Error = true;
-                    objResultado.MensajeError = Verificador;
+                    objResultado.MensajeError = "Datos de sesión no encontrados";
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
                 }
-                return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
             catch(Exception ex)
             {
                 objResultado.Error = true;
-                objResultado.MensajeError = ex.Message;
+                objResultado.MensajeError = "Error al ejecutar la función" + ex.Message;
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
-
+        /// <summary>
+        /// La función de este método es obtener los valores de la vacante seleccionada
+        /// Método : ObtenerDatosVacante
+        /// </summary>
+        /// <param name="Id_Candidato"></param>
+        /// <param name="Id_Vacante"></param>
+        /// <returns>Json</returns>
         public JsonResult ObtenerDatosVacante(string Id_Candidato, string Id_Vacante)
         {
             ResultadoComun objResultadoCm = new ResultadoComun();
@@ -3287,6 +3886,12 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// La función de este método es eliminar la vacante seleccionada
+        /// Método : EliminarVacante
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns>Json</returns>
         public JsonResult EliminarVacante (string Id)
         {
             ResultadoComun objResultado = new ResultadoComun();
@@ -3318,19 +3923,26 @@ namespace BolsaTrabajoUnv2_0.Controllers
         }
 
         //Metodos para enviar correos
-        public ResultadoComun CorreoAltaCandidato(string Correo)
+        /// <summary>
+        /// La función de este método es enviar un correo informando la alta del candidato al sistema
+        /// Método : CorreoAltaCandidato
+        /// </summary>
+        /// <param name="Correo"></param>
+        /// <returns>Json</returns>
+        public ResultadoComun CorreoAltaCandidato(Btu_Curriculum objDatosCandidato)
         {
             ResultadoComun objResultado = new ResultadoComun();
 
             string AsuntoCorreo = "Registro de usuario";
-            string Contenido = "<img src='https://btu.unach.mx/Dsia/Imagenes/ImagenesSitio/encabezado_correo.png'>" +
-                "<img src='https://btu.unach.mx/Dsia/Imagenes/ImagenesSitio/btu.png'>" +
+            string Contenido = "<img src='http://btu.unach.mx/Imagenes/ImagenesSitio/encabezado_correo.png'>" +
+                //"<img src='http://btu.unach.mx/Imagenes/ImagenesSitio/btu.png'>" +
                 "<br /><div align=center><font size='4'><a href=\'" + "'>Notificación de registros de datos</a></font></div><br /><br />" +
                 "<font size='2'>Tus datos han sido: Registrados y serán validados en los próximos días<br />" +
-                "<br /><strong>DIRECCIÓN DE PERSONAL</strong><br />Teléfono - (961) 61 1 36 39, Ext.: 22/ (961) 61 1 34 78 Correo Electronico : btu@unach.mx<br /><br />";
+                "<br /><strong>DIRECCIÓN DE PERSONAL</strong><br />Correo Electronico : btu@unach.mx / Facebook https://www.facebook.com/BTUNACH <br /><br />";
             System.Net.Mail.MailMessage mmsg = new System.Net.Mail.MailMessage();
             string MsjError = string.Empty;
-            EnvioCorreo_Adjunto(ref mmsg, AsuntoCorreo, Contenido, Correo, ref MsjError);
+            EnvioCorreo_Adjunto(ref mmsg, AsuntoCorreo, Contenido, objDatosCandidato.Correo, ref MsjError);
+            NotificacionAltaCandidato(objDatosCandidato.Matricula);
             if (MsjError == "")
             {
                 objResultado.Error = false;
@@ -3346,6 +3958,44 @@ namespace BolsaTrabajoUnv2_0.Controllers
             }
 
         }
+
+        public ResultadoComun NotificacionAltaCandidato(string Matricula)
+        {
+            ResultadoComun objResultado = new ResultadoComun();
+
+            string AsuntoCorreo = "Registro de usuario";
+            string Contenido = "<img src='http://btu.unach.mx/Imagenes/ImagenesSitio/encabezado_correo.png'>" +
+                //"<img src='http://btu.unach.mx/Imagenes/ImagenesSitio/btu.png'>" +
+                "<br /><div align=center><font size='4'><a href=\'" + "'>Notificación de registros de datos</a></font></div><br /><br />" +
+                "<font size='2'>El alumno con la matícula: "+Matricula+ " se ha registrado en el sistena <br />" +
+                "<br /><strong>DIRECCIÓN DE PERSONAL</strong><br />Correo Electronico : btu@unach.mx / Facebook https://www.facebook.com/BTUNACH <br /><br />";
+            System.Net.Mail.MailMessage mmsg = new System.Net.Mail.MailMessage();
+            string MsjError = string.Empty;
+            EnvioCorreo_Adjunto(ref mmsg, AsuntoCorreo, Contenido, "btu@unach.mx", ref MsjError);
+            if (MsjError == "")
+            {
+                objResultado.Error = false;
+                objResultado.MensajeError = "";
+                return objResultado;
+            }
+
+            else
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = MsjError;
+                return objResultado;
+            }
+
+        }
+        /// <summary>
+        /// La función de este método es informa el cambio de estatus de la vacante a la que aplica un candidato
+        /// Método : EnviarCorreoCambioEstatus
+        /// </summary>
+        /// <param name="Asunto"></param>
+        /// <param name="Correo"></param>
+        /// <param name="Status"></param>
+        /// <param name="Empresa"></param>
+        /// <returns>Json</returns>
         public JsonResult EnviarCorreoCambioEstatus(string Asunto, string Correo, string Status, string Empresa)
         {
             string mensaje = "";
@@ -3363,13 +4013,13 @@ namespace BolsaTrabajoUnv2_0.Controllers
             }
 
             string AsuntoCorreo = "Cambio de estatus en la vacante " + Asunto;
-            string Contenido = "<img src='https://btu.unach.mx/Dsia/Imagenes/ImagenesSitio/encabezado_correo.png'>" +
-                "<img src='https://btu.unach.mx/Dsia/Imagenes/ImagenesSitio/btu.png'>" +
+            string Contenido = "<img src='http://btu.unach.mx/Imagenes/ImagenesSitio/encabezado_correo.png'>" +
+                //"<img src='http://btu.unach.mx/Imagenes/ImagenesSitio/btu.png'>" +
                 "<br />" +
                 "<div align=center><font size='4'>" +
                 "<a href=\'" + "'>Notificación de aplicación a la vacante</a></font></div><br /><br />" +
                 "<font size='2'>" + mensaje + "<br />" +
-                "<br /><strong>DIRECCIÓN DE PERSONAL</strong><br />Teléfono - (961) 61 1 36 39, Ext.: 22/ (961) 61 1 34 78 Correo Electronico : btu@unach.mx<br /><br />";
+                "<br /><strong>DIRECCIÓN DE PERSONAL</strong><br /> Correo Electronico : btu@unach.mx / Facebook https://www.facebook.com/BTUNACH  <br /><br />";
             System.Net.Mail.MailMessage mmsg = new System.Net.Mail.MailMessage();
             string MsjError = string.Empty;
             EnvioCorreo_Adjunto(ref mmsg, AsuntoCorreo, Contenido, Correo, ref MsjError);
@@ -3379,13 +4029,21 @@ namespace BolsaTrabajoUnv2_0.Controllers
             else
                 return Json(MsjError, JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// La función de este método es informarle al candidato que ha aplicado a una vacante
+        /// Método : EnviarCorreoInfoInvitado
+        /// </summary>
+        /// <param name="Asunto"></param>
+        /// <param name="Correo"></param>
+        /// <param name="nombreAplicante"></param>
+        /// <returns>Json</returns>
         public JsonResult EnviarCorreoInfoInvitado(string Asunto, string Correo, string nombreAplicante)
         {
             string AsuntoCorreo = "Invitación a la vacante " + Asunto;
-            string Contenido = "<img src='https://btu.unach.mx/Dsia/Imagenes/ImagenesSitio/encabezado_correo.png'>" +
-                "<img src='https://btu.unach.mx/Dsia/Imagenes/ImagenesSitio/btu.png'><br /><div align=center><font size='4'><a href=\'" + "'>Invitación a la vacante</a></font></div><br /><br />" +
+            string Contenido = "<img src='http://btu.unach.mx/Imagenes/ImagenesSitio/encabezado_correo.png'>" +
+                "<img src='http://btu.unach.mx/Imagenes/ImagenesSitio/btu.png'><br /><div align=center><font size='4'><a href=\'" + "'>Invitación a la vacante</a></font></div><br /><br />" +
                 "<font size='2'>Has invitado a el C. " + nombreAplicante + " a aplicar a la vacante: " + Asunto + "<br />" +
-                "<br /><strong>DIRECCIÓN DE PERSONAL</strong><br />Teléfono - (961) 61 1 36 39, Ext.: 22/ (961) 61 1 34 78 Correo Electronico : btu@unach.mx<br /><br />";
+                "<br /><strong>DIRECCIÓN DE PERSONAL</strong><br />Correo Electronico : btu@unach.mx / Facebook https://www.facebook.com/BTUNACH   <br /><br />";
             ;
             System.Net.Mail.MailMessage mmsg = new System.Net.Mail.MailMessage();
             string MsjError = string.Empty;
@@ -3396,14 +4054,20 @@ namespace BolsaTrabajoUnv2_0.Controllers
             else
                 return Json(MsjError, JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// La función de este método es informarle al candidato que ha sido invitado a aplicar a una vacante
+        /// </summary>
+        /// <param name="Asunto"></param>
+        /// <param name="Correo"></param>
+        /// <returns></returns>
         public JsonResult EnviarCorreoInvAplicar(string Asunto, string Correo)
         {
             string AsuntoCorreo = "Invitación a la vacante " + Asunto;
-            string Contenido = "<img src='https://btu.unach.mx/Dsia/Imagenes/ImagenesSitio/encabezado_correo.png'>" +
-                "<img src='https://btu.unach.mx/Dsia/Imagenes/ImagenesSitio/btu.png'>" +
+            string Contenido = "<img src='http://btu.unach.mx/Imagenes/ImagenesSitio/encabezado_correo.png'>" +
+                "<img src='http://btu.unach.mx/Imagenes/ImagenesSitio/btu.png'>" +
                 "<div align=center><font size='4'><a href=\'" + "'>Notificación de aplicación a la vacante</a></font></div><br /><br />" +
                 "<font size='2'>Has sido invitado a aplicar a la vacante: " + Asunto + " por favor revista tu lista de vacantes<br />" +
-                "<br /><strong>DIRECCIÓN DE PERSONAL</strong><br />Teléfono - (961) 61 1 36 39, Ext.: 22/ (961) 61 1 34 78 Correo Electronico : btu@unach.mx<br /><br />";
+                "<br /><strong>DIRECCIÓN DE PERSONAL</strong><br /> Correo Electronico : btu@unach.mx / Facebook https://www.facebook.com/BTUNACH <br /><br />";
             System.Net.Mail.MailMessage mmsg = new System.Net.Mail.MailMessage();
             string MsjError = string.Empty;
             EnvioCorreo_Adjunto(ref mmsg, AsuntoCorreo, Contenido, Correo, ref MsjError);
@@ -3411,16 +4075,24 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(true, JsonRequestBehavior.AllowGet);
             else
                 return Json(MsjError, JsonRequestBehavior.AllowGet);
-        }        
+        }
+        /// <summary>
+        /// La función de este método es enviar un correo de notificación a la empresa que ha aplicado a una vacante
+        /// Método : EnviarCorreoNotfAplicaVac
+        /// </summary>
+        /// <param name="Asunto"></param>
+        /// <param name="Correo"></param>
+        /// <param name="nombreAplicante"></param>
+        /// <returns>Json</returns>
         public JsonResult EnviarCorreoNotfAplicaVac(string Asunto, string Correo, string nombreAplicante)
         {
 
             string AsuntoCorreo = "Aplicación vacante " + Asunto;
-            string Contenido = "< img src = 'https://btu.unach.mx/Dsia/Imagenes/ImagenesSitio/encabezado_correo.png' > " +
-                "<img src='https://btu.unach.mx/Dsia/Imagenes/ImagenesSitio/btu.png'>" +
+            string Contenido = "< img src = 'http://btu.unach.mx/Imagenes/ImagenesSitio/encabezado_correo.png'>" +
+                "<img style='background-color:lightblue' src='http://btu.unach.mx/Imagenes/ImagenesSitio/btu.png'>" +
                 "<br /><div align=center><font size='4'><a href=\'" + "'>Notificación de aplicación a la vacante</a></font></div><br /><br />" +
                 "<font size='2'>El C. " + nombreAplicante + " ha aplicado a la vacante: " + Asunto + "<br />" +
-                "<br /><strong>DIRECCIÓN DE PERSONAL</strong><br />Teléfono - (961) 61 1 36 39, Ext.: 22/ (961) 61 1 34 78 Correo Electronico : btu@unach.mx<br /><br />";
+                "<br /><strong>DIRECCIÓN DE PERSONAL</strong><br /> Correo Electronico : btu@unach.mx / Facebook https://www.facebook.com/BTUNACH <br /><br />";
             System.Net.Mail.MailMessage mmsg = new System.Net.Mail.MailMessage();
             string MsjError = string.Empty;
             EnvioCorreo_Adjunto(ref mmsg, AsuntoCorreo, Contenido, Correo, ref MsjError);
@@ -3430,14 +4102,21 @@ namespace BolsaTrabajoUnv2_0.Controllers
             else
                 return Json(MsjError, JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// La función de este método es enviar un correo de notificación de aplicación a la vacante a los candidatos
+        /// Método : EnviarCorreoAplicaVac
+        /// </summary>
+        /// <param name="Asunto"></param>
+        /// <param name="Correo"></param>
+        /// <returns>Json</returns>
         public JsonResult EnviarCorreoAplicaVac(string Asunto, string Correo)
         {
             string AsuntoCorreo = "Aplicación vacante " + Asunto;
-            string Contenido = "<img src='https://btu.unach.mx/Dsia/Imagenes/ImagenesSitio/encabezado_correo.png' > " +
-                "<img src='https://btu.unach.mx/Dsia/Imagenes/ImagenesSitio/btu.png'>" +
+            string Contenido = "<img src='http://btu.unach.mx/Imagenes/ImagenesSitio/encabezado_correo.png' > " +
+                //"<img src='http://btu.unach.mx/Imagenes/ImagenesSitio/btu.png'>" +
                 "<br /><div align=center><font size='4'><a href=\'" + "'>Notificación de aplicación a la vacante</a></font></div><br /><br />" +
                 "<font size='2'>Has aplicado a la vacante: " + Asunto + " por favor mantente atento a la respuesta de la empresa<br />" +
-                "<br /><strong>DIRECCIÓN DE PERSONAL</strong><br />Teléfono - (961) 61 1 36 39, Ext.: 22/ (961) 61 1 34 78 Correo Electronico : btu@unach.mx<br /><br />";
+                "<br /><strong>DIRECCIÓN DE PERSONAL</strong><br />Correo Electronico : btu@unach.mx / Facebook https://www.facebook.com/BTUNACH <br /><br />";
             System.Net.Mail.MailMessage mmsg = new System.Net.Mail.MailMessage();
             string MsjError = string.Empty;
             EnvioCorreo_Adjunto(ref mmsg, AsuntoCorreo, Contenido, Correo, ref MsjError);
@@ -3446,6 +4125,14 @@ namespace BolsaTrabajoUnv2_0.Controllers
             else
                 return Json(MsjError, JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// La función de este método es notificar del cambio de estatus de la empresa
+        /// Método : EnviarCorreoCambioStatusEmpresa
+        /// </summary>
+        /// <param name="Asunto"></param>
+        /// <param name="Correo"></param>
+        /// <param name="status"></param>
+        /// <returns>Json</returns>
         public ResultadoComun EnviarCorreoCambioStatusEmpresa(string Asunto, string Correo, string status)
         {
             ResultadoComun objResultado = new ResultadoComun();
@@ -3456,11 +4143,11 @@ namespace BolsaTrabajoUnv2_0.Controllers
             else
                 status = "BAJA TEMPORAL";
             string AsuntoCorreo = "Cambio de estatus";
-            string Contenido = "<img src='https://btu.unach.mx/Dsia/Imagenes/ImagenesSitio/encabezado_correo.png'>" +
-                "<img src='https://btu.unach.mx/Dsia/Imagenes/ImagenesSitio/btu.png'>" +
+            string Contenido = "<img src='http://btu.unach.mx/Imagenes/ImagenesSitio/encabezado_correo.png'><br />" +
+                //"<img style='background-color:lightblue';  src ='http://btu.unach.mx/Imagenes/ImagenesSitio/btu.png'>" +
                 "<br /><div align=center><font size='4'><strong>Notificación de cambio de estatus</strong></font></div><br /><br />" +
-                "<font size='2'>El estatus de su empresa ha cambiado a: " + status + "<br />" +
-                "<br /><strong>DIRECCIÓN DE PERSONAL</strong><br />Teléfono - (961) 61 1 36 39, Ext.: 22/ (961) 61 1 34 78 Correo Electronico : btu@unach.mx<br /><br />";
+                "<font size='2'>El estatus de su empresa ha cambiado a:  \n <strong>" + status + "</strong><br />" +
+                "<br /><strong>DIRECCIÓN DE PERSONAL</strong><br />Correo Electronico : btu@unach.mx / Facebook https://www.facebook.com/BTUNACH <br /><br />";
             System.Net.Mail.MailMessage mmsg = new System.Net.Mail.MailMessage();
             string MsjError = string.Empty;
             EnvioCorreo_Adjunto(ref mmsg, AsuntoCorreo, Contenido, Correo, ref MsjError);
@@ -3474,6 +4161,14 @@ namespace BolsaTrabajoUnv2_0.Controllers
             }
             return objResultado;
         }
+        /// <summary>
+        /// La función de este método es notificar del cambio de estatus del perfil del candidato
+        /// Método : EnviarCorreoCambioEstatusCandidato
+        /// </summary>
+        /// <param name="Asunto"></param>
+        /// <param name="Correo"></param>
+        /// <param name="status"></param>
+        /// <returns>Json</returns>
         public ResultadoComun EnviarCorreoCambioEstatusCandidato(string Asunto, string Correo, string status)
         {
             ResultadoComun objResultado = new ResultadoComun();
@@ -3496,11 +4191,11 @@ namespace BolsaTrabajoUnv2_0.Controllers
             }
 
             string AsuntoCorreo = Asunto;
-            string Contenido = "<img src='https://btu.unach.mx/Dsia/Imagenes/ImagenesSitio/encabezado_correo.png'>" +
-                "<img src='https://btu.unach.mx/Dsia/Imagenes/ImagenesSitio/btu.png'>" +
+            string Contenido = "<img src='http://btu.unach.mx/Imagenes/ImagenesSitio/encabezado_correo.png'>" +
+                //"<img src='http://btu.unach.mx/Imagenes/ImagenesSitio/btu.png'>" +
                 "<br /><div align=center><font size='4'><a href=\'" + "'>Notificación de cambio de estatus</a></font></div><br /><br />" +
                 "<font size='2'>Le informamos que su cuenta se encuentra en estatus: " + statusVacante + msjStatus +
-                "<br /><strong>DIRECCIÓN DE PERSONAL</strong><br />Teléfono - (961) 61 1 36 39, Ext.: 22/ (961) 61 1 34 78 Correo Electronico : btu@unach.mx<br /><br />";
+                "<br /><strong>DIRECCIÓN DE PERSONAL</strong><br /> Correo Electronico : btu@unach.mx / Facebook https://www.facebook.com/BTUNACH <br /><br />";
             System.Net.Mail.MailMessage mmsg = new System.Net.Mail.MailMessage();
             string MsjError = string.Empty;
             EnvioCorreo_Adjunto(ref mmsg, AsuntoCorreo, Contenido, Correo, ref MsjError);
@@ -3514,16 +4209,23 @@ namespace BolsaTrabajoUnv2_0.Controllers
             }
             return objResultado;
         }
+        /// <summary>
+        /// La función de este método es notificar que la vacante ha caducado
+        /// Método : EnviarCorreoVacanteVencida
+        /// </summary>
+        /// <param name="Correo"></param>
+        /// <param name="Vacante"></param>
+        /// <returns>Json</returns>
         public JsonResult EnviarCorreoVacanteVencida(string Correo, string Vacante)
         {
             ResultadoComun objResultado = new ResultadoComun();           
 
             string AsuntoCorreo = "Vigencia de la vacante";
-            string Contenido = "<img src='https://btu.unach.mx/Dsia/Imagenes/ImagenesSitio/encabezado_correo.png'>" +
-                "<img src='https://btu.unach.mx/Dsia/Imagenes/ImagenesSitio/btu.png'>" +
+            string Contenido = "<img src='http://btu.unach.mx/Imagenes/ImagenesSitio/encabezado_correo.png'>" +
+                //"<img src='http://btu.unach.mx/Imagenes/ImagenesSitio/btu.png'>" +
                 "<br /><div align=center><font size='4'><a href=\'" + "'>Notificación del estatus de la vacante</a></font></div><br /><br />" +
                 "<font size='2'>Le informamos que la fecha de la vacante: " + Vacante  + " ha caducado por lo que no aparecerá como vacante activa en el sistema, le recomendamos cambiar las fechas de vigencia para que la vacante vuelva a estar activa si así lo desea."+
-                "<br /><strong>DIRECCIÓN DE PERSONAL</strong><br />Teléfono - (961) 61 1 36 39, Ext.: 22/ (961) 61 1 34 78 Correo Electronico : btu@unach.mx<br /><br />";
+                "<br /><strong>DIRECCIÓN DE PERSONAL</strong><br />Correo Electronico : btu@unach.mx / Facebook https://www.facebook.com/BTUNACH  <br /><br />";
             System.Net.Mail.MailMessage mmsg = new System.Net.Mail.MailMessage();
             string MsjError = string.Empty;
             EnvioCorreo_Adjunto(ref mmsg, AsuntoCorreo, Contenido, Correo, ref MsjError);
@@ -3588,8 +4290,9 @@ namespace BolsaTrabajoUnv2_0.Controllers
                                             //client.Credentials = new System.Net.NetworkCredential("sysweb@unach.mx", "dsia2014"); descomentar
             client.UseDefaultCredentials = false;
             //client.Credentials = new System.Net.NetworkCredential("sysweb@unach.mx", "Dsia890#");
-            client.Credentials = new System.Net.NetworkCredential("btu@unach.mx", "Bolsa_2019");
-
+            client.Credentials = new System.Net.NetworkCredential("btu@unach.mx", "sauciivgsmifccbt");
+            //Activar el acceso a aplicaciones poco seguras desde la cuenta de google, "Seguridad/Acceso de aplicaciones poco seguras
+            //https://myaccount.google.com/lesssecureapps?pli=1&rapt=AEjHL4PF6IpIpd1NirApmAtMOIDQeXXELJUuSQMv3WMnS1ic59KbBK9kWxwcJYMZFHwk0zYwWSr8unHuuCtF7KaEMxs5_u_wMQ
             try
             {
                 //Enviamos el mensaje      
@@ -3616,7 +4319,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
             string fichero = "";
             string url = RutaFoto;
             string rutaObtenida = url.Substring(0, 38);
-            if (rutaObtenida == "https://btu.unach.mx/Dsia/ImgProfileCv")
+            if (rutaObtenida == "http://btu.unach.mx/ImgProfileCv")
             {
                 string fileName = System.IO.Path.GetFileName(url);
                 fichero = Server.MapPath("../ImgProfileCv/" + fileName);
@@ -3628,7 +4331,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 WebClient myWebClient = new WebClient();
                 string destino = Path.Combine(Server.MapPath("../ImgProfileCv/") + fileName);
 
-                myWebClient.DownloadFile(url, destino);
+                //myWebClient.DownloadFile(url, destino);
                 fichero = Server.MapPath("../ImgProfileCv/" + fileName);
             }
 
@@ -3695,6 +4398,53 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+
+        public ActionResult ReporteListaEmpresa()
+        {
+            ResultadoComun objResultado = new ResultadoComun();
+            if (System.Web.HttpContext.Current.Session["SessionInicioAdministrador"] != null)
+            {
+                try
+                {
+                    //string ruta = Request.MapPath(sr);                
+                    ConnectionInfo connectionInfo = new ConnectionInfo();
+                    System.Web.UI.Page p = new System.Web.UI.Page();
+
+                    ReportDocument rd = new ReportDocument();
+                    string Ruta = Path.Combine(Server.MapPath("~/Reportes"), "ListaEmpresas.rpt");
+                    rd.Load(Path.Combine(Server.MapPath("~/Reportes"), "ListaEmpresas.rpt"));
+                    rd.PrintOptions.PaperSize = CrystalDecisions.Shared.PaperSize.PaperLetter;
+                    connectionInfo.ServerName = "DSIA";
+                    connectionInfo.UserID = "vincular";
+                    connectionInfo.Password = "persona2019";
+                    SetDBLogonForReport(connectionInfo, rd);
+
+                    Response.Buffer = false;
+                    Response.ClearContent();
+                    Response.ClearHeaders();
+
+
+                    Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                    stream.Seek(0, SeekOrigin.Begin);
+                    return File(stream, "application/pdf", "ListaEmpresas.pdf");
+                }
+                catch (Exception ex)
+                {
+                    objResultado.Error = true;
+                    objResultado.MensajeError = ex.Message;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else
+            {
+                objResultado.Error = true;
+                objResultado.MensajeError = "No es administrador";
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+                
+
+        }
+
         public ActionResult ReporteFichaEmpresa(int IdEmpresa)
         {
             ResultadoComun objResultado = new ResultadoComun();
@@ -3843,7 +4593,10 @@ namespace BolsaTrabajoUnv2_0.Controllers
         }
         public ActionResult PanelEmpresa()
         {
-            return View();
+            if (System.Web.HttpContext.Current.Session["SessionInicioAdministrador"] != null || System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"] != null)
+                return View();
+            else
+                return RedirectToAction("Btu", "Btu");
         }
         public ActionResult PanelCandidato()
         {
@@ -3851,13 +4604,33 @@ namespace BolsaTrabajoUnv2_0.Controllers
         }
         public ActionResult PanelAdministrador()
         {
-            return View();
+            if (System.Web.HttpContext.Current.Session["SessionInicioAdministrador"] != null || System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"] != null)
+                return View();
+            else
+                return RedirectToAction("Btu", "Btu");
         }
         public ActionResult Vacante()
         {
-            return View();
+            if(System.Web.HttpContext.Current.Session["SessionInicioAdministrador"] != null || System.Web.HttpContext.Current.Session["SessionInicioSesionEmpresa"] != null) 
+                return View();
+            else
+                return RedirectToAction("Btu", "Btu");
         }
         public ActionResult Btu()
+        {
+            return View();
+        }
+        public ActionResult RegistroExternos()
+        {
+            return RedirectToAction("Btu", "Btu");
+        }
+
+        public ActionResult PreRegistroBtu()
+        {
+            return View();
+        }
+
+        public ActionResult Admin_btu()
         {
             return View();
         }

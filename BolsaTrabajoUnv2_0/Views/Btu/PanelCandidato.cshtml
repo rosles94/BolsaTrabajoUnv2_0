@@ -8,27 +8,27 @@
         <div class="col-md-2 py-5">
             <ul class="list-group">
                 <li id="" class="list-group-item d-flex justify-content-between align-items-center" style="background-color:forestgreen">
-                    <span id="" data-toggle="tooltip" title="Ver Vacantes" ng-click="ctrl.ObtenerVacantesXstatus(ctrl.IdUsuario, 'S')">Invitado: {{ctrl.StatusInv}}</span>
+                    <span id="" data-toggle="tooltip" title="Ver Vacantes" >Invitado: {{ctrl.StatusInv}}</span>
                     <span class="badge badge-primary badge-pill">
-                        <i id="infemp1" class="fas fa-eye"></i>
+                        <i id="infemp1" class="fas fa-eye" ng-click="ctrl.ObtenerVacantesXstatus(ctrl.IdUsuario, 'S')"></i>
                     </span>
                 </li>
                 <li id="" class="list-group-item d-flex justify-content-between align-items-center" style="background-color:forestgreen">
-                    <span id="" data-toggle="tooltip" title="Ver Vacantes" ng-click="ctrl.ObtenerVacantesXstatus(ctrl.IdUsuario, 'I')">Interesado: {{ctrl.StatusInt}}</span>
+                    <span id="" data-toggle="tooltip" title="Ver Vacantes" >Interesado: {{ctrl.StatusInt}}</span>
                     <span class="badge badge-primary badge-pill">
-                        <i id="infemp1" class="fas fa-check-circle"></i>
+                        <i id="infemp1" class="fas fa-check-circle" ng-click="ctrl.ObtenerVacantesXstatus(ctrl.IdUsuario, 'I')"></i>
                     </span>
                 </li>
                 <li id="" class="list-group-item d-flex justify-content-between align-items-center" style="background-color:lightgoldenrodyellow">
-                    <span id="" data-toggle="tooltip" title="Ver Vacantes" ng-click="ctrl.ObtenerVacantesXstatus(ctrl.IdUsuario, 'E')">Entrevista: {{ctrl.StatusEnt}}</span>
+                    <span id="" data-toggle="tooltip" title="Ver Vacantes" >Entrevista: {{ctrl.StatusEnt}}</span>
                     <span class="badge badge-primary badge-pill">
-                        <i id="infemp1" class="fas fa-check"></i>
+                        <i id="infemp1" class="fas fa-check" ng-click="ctrl.ObtenerVacantesXstatus(ctrl.IdUsuario, 'E')"></i>
                     </span>
                 </li>
                 <li id="" data-toggle="tooltip" title="Ver Vacantes" class="list-group-item d-flex justify-content-between align-items-center" style="background-color:palegoldenrod">
-                    <span id="" ng-click="ctrl.ObtenerVacantesXstatus(ctrl.IdUsuario, 'A')">Aceptado: {{ctrl.StatusAcep}}</span>
+                    <span id="" >Aceptado: {{ctrl.StatusAcep}}</span>
                     <span class="badge badge-primary badge-pill">
-                        <i id="infemp1" class="fas fa-thumbs-up"></i>
+                        <i id="infemp1" class="fas fa-thumbs-up" ng-click="ctrl.ObtenerVacantesXstatus(ctrl.IdUsuario, 'A')"></i>
                     </span>
                 </li>
                 <li id="" class="list-group-item d-flex justify-content-between align-items-center">
@@ -60,7 +60,7 @@
                     <p ng-model="ctrl.Registrado" class="card-text">La información de tu curriculum puede ser modificada si lo deseas presionando el  botón que está abajo.</p>
                     <p ng-model="ctrl.Matricula" class="card-text"><small id="statusCand" style="display:none" class="text-muted">El usuario está en estatus {{ctrl.StatusCand}}.</small></p>
                     <input ng-model="ctrl.IdUsuario" type="button" class="btn btn-success" value="Ver Información del Curriculum" ng-click="ctrl.GuardarIdCv(ctrl.IdUsuario, ctrl.Matricula, ctrl.Registrado)" />
-                    <input type="button" class="btn btn-warning" value="Cargar cv" data-toggle="modal" data-target="#modalCargarCv" />       
+                    @*<input type="button" class="btn btn-warning" value="Cargar cv" data-toggle="modal" data-target="#modalCargarCv" />*@
                     <a href="../CvCandidatos/{{ctrl.Matricula}}.pdf"> <i class="far fa-file-pdf" data-toggle="tooltip" title="Ver Cv"></i> </a>
                 </div>
             </div>

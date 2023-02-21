@@ -2,6 +2,11 @@
 @{
     ViewBag.Title = "Registrar Datos de la Empresa";    
 }
+<style>
+    #tabInfoEmpresa{
+        pointer-events: none;
+    }
+</style>
 
     <div class="container-fluid py-5" ng-init="ctrl.CargarDatosPrincipalesEmpresa()">
 
@@ -244,7 +249,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="basic-addon1">Medio de Contacto</span>
                                         </div>
-                                        <select name="Estado" id="Estado" ng-change="ctrl.GlobalDatosContacto()" ng-model="ctrl.MedioContacto" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listMedioContacto" style="max-width:100%" required></select>
+                                        <select name="Estado" id="medioContacto" ng-change="ctrl.GlobalDatosContacto()" ng-model="ctrl.MedioContacto" class="custom-select" ng-options="list.Id as list.Descripcion for list in ctrl.listMedioContacto" style="max-width:100%" required></select>
                                     </div>
                                     <span style="color:red" ng-show="myForm2.Estado.$invalid" />
                                     <span ng-show="myForm2.Estado.$error.required">*Medio de Contacto requerido</span>

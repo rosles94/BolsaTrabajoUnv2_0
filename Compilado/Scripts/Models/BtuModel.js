@@ -934,7 +934,7 @@ var btuContext =
                     for (var i = 0; i < resp.Resultado.length; i++) {                        
                         self.listDatosPanelCv.push({
                             Id: resp.Resultado[i].Id, Matricula: resp.Resultado[i].Matricula, Registrado: resp.Resultado[i].Registrado, Email: resp.Resultado[i].Email, NombreCandidato: resp.Resultado[i].Nombre,
-                            Administrador: resp.Resultado[i].Administrador
+                            Administrador: resp.Resultado[i].Administrador, Email_Unach: resp.Resultado[i].Email_Unach
                         });
                     }
                     callBackResult({ ressult: 'tgp', message: resp.MensajeError });
@@ -1488,7 +1488,7 @@ var btuContext =
                     for (var i = 0; i < resp.Resultado.length; i++) {
                         self.listInteresadosVac.push({
                             Nombre: resp.Resultado[i].Nombre, Id_Vac_Cand: resp.Resultado[i].objVacantesCandidatos.Id, Id: resp.Resultado[i].Id, Status: resp.Resultado[i].objVacantesCandidatos.Status,
-                            Correo: resp.Resultado[i].Correo, Genero: resp.Resultado[i].Genero, Ruta_Foto: resp.Resultado[i].Ruta_Foto, Fecha_Nacimiento: resp.Resultado[i].Fecha_Nacimiento
+                            Correo: resp.Resultado[i].Correo, Genero: resp.Resultado[i].Genero, Ruta_Foto: resp.Resultado[i].Ruta_Foto, Fecha_Nacimiento: resp.Resultado[i].Fecha_Nacimiento, Celular: resp.Resultado[i].Celular
                         });
                     }
                     callBackResult({ ressult: 'tgp', message: resp.MensajeError });
@@ -1840,7 +1840,7 @@ var btuContext =
                             Codigo_Postal: resp.Resultado[i].Codigo_Postal, Status: resp.Resultado[i].Status, Contacto: resp.Resultado[i].Contacto, Contacto_Cargo: resp.Resultado[i].Contacto_Cargo,
                             Telefono: resp.Resultado[i].Telefono, Celular: resp.Resultado[i].Celular, Email: resp.Resultado[i].Email, Contrasena: resp.Resultado[i].Contrasena,
                             Medio_Contacto: resp.Resultado[i].Medio_Contacto, Rfc: resp.Resultado[i].Rfc, Id: resp.Resultado[i].Id, Total: resp.Resultado[i].Total, Motivo: resp.Resultado[i].Motivo,
-                            TieneVacantes: IndicaVacantes
+                            TieneVacantes: IndicaVacantes, Alta_Fecha: resp.Resultado[i].Alta_Fecha
                         });
                     }
                     callBackResult({ ressult: 'tgp', message: resp.MensajeError });
@@ -2182,6 +2182,27 @@ var btuContext =
                 if (callBackResult !== undefined) {
                     callBackResult({ ressult: 'notgp', message: ex.statusText });
                 }
+            }
+        });
+    },
+
+    RegistrarDatosExterno: function (nombre, paterno, materno, escuela, Estado, Municipio, Colonia, Domicilio, email,
+        contrasenia, fec_nac, curp, callBackResult) {
+        $.ajax({
+            type: "POST",
+            url: urlServer + "Btu/RegistrarDatosExterno",
+            data: {
+                nombre, paterno, materno, escuela, Estado, Municipio, Colonia, Domicilio, email,
+                contrasenia, curp, fec_nac
+            },
+            success: function (resp) {
+                if (resp.Error === false)
+                    callBackResult({ ressult: 'tgp', message: resp.MensajeError });
+                else
+                    callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+            },
+            error: function (ex) {
+                callBackResult({ ressult: 'notgp', message: ex });
             }
         });
     },

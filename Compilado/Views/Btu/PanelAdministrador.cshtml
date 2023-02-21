@@ -1,5 +1,4 @@
-﻿-
-@{
+﻿@{
     ViewBag.Title = "PanelAdministrador";
     Layout = "~/Views/Shared/_LayoutSesion.cshtml";
 }
@@ -30,8 +29,10 @@
                         <h5 class="card-title">Empresas.</h5>
                         <p class="card-text">En esta sección podrás las empresas registradas, para poder verlas da click en el botón "Ver Empresas Registradas".</p>
                         <p class="card-text"><small class="text-muted">Número de empresas registradas: {{ctrl.TotalEmpresas}}.</small></p>
+                        <br />
                         <input type="button" class="btn btn-success" value="Ver empresas..." data-toggle="tooltip" title="Ver empresas registradas" ng-click="ctrl.ObtenerGridEmpresasRegistradas()" />
                         <input type="button" class="btn btn-success" value="Ver vacantes..." data-toggle="tooltip" title="Ver vacantes vencidas" ng-click="ctrl.ObtenerGridVacantesVencidas()" />
+                        <input type="button" class="btn btn-warning" value="Reporte Empresas..." data-toggle="tooltip" title="Ver Reporte de todas las empresas registradas" ng-click="ctrl.ReporteListaEmpresas()"/>
                     </div>
                 </div>
             </div>

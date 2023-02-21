@@ -4,6 +4,11 @@
     Layout = "~/Views/Shared/_LayoutSesion.cshtml";
 }
     <link href="~/Content/imagenPerfil.css" rel="stylesheet" />
+    <style>
+        #tabInfoPersonal {
+            pointer-events: none;
+        }
+    </style>
 
 <div id="cargandoDatos" class="row py-5" style="display:none">
     <div class="col-md-5">
@@ -31,17 +36,18 @@
         </div>
         <div class="col-md-2">            
             <img id="imgCadidato" class="user">
-            <label for="cargarFoto" class="fotoPerilCv">Agregar Foto de Perfil</label>
+            <label for="cargarFoto" class="fotoPerilCv">Seleccionar Foto para Cv</label>
             <input type="file" id="cargarFoto" multiple accept="image/*" />
             <br />
-            <input type="button" ng-click="ctrl.cargarFotoPerfilCv()" value="Cargar Imagen" />
+            <button class="btn btn-info" ng-click="ctrl.cargarFotoPerfilCv()"> <i class="fas fa-upload"></i>  Cargar Imagen </button>
+            @*<input type="button" ng-click="ctrl.cargarFotoPerfilCv()" value="Cargar Imagen" />*@
         </div>
         <div class="col-md-8">
             <ul>
                 <li>Matrícula: {{ctrl.Matricula}} </li>
                 <li>Carrera: {{ctrl.DescCarrera}} </li>
                 <li>Áreas de Interes: {{ctrl.AreaInt}} </li>
-                <li>Objetivo Profesional: {{ctrl.ObjPersonal}}</li>                
+                <li>Objetivo Profesional: {{ctrl.ObjPersonal}}</li>
             </ul>
         </div>
     </div>
@@ -49,6 +55,12 @@
     <div class="row py-2">
         <div class="col-md-2">
             <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Manual de Usuario
+                    <span class="">                        
+                        <a href="~/Manuales/ManualCandUnach/Manual usuario BTU - Candidato.pdf" target="_blank"><i id="" class="fas fa-file-pdf"></i></a>
+                    </span>
+                </li>
                 <li id="globalInfoPer" class="list-group-item d-flex justify-content-between align-items-center" style="background-color:yellow">
                     Información Personal
                     <span class="badge badge-primary badge-pill">
@@ -126,37 +138,37 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Nombre(s)</span>
                                     </div>
-                                    <input ng-model="ctrl.NombreCandidato" id="NombreCandidato" name="NombreCandidato" ng-change="ctrl.GlobalInfoPersonal()" type="text" class="form-control" placeholder="Nombre(s)" aria-label="Nombre" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.NombreCandidato" id="NombreCandidato" name="NombreCandidato" ng-change="ctrl.GlobalInfoPersonal()" type="text" class="form-control" placeholder="Nombre(s)" aria-label="Nombre" aria-describedby="basic-addon1" style="max-width:100%" maxlength="100" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.NombreCandidato.$invalid" />
-                                <span ng-show="myForm.NombreCandidato.$error.required">*Nombre requerido</span>
+                                <span ng-show="myForm.NombreCandidato.$error.required">*Nombre requerido (Max. 100 caracteres)</span>
                             </div>
                             <div class="col-md-6 py-3">
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Apellido Paterno</span>
                                     </div>
-                                    <input ng-model="ctrl.ApePatCandidato" id="ApePatCandidato" name="ApePatCandidato" ng-change="ctrl.GlobalInfoPersonal()" type="text" class="form-control" placeholder="Apellido Paterno" aria-label="ApellidoPaterno" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.ApePatCandidato" id="ApePatCandidato" name="ApePatCandidato" ng-change="ctrl.GlobalInfoPersonal()" type="text" class="form-control" placeholder="Apellido Paterno" aria-label="ApellidoPaterno" aria-describedby="basic-addon1" style="max-width:100%" maxlength="100" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.ApePatCandidato.$invalid" />
-                                <span ng-show="myForm.ApePatCandidato.$error.required">*Apellido Paterno requerido</span>
+                                <span ng-show="myForm.ApePatCandidato.$error.required">*Apellido Paterno requerido (Max. 100 caracteres)</span>
                             </div>
                             <div class="col-md-6 py-3">
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Apellido Materno</span>
                                     </div>
-                                    <input ng-model="ctrl.ApeMatCandidato" id="ApeMatCandidato" name="ApeMatCandidato" ng-change="ctrl.GlobalInfoPersonal()" type="text" class="form-control" placeholder="Apellido Materno" aria-label="ApellidoMaterno" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.ApeMatCandidato" id="ApeMatCandidato" name="ApeMatCandidato" ng-change="ctrl.GlobalInfoPersonal()" type="text" class="form-control" placeholder="Apellido Materno" aria-label="ApellidoMaterno" aria-describedby="basic-addon1" style="max-width:100%" maxlength="100" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.ApeMatCandidato.$invalid" />
-                                <span ng-show="myForm.ApeMatCandidato.$error.required">*Apellido Materno requerido</span>
+                                <span ng-show="myForm.ApeMatCandidato.$error.required">*Apellido Materno requerido (Max. 100 caracteres)</span>
                             </div>
                             <div class="col-md-6 py-3">
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Fecha de Nacimiento</span>
                                     </div>
-                                    <input ng-model="ctrl.FecNac" id="FecNac" name="FecNac" ng-change="ctrl.GlobalInfoPersonal()" class="form-control" type="text" aria-label="FechaNacimiento" aria-describedby="basic-addon1" style="max-width:100%"  required>
+                                    <input ng-model="ctrl.FecNac" id="FecNac" name="FecNac" ng-change="ctrl.GlobalInfoPersonal()" class="form-control" type="date" aria-label="FechaNacimiento" aria-describedby="basic-addon1" style="max-width:100%"  required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.FecNac.$invalid" />
                                 <span ng-show="myForm.FecNac.$error.required">*Fecha de Nacimiento requerida</span>
@@ -186,40 +198,40 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Domicilio</span>
                                     </div>
-                                    <input ng-model="ctrl.Domicilio" id="Domicilio" name="Domicilio" type="text" ng-change="ctrl.GlobalInfoPersonal()" class="form-control" placeholder="Domicilio" aria-label="Domicilio" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.Domicilio" id="Domicilio" name="Domicilio" type="text" ng-change="ctrl.GlobalInfoPersonal()" class="form-control" placeholder="Domicilio" aria-label="Domicilio" aria-describedby="basic-addon1" style="max-width:100%" maxlength="200" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.Domicilio.$invalid" />
-                                <span ng-show="myForm.Domicilio.$error.required">*Domicilio requerido</span>
+                                <span ng-show="myForm.Domicilio.$error.required">*Domicilio requerido (Max. 200 caracteres)</span>
                             </div>
                             <div class="col-md-6 py-2">
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Teléfono Celular</span>
                                     </div>
-                                    <input ng-model="ctrl.TelCel" id="TelCel" name="TelCel" type="text" ng-change="ctrl.GlobalInfoPersonal()" class="form-control" placeholder="Teléfono Celular" aria-label="TeléfonoCelular" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.TelCel" id="TelCel" name="TelCel" type="text" ng-change="ctrl.GlobalInfoPersonal()" class="form-control" placeholder="Teléfono Celular" aria-label="TeléfonoCelular" aria-describedby="basic-addon1" style="max-width:100%" maxlength="20" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.TelCel.$invalid" />
-                                <span ng-show="myForm.TelCel.$error.required">*Teléfono Celular requerido</span>
+                                <span ng-show="myForm.TelCel.$error.required">*Teléfono Celular requerido (Max. 20 caracteres)</span>
                             </div>
                             <div class="col-md-6 py-2">
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Teléfono Adicional</span>
                                     </div>
-                                    <input ng-model="ctrl.TelAd" id="TelAd" name="TelAd" type="text" ng-change="ctrl.GlobalInfoPersonal()" class="form-control" placeholder="Teléfono Adicional" aria-label="TeléfonoAdicional" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.TelAd" id="TelAd" name="TelAd" type="text" ng-change="ctrl.GlobalInfoPersonal()" class="form-control" placeholder="Teléfono Adicional" aria-label="TeléfonoAdicional" aria-describedby="basic-addon1" style="max-width:100%" maxlength="20" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.TelAd.$invalid" />
-                                <span ng-show="myForm.TelAd.$error.required">*Teléfono Adicional requerido</span>
+                                <span ng-show="myForm.TelAd.$error.required">*Teléfono Adicional requerido (Max. 20 caracteres)</span>
                             </div>
                             <div class="col-md-12 py-2">
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">E-mail</span>
                                     </div>
-                                    <input ng-model="ctrl.Email" id="Email" name="Email" type="text" ng-change="ctrl.GlobalInfoPersonal()" class="form-control" placeholder="E-mail" aria-label="Email" aria-describedby="basic-addon1" style="max-width:44.5%" required>
+                                    <input ng-model="ctrl.Email" id="Email" name="Email" type="text" ng-change="ctrl.GlobalInfoPersonal()" class="form-control" placeholder="E-mail" aria-label="Email" aria-describedby="basic-addon1" style="max-width:44.5%" maxlength="200" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.Email.$invalid" />
-                                <span ng-show="myForm.Email.$error.required">*E-mail requerido</span>
+                                <span ng-show="myForm.Email.$error.required">*E-mail requerido (Max. 200 caracteres)</span>
                             </div>
                             <div class="col-md-6">
                                 <div class="input-group">
@@ -239,20 +251,20 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Área de Interes</span>
                                     </div>
-                                    <input ng-model="ctrl.AreaInt" id="AreaInt" name="AreaInt" type="text" ng-change="ctrl.GlobalInfoPersonal()" class="form-control" placeholder="Área de Interes" aria-label="ÁreaInteres" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.AreaInt" id="AreaInt" name="AreaInt" type="text" ng-change="ctrl.GlobalInfoPersonal()" class="form-control" placeholder="Área de Interes" aria-label="ÁreaInteres" aria-describedby="basic-addon1" style="max-width:100%" maxlength="1000" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm.AreaInt.$invalid" />
-                                <span ng-show="myForm.AreaInt.$error.required">*Área de Interes requerida</span>
+                                <span ng-show="myForm.AreaInt.$error.required">*Área de Interes requerida (Max. 1000 caracteres)</span>
                             </div>
                             <div class="col-md-12 py-2">
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Objetivo Personal</span>
                                     </div>
-                                    <textarea ng-model="ctrl.ObjPersonal" id="ObjPersonal" name="ObjPersonal" type="text" ng-change="ctrl.GlobalInfoPersonal()" class="form-control" aria-label="ObjetivoPersonal" aria-describedby="basic-addon1" style="max-width:100%; max-height:70%; min-height:70%" required></textarea>
+                                    <textarea ng-model="ctrl.ObjPersonal" id="ObjPersonal" name="ObjPersonal" type="text" ng-change="ctrl.GlobalInfoPersonal()" class="form-control" aria-label="ObjetivoPersonal" aria-describedby="basic-addon1" style="max-width:100%; max-height:70%; min-height:70%" maxlength="2000" required></textarea>
                                 </div>
                                 <span style="color:red" ng-show="myForm.ObjPersonal.$invalid" />
-                                <span ng-show="myForm.ObjPersonal.$error.required">*Objetivo Personal requerido</span>
+                                <span ng-show="myForm.ObjPersonal.$error.required">*Objetivo Personal requerido (Max. 2000 caracteres)</span>
                             </div>
                             <div class="col-md-1">
                                 <input id="btninformacionCandidato" type="button" class="btn btn-info" value="Continuar"
@@ -322,7 +334,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Institución Educativa</span>
                                     </div>
-                                    <input ng-model="ctrl.NombEsc" id="NombEsc" name="NombEsc" type="text" ng-change="ctrl.GlobalInfoAcademica()" class="form-control" placeholder="Ejmp. UNACH" aria-label="NombreInstituciónEducativa" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input ng-model="ctrl.NombEsc" id="NombEsc" name="NombEsc" type="text" ng-change="ctrl.GlobalInfoAcademica()" class="form-control" placeholder="Ejmp. UNACH" aria-label="NombreInstituciónEducativa" aria-describedby="basic-addon1" style="max-width:100%" maxlength="200" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm2.NombEsc.$invalid" />
                                 <span ng-show="myForm2.NombEsc.$error.required">*Institución Educativa requerida</span>
@@ -412,7 +424,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Software</span>
                                     </div>
-                                    <input id="Software" name="Software" ng-model="ctrl.Software" type="text" ng-change="" class="form-control" placeholder="Software" aria-label="Software" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input id="Software" name="Software" ng-model="ctrl.Software" type="text" ng-change="" class="form-control" placeholder="Software" aria-label="Software" aria-describedby="basic-addon1" style="max-width:100%" maxlength="500" required>
                                 </div>
                                 @*<span style="color:red" ng-show="myForm3.Software.$invalid" />
                                     <span ng-show="myForm3.Software.$error.required">*R requerida</span>*@
@@ -457,7 +469,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Idioma</span>
                                     </div>
-                                    <input id="Idioma" name="Idioma" ng-model="ctrl.Idioma" type="text" ng-change="" class="form-control" placeholder="Idioma" aria-label="Idioma" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input id="Idioma" name="Idioma" ng-model="ctrl.Idioma" type="text" ng-change="" class="form-control" placeholder="Idioma" aria-label="Idioma" aria-describedby="basic-addon1" style="max-width:100%" maxlength="500" required>
                                 </div>
                                 @*<span style="color:red" ng-show="myForm3.Software.$invalid" />
                                     <span ng-show="myForm3.Software.$error.required">*R requerida</span>*@
@@ -517,7 +529,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Nombre de la Empresa</span>
                                     </div>
-                                    <input id="NombreEmpresa" name="NombreEmpresa" ng-model="ctrl.NombreEmpresa" type="text" ng-change="ctrl.GlobalExpProf()" class="form-control" placeholder="Nombre de la Empresa" aria-label="NombreEmpresa" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input id="NombreEmpresa" name="NombreEmpresa" ng-model="ctrl.NombreEmpresa" type="text" ng-change="ctrl.GlobalExpProf()" class="form-control" placeholder="Nombre de la Empresa" aria-label="NombreEmpresa" aria-describedby="basic-addon1" style="max-width:100%" maxlength="200" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm3.NombreEmpresa.$invalid" />
                                 <span ng-show="myForm3.NombreEmpresa.$error.required">*Nombre de la Empresa requerida</span>
@@ -547,7 +559,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Puesto / Actividades que Desempeñaba</span>
                                     </div>
-                                    <textarea id="DescAct" name="DescAct" ng-model="ctrl.DescAct" type="text" ng-change="ctrl.GlobalExpProf()" class="form-control" placeholder="Descripcion de Activades Realizadas" aria-label="DescripcionActividades" aria-describedby="basic-addon1" style="max-width:100%; min-height:30%;  max-height:30%" rows="7" required maxlength="200"></textarea>                                    
+                                    <textarea id="DescAct" name="DescAct" ng-model="ctrl.DescAct" type="text" ng-change="ctrl.GlobalExpProf()" class="form-control" placeholder="Descripcion de Activades Realizadas" aria-label="DescripcionActividades" aria-describedby="basic-addon1" style="max-width:100%; min-height:30%;  max-height:30%" rows="7" maxlength="200" required></textarea>
                                 </div>
                                 <span style="color:red" ng-show="myForm3.DescAct.$invalid" />
                                 <span ng-show="myForm3.DescAct.$error.required">*Puesto / Actividades requerido</span>
@@ -557,7 +569,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Nombre del Contacto / Teléfono</span>
                                     </div>
-                                    <input id="ReferenciaTrabajo" name="ReferenciaTrabajo" ng-model="ctrl.ReferenciaTrabajo" type="text" ng-change="ctrl.GlobalExpProf()" class="form-control" placeholder="Nombre del Contacto / Teléfono" aria-label="ReferenciaTrabajo" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input id="ReferenciaTrabajo" name="ReferenciaTrabajo" ng-model="ctrl.ReferenciaTrabajo" type="text" ng-change="ctrl.GlobalExpProf()" class="form-control" placeholder="Nombre del Contacto / Teléfono" aria-label="ReferenciaTrabajo" aria-describedby="basic-addon1" style="max-width:100%" maxlength="50" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm3.ReferenciaTrabajo.$invalid" />
                                 <span ng-show="myForm3.ReferenciaTrabajo.$error.required">*Datos de Contato requeridos</span>
@@ -606,7 +618,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Nombre del Curso / Taller</span>
                                     </div>
-                                    <input id="CursoTaller" name="CursoTaller" ng-model="ctrl.CursoTaller" type="text" ng-change="" class="form-control" placeholder="Curso / Taller" aria-label="CursoTaller" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input id="CursoTaller" name="CursoTaller" ng-model="ctrl.CursoTaller" type="text" ng-change="" class="form-control" placeholder="Curso / Taller" aria-label="CursoTaller" aria-describedby="basic-addon1" style="max-width:100%" maxlength="500" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm4.CursoTaller.$invalid" />
                                 <span ng-show="myForm4.CursoTaller.$error.required">*Curso o Taller requerido</span>
@@ -626,7 +638,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Institución</span>
                                     </div>
-                                    <input id="InstTaller" name="InstTaller" ng-model="ctrl.InstTaller" type="text" ng-change="" class="form-control" placeholder="Institución" aria-label="InstTaller" aria-describedby="basic-addon1" style="max-width:100%" required>
+                                    <input id="InstTaller" name="InstTaller" ng-model="ctrl.InstTaller" type="text" ng-change="" class="form-control" placeholder="Institución" aria-label="InstTaller" aria-describedby="basic-addon1" style="max-width:100%" maxlength="200" required>
                                 </div>
                                 <span style="color:red" ng-show="myForm4.InstTaller.$invalid" />
                                 <span ng-show="myForm4.InstTaller.$error.required">*Institución requerida</span>
@@ -718,7 +730,7 @@
 
 <script src="~/Scripts/funcionesDatosCandidatos.js"></script>
 
-<script type="text/javascript">
+@*<script type="text/javascript">
         jQuery(function ($) {
             $.datepicker.regional['es'] = {
                 closeText: 'Cerrar',
@@ -749,6 +761,6 @@
         $('#fecFinExpAlumno').datepicker();
         $('#fecIniCursoTallerAlumno').datepicker();
         $('#fecFinCursoTallerAlumno').datepicker();
-    </script>
+    </script>*@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.jquery.min.js"></script>

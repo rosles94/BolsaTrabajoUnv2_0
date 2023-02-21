@@ -20,6 +20,8 @@ namespace BolsaTrabajoUnv2_0.Models
         public string Sesion { get; set; }
         public string Status { get; set; }
         public bool Administrador { get; set; }
+        public string Email_Candidato_ { get; set; }
+        public string Email_Unach { get; set; }
     }
 
     public class ResultadoSesion
