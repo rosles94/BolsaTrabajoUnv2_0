@@ -209,6 +209,7 @@
                                         <th scope="col">Estatus</th>
                                         <th scope="col">Edad</th>
                                         <th scope="col">Email</th>
+                                        <th scope="col">Celular</th>
                                         <th scope="col">Cv</th>
                                         <th scope="col">Cambiar estatus</th>
                                     </tr>
@@ -219,6 +220,7 @@
                                         <td>{{x.Status}}</td>
                                         <td>{{x.Fecha_Nacimiento}}</td>
                                         <td>{{x.Correo}}</td>
+                                        <td>{{x.Celular}}</td>
                                         <td><i data-toggle="tooltip" data-placement="top" title="Ver Cv" ng-click="ctrl.ReporteCurriculumEmpresa(x.Id,x.Ruta_Foto, x.Status)" class="fas fa-file-alt"></i></td>
                                         <td><span data-toggle="modal" data-target="#modalStatusCandidato"><i data-toggle="tooltip" data-placement="top" title="Cambiar estatus candidato" class="fas fa-pencil-alt" ng-click="ctrl.GuardarIdCandidatoInteresado(x.Id_Vac_Cand, x.Id, x.Correo)"></i></span></td>
                                     </tr>

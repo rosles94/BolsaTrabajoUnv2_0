@@ -658,7 +658,7 @@
                         }
                         break;
                     case "notgp":
-                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 1500 })
+                        Swal.fire({ icon: 'error', title: 'Error.', text: resp.message, showConfirmButton: false, timer: 20000 })
                         break;
                     default:
                         break;
@@ -1760,8 +1760,9 @@
                         self.DetalleResponsableEntrevista = self.listDatosVacante[0].Responsable_Entrevista;
                         self.DetalleEspecificaciones = self.listDatosVacante[0].Especificaciones_Entrevista;
                         //    self.DircEntre = self.listDatosVacante[0].Direccion_Entrevista;
-                        //    self.TelOfc = self.listDatosVacante[0].Telefono;
+                        self.TelOfc = self.listDatosVacante[0].Telefono;
                         eMailEmpresa = self.listDatosVacante[0].Correo;
+                        self.emailEmp = self.listDatosVacante[0].Correo;
                         self.DetalleComentarios = self.listDatosVacante[0].Comentarios;
                         if (self.listDatosVacante[0].Genero === 'I')
                             self.DetalleGenero = 'INDISTINTO';

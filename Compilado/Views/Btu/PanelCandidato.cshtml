@@ -78,6 +78,7 @@
                     <div class="card-body">
                         <h5 class="card-title">{{x.Empresa}}</h5>
                         <p class="card-text">{{x.Nombre}}.</p>
+                        <p class="card-text">Total Vacantes {{x.Total}}</p>
                         <input type="button" class="btn btn-info" value="Ver Vacante" ng-click="ctrl.ObtenerDetalleVacante(ctrl.IdUsuario, x.Id, x.Status, x.Id_Vac_Cand)" data-toggle="modal" data-target="#modalDetVac" />
                     </div>
                     <div class="card-footer">
@@ -224,6 +225,21 @@
                                 <span class="input-group-text" id="basic-addon1">Conocimientos:</span>
                             </div>
                             <textarea style="min-height:180px" class="form-control col-md-12 " aria-describedby="basic-addon1" disabled>{{ctrl.DetalleConocimientos}}</textarea>
+                        </div>
+                        <div class="input-group mb-3 col-md-12">
+                            <h5>Medios de contacto</h5>                            
+                        </div>
+                        <div class="input-group mb-3 col-md-12">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Celular:</span>
+                            </div>
+                            <label class="form-control" aria-describedby="basic-addon1">{{ctrl.TelOfc}}</label>
+                        </div>
+                        <div class="input-group mb-3 col-md-12">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Email:</span>
+                            </div>
+                            <label class="form-control" aria-describedby="basic-addon1">{{ctrl.emailEmp}}</label>
                         </div>
                     </div>
                 </div>

@@ -39,12 +39,12 @@
         </div>
     </div>
     @*<img class="col-md-5" src="~/Imagenes/ImagenesSitio/header.png" />*@
-    <p style="position: absolute;left: 43%;top: 130px;"><a href="https://secadva.unach.mx/index.php/bolsa" target="_blank">Valores</a></p>
+    <p style="position: absolute;left: 43%;top: 130px;"><a style="text-decoration: unset; color:white" href="https://secadva.unach.mx/index.php/bolsa" target="_blank">Valores</a></p>
     <p ng-init="ctrl.DatosGeneralesSistema()" id="vacantes" class="col-md-4" style="font-family:Georgia, 'Times New Roman', Times, serif">Ofertas de empleo: {{ctrl.Total}}</p>
     <div id="carouselExampleControls" class="carousel slide py-2" data-ride="carousel">
         <div class="carousel-inner row">
             <div class="carousel-item active">
-                <img src="~/Imagenes/ImagenesSitio/Fondo1_btu.jpg" class="d-block w-100" alt="...">
+                <img src="~/Imagenes/ImagenesSitio/BTU24_Slider1.jpg" class="d-block w-100" alt="...">
                 
                 <div class="bot2">
                     <button class="btn  btn-circle btn-xl2 bouton-image2 monBouton2 " data-toggle="modal" data-target="#modalEmpresa"></button>
@@ -63,7 +63,7 @@
                     <button class="btn btn-circle btn-xl4 bouton-image4 monBouton4" data-toggle="modal" data-target="#modalAlumno"></button>
                 </div>
 
-                <img src="~/Imagenes/ImagenesSitio/Fondo2_btu.jpg" class="d-block w-100" alt="...">
+                <img src="~/Imagenes/ImagenesSitio/BTU24_Slider2.jpg" class="d-block w-100" alt="...">
             </div>
             <div class="carousel-item">
 
@@ -74,9 +74,9 @@
                     <button class="btn btn-circle btn-xl4 bouton-image4 monBouton4" data-toggle="modal" data-target="#modalAlumno"></button>
                 </div>
 
-                <img src="~/Imagenes/ImagenesSitio/Fondo3_btu.jpg" class="d-block w-100" alt="...">
+                <img src="~/Imagenes/ImagenesSitio/BTU24_Slider3.jpg" class="d-block w-100" alt="...">
             </div>
-            <div class="carousel-item">
+            @*<div class="carousel-item">
 
                 <div class="bot2">
                     <button class="btn  btn-circle btn-xl2 bouton-image2 monBouton2 " data-toggle="modal" data-target="#modalEmpresa"></button>
@@ -86,7 +86,7 @@
                 </div>
 
                 <img src="~/Imagenes/ImagenesSitio/Fondo4_btu.jpg" class="d-block w-100" alt="...">
-            </div>
+            </div>*@
         </div>
         <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -211,3 +211,7 @@
     </div>
 </div>
 
+<script>
+    if (window.location.href.indexOf('https') == -1)
+        window.location.href = 'https://btu.unach.mx';
+</script>

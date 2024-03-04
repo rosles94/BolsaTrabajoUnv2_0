@@ -54,7 +54,7 @@
     font-weight: bold;
     line-height: 1.33;
     border-radius: 70px;
-    background-color: #efe6a0;
+    background-color: #b2c1f3;
     /*background-color: #efe6a0;*/
 }
 
@@ -72,7 +72,7 @@
 }
 
 .monBouton2:before {
-    background-image: url('../Imagenes/ImagenesSitio/empresas.png');
+    background-image: url('../Imagenes/ImagenesSitio/edificio.png');
     border-radius: 150px;
 }
 
@@ -152,8 +152,8 @@
 }
 
 .monBouton4:before {
-    background-image: url('../Imagenes/ImagenesSitio/unach.png');
-    border-radius: 150px;
+    background-image: url('../Imagenes/ImagenesSitio/redes-sociales.png');
+    border-radius: 50px;
 }
 
 

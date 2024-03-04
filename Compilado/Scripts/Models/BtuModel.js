@@ -1720,7 +1720,8 @@ var btuContext =
                 if (resp.Error === false) {
                     for (var i = 0; i < resp.Resultado.length; i++) {
                         self.listVacantesXstatus.push({
-                            Nombre: resp.Resultado[i].Nombre, Id: resp.Resultado[i].Id, Empresa: resp.Resultado[i].Empresa, Status: resp.Resultado[i].objVacCand.Status, Id_Vac_Cand: resp.Resultado[i].objVacCand.Id
+                            Nombre: resp.Resultado[i].Nombre, Id: resp.Resultado[i].Id, Empresa: resp.Resultado[i].Empresa, Status: resp.Resultado[i].objVacCand.Status, Id_Vac_Cand: resp.Resultado[i].objVacCand.Id,
+                            Total_Vacantes: resp.Resultado[i].Total_Vacantes
                         });
                     }
                     callBackResult({ ressult: 'tgp', message: resp.MensajeError });

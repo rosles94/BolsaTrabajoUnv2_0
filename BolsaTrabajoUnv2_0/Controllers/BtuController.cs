@@ -1053,16 +1053,17 @@ namespace BolsaTrabajoUnv2_0.Controllers
                 objResultadoCm = VerificarSesionCandidato();
                 if (objResultadoCm.Error == false)
                 {
+                    List<Btu_Sesion> listSesionCandidato = new List<Btu_Sesion>();
+                    listSesionCandidato = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
+
                     if (System.Web.HttpContext.Current.Session["SessionIdCvEditar"] != null)
                     {
                         objDatosUnach = (Btu_Curriculum)System.Web.HttpContext.Current.Session["SessionIdCvEditar"];
                         if (objDatosUnach.Registrado == "1")
                             objResultado.Resultado = DataContext.ObtenerDatosCurriculumAlta(objDatosUnach, ref Verificador);                        
                     }
-                    else if (System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] != null)
-                    {
-                        List<Btu_Sesion> listSesionCandidato = new List<Btu_Sesion>();
-                        listSesionCandidato = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
+                    else if (listSesionCandidato[0].Matricula != null)
+                    {                        
                         objDatosUnach.Matricula = listSesionCandidato[0].Matricula;
                         if(listSesionCandidato[0].Tipo == "UNACH")
                             objResultado.Resultado = DataContext.DatosRegistroUnach(objDatosUnach, ref Verificador);
@@ -1079,7 +1080,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                     else
                     {
                         objResultado.Error = true;
-                        objResultado.MensajeError = Verificador;                        
+                        objResultado.MensajeError = "Error al obtener los datos del estudiante";                        
                     }
                     return Json(objResultado, JsonRequestBehavior.AllowGet);
                 }
@@ -1745,7 +1746,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                         extencion = Path.GetExtension(fname);
                         if (extencion == ".jpg" || extencion == ".png")
                         {
-                            Status_Updload = "Cargando el archivo al servidor";
+                            Status_Updload = "Cargando el archivo al servidor " + lisInfoPersonal[0].Matricula;
                             // Get the complete folder path and store the file inside it.
                             //string fnameDoc = "../ImgProfileCv/" + fname;
                             string fnameDoc = "../ImgProfileCv/" + lisInfoPersonal[0].Matricula + extencion;
@@ -1867,46 +1868,58 @@ namespace BolsaTrabajoUnv2_0.Controllers
             ResultadoSesion objResultado = new ResultadoSesion();
             Btu_Sesion objSesion = new Btu_Sesion();
             string Verificador = string.Empty;
+            string Autorizado = string.Empty;
             try
             {
-                var client = new RestClient("http://ldapm.unach.mx/authldap.php");
-                client.Timeout = -1;
-                var request = new RestRequest(Method.POST);
-                request.AddHeader("Username", "ldapru");
-                request.AddHeader("Password", "01#lDhyr983wry");
-                request.AddHeader("Authorization", "Basic bGRhcHJ1OjAxI2xEaHlyOTgzd3J5");
-                request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
-                request.AddParameter("ldapuser", Usuario);
-                request.AddParameter("ldappasswd", Contrasena);
-                IRestResponse response = client.Execute(request);
-                //lblError.Text = response.Content;
-                var jObject = JObject.Parse(response.Content);
-
-                //Extracting Node element using Getvalue method
-                string Autorizado = jObject.GetValue("valido").ToString();
-                if (Autorizado == "0")
+                if (Usuario.Contains("@unach"))
                 {
-                    string Grupo = jObject.GetValue("group").ToString();
-                    string Matricula = jObject.GetValue("id").ToString();
-                    objSesion.Email = Matricula;
-                    objSesion.Tipo = Tipo;
-                    objSesion.Password = "";
-                    objSesion.Email_Unach = Usuario;
-                    
-                    objResultado.Resultado = DataContext.InciarSesion(objSesion, ref Verificador);
-                    Session["SessionInicioSesionUnach"] = objResultado.Resultado;
-                    if (Verificador == "0")
+                    var client = new RestClient("http://ldapm.unach.mx/authldap.php");
+                    client.Timeout = -1;
+                    var request = new RestRequest(Method.POST);
+                    request.AddHeader("Username", "ldapru");
+                    request.AddHeader("Password", "01#lDhyr983wry");
+                    request.AddHeader("Authorization", "Basic bGRhcHJ1OjAxI2xEaHlyOTgzd3J5");
+                    request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+                    request.AddParameter("ldapuser", Usuario);
+                    request.AddParameter("ldappasswd", Contrasena);
+                    IRestResponse response = client.Execute(request);
+                    //lblError.Text = response.Content;
+                    var jObject = JObject.Parse(response.Content);
+
+                    //Extracting Node element using Getvalue method
+                    Autorizado = jObject.GetValue("valido").ToString();
+
+                    if (Autorizado == "0")
                     {
-                        objResultado.Error = false;
-                        objResultado.MensajeError = "";
+                        string Grupo = jObject.GetValue("group").ToString();
+                        string Matricula = jObject.GetValue("id").ToString();
+                        objSesion.Email = Matricula;
+                        objSesion.Tipo = Tipo;
+                        objSesion.Password = "";
+                        objSesion.Email_Unach = Usuario;
+
+                        objResultado.Resultado = DataContext.InciarSesion(objSesion, ref Verificador);
+                        Session["SessionInicioSesionUnach"] = objResultado.Resultado;
+                        if (Verificador == "0")
+                        {
+                            objResultado.Error = false;
+                            objResultado.MensajeError = "";
+                        }
+                        else
+                        {
+                            objResultado.Error = true;
+                            objResultado.MensajeError = Verificador;
+                        }
                     }
                     else
                     {
+                        string Mensaje = jObject.GetValue("msg").ToString();
                         objResultado.Error = true;
-                        objResultado.MensajeError = Verificador;
+                        objResultado.MensajeError = Mensaje;
                     }
-                }
-                else if (Autorizado != "0")
+
+                }                
+                else
                 {
                     objSesion.Email = Usuario;
                     objSesion.Tipo = Tipo;
@@ -1923,13 +1936,7 @@ namespace BolsaTrabajoUnv2_0.Controllers
                         objResultado.Error = true;
                         objResultado.MensajeError = Verificador;
                     }
-                }
-                else 
-                {
-                    string Mensaje = jObject.GetValue("msg").ToString();
-                    objResultado.Error = true;
-                    objResultado.MensajeError = Mensaje;
-                }
+                }                
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
 
 
@@ -2480,13 +2487,20 @@ namespace BolsaTrabajoUnv2_0.Controllers
             ResultadoSesion objResultado = new ResultadoSesion();
             try
             {
-                if(System.Web.HttpContext.Current.Session["SessionAdminCandidato"] != null)
+                objResultado.Error = false;
+                objResultado.MensajeError = "";
+
+                if (System.Web.HttpContext.Current.Session["SessionAdminCandidato"] != null)
                     objResultado.Resultado = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionAdminCandidato"];                
                 else if  (System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] != null)
                     objResultado.Resultado = (List<Btu_Sesion>)System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"];
-
-                objResultado.Error = false;
-                objResultado.MensajeError = "";
+                else if (System.Web.HttpContext.Current.Session["SessionInicioSesionUnach"] == null || System.Web.HttpContext.Current.Session["SessionAdminCandidato"] == null)
+                {
+                    objResultado.Error = true;
+                    objResultado.MensajeError = "Error al cargar datos de sesión, vuelva a ingresar";
+                    CerrarSesion();
+                }
+               
                 
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }

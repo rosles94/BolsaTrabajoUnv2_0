@@ -89,7 +89,7 @@ namespace BolsaTrabajoUnv2_0.Data
                     objDatosSesion.Registrado = Convert.ToString(cmd.Parameters["P_REGISTRADO"].Value);
                     objDatosSesion.Id = Convert.ToString(cmd.Parameters["P_ID"].Value);
                     objDatosSesion.Email2 = Convert.ToString(cmd.Parameters["P_EMAIL_2"].Value); // EMAIL EMPRESA
-                }
+                    }
                 list.Add(objDatosSesion);
             }
             catch (Exception ex)
@@ -803,6 +803,7 @@ namespace BolsaTrabajoUnv2_0.Data
                     objVac.Empresa = Convert.ToString(dr[2]);
                     objVac.objVacCand.Id = Convert.ToString(dr[3]);
                     objVac.objVacCand.Status = Convert.ToString(dr[4]);
+                    objVac.objVacCand.Total_Vacantes = Convert.ToString(dr[5]);
                     //objVacCand.btuBasicos.TIPO = Convert.ToString(dr[2]);
                     list.Add(objVac);
                 }
